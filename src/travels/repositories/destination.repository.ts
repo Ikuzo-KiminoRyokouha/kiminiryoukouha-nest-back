@@ -18,17 +18,20 @@ export class DestinationRepository {
       const searchedDes = await getDestinationInfo(destinationName);
       console.log(searchedDes);
 
-      const { mapx, mapy, firstimage } = searchedDes;
-      const destination = await this.destinationRepository.save(
-        this.destinationRepository.create({
-          name: destinationName,
-          cordinationX: mapx,
-          cordinationY: mapy,
-          img: firstimage,
-        }),
-      );
-      console.log(destination);
-      return destination;
+      const { mapx, mapy, firstimage, contentid, contenttypeid, title } =
+        searchedDes;
+      // const destination = await this.destinationRepository.save(
+      //   this.destinationRepository.create({
+      //     title,
+      //     mapx,
+      //     mapy,
+      //     firstimage,
+      //     contentid,
+      //     contenttypeid,
+      //   }),
+      // );
+      // console.log(destination);
+      // return destination;
     } catch (error) {
       return null;
     }
@@ -37,7 +40,7 @@ export class DestinationRepository {
   async checkDestination(destinationName) {
     try {
       let destination = await this.destinationRepository.findOne({
-        where: { name: destinationName },
+        where: { title: destinationName },
       });
       if (!destination)
         destination = await this.createDestination(destinationName);
@@ -51,7 +54,7 @@ export class DestinationRepository {
   async showDestination(destinationNmae) {
     try {
       const destination = await this.destinationRepository.findOne({
-        where: { name: destinationNmae },
+        where: { title: destinationNmae },
       });
       if (!destination) return null;
       return destination;

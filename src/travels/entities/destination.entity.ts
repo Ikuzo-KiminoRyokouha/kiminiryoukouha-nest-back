@@ -6,25 +6,28 @@ import { Column, Entity } from 'typeorm';
 export class Destination extends BasicEntity {
   @Column()
   @IsString()
-  name: string;
+  title: string;
 
   @Column()
   @IsString()
   @IsOptional()
-  cordinationX: string;
+  mapx: string;
 
   @Column()
   @IsString()
   @IsOptional()
-  cordinationY: string;
+  mapy: string;
 
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
-  img: string;
+  firstimg: string;
 
-  @Column('text', { nullable: true })
+  @Column()
   @IsString()
-  @IsOptional()
-  overview: string;
+  contentid: string;
+
+  @Column()
+  @IsString()
+  contenttypeid: string;
 }

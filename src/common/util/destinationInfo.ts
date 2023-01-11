@@ -19,32 +19,23 @@ export class DestinationInfoOutput {
   mapx: string;
   mapy: string;
   firstimage: string;
+  contentid: string;
+  contenttypeid: string;
 }
 
 //관광지 검ㅐ
-export async function getDestinationInfo(
-  destination,
-  cat1 = '',
-  cat2 = '',
-): Promise<DestinationInfoOutput> {
+export async function getDestinationInfo(destination, cat1 = '', cat2 = '') {
   let url = commonUrl('searchKeyword');
-  url += '&' + 'numOfRows' + '=' + 12;
+  url += '&' + 'numOfRows' + '=' + 500;
   url += '&' + 'areaCode' + '=' + '35';
   url += '&' + 'sigunguCode' + '=' + '2';
   url += '&' + 'cat1' + '=' + cat1;
   url += '&' + 'cat2' + '=' + cat2;
   url += '&' + 'keyword' + '=' + `${destination}`;
-
   const data = await axios
     .get(url)
     .then((res) => {
-      const { mapx, mapy, firstimage }: DestinationInfoOutput =
-        res.data.response.body.items.item[0];
-      return {
-        mapx,
-        mapy,
-        firstimage,
-      };
+      return res.data.response.body.items.item;
     })
     .catch((_) => {
       return null;
@@ -61,7 +52,6 @@ export async function getAllDestinationInfo(contentTypeId) {
   url += '&' + 'cat1' + '=' + '';
   url += '&' + 'cat2' + '=' + '';
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
-  console.log(url);
   const data = await axios
     .get(url)
     .then((res) => {
@@ -70,6 +60,7 @@ export async function getAllDestinationInfo(contentTypeId) {
     .catch((e) => {
       return null;
     });
+  // console.log(data);
   return data;
 }
 
@@ -78,7 +69,6 @@ export async function getDestinationDetail(contentId, contentTypeId) {
   url += '&' + 'contentId' + '=' + contentId;
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
   url += '&' + 'overviewYN' + '=' + 'Y';
-  console.log('url : ', url);
   const data = await axios
     .get(url)
     .then((res) => {
@@ -88,8 +78,5 @@ export async function getDestinationDetail(contentId, contentTypeId) {
       console.log('e : ', e);
       return null;
     });
-
   return data;
 }
-
-// getDestinationDetail(130509, 14);
