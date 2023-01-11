@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CustomRepository } from 'src/repositories/custom-repository.decorater';
 import { UserRespository } from 'src/users/users.repository';
 import { Repository } from 'typeorm';
+import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import { CreatePlanInput } from '../dtos/plan/create-plan.dto';
 import { Plan } from '../entities/plan.entity';
 
@@ -14,7 +15,7 @@ export class planRepository {
     private readonly userRepository: UserRespository,
   ) {}
 
-  async createPlan(createPlanInput: CreatePlanInput) {
+  async createPlan(createPlanInput: CreatePlanInput | CreateRandomPlanInput) {
     try {
       // const thisUser = await this.userRepository.findOne({
       //   where: { id: user.sub },
@@ -28,6 +29,15 @@ export class planRepository {
 
       return plan;
     } catch (error) {
+      return null;
+    }
+  }
+  async createRandomPlan() {
+    try {
+      const plan = await this.planRepository.save(
+        this.planRepository.create({}),
+      );
+    } catch (e) {
       return null;
     }
   }

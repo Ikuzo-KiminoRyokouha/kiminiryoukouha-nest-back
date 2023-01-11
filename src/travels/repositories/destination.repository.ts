@@ -62,4 +62,16 @@ export class DestinationRepository {
       return null;
     }
   }
+
+  async getRaondomDes(id) {
+    const randomDestination = await this.destinationRepository.findOne({
+      where: { id },
+    });
+    return randomDestination;
+  }
+
+  async getCountDes() {
+    const countAll = await this.destinationRepository.count();
+    return countAll;
+  }
 }

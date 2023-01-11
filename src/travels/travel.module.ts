@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { PlanController } from './plan/plan.controller';
-import { PlanService } from './plan/plan.service';
+import { PlanController } from './controllers/plan.controller';
+import { PlanService } from './services/plan.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Plan } from './entities/plan.entity';
-import { planRepository } from './plan/plan.repository';
+import { planRepository } from './repositories/plan.repository';
 import { TypeOrmExModule } from 'src/repositories/custom-repository.module';
 import { UserRespository } from 'src/users/users.repository';
-import { TravelController } from './travel/travel.controller';
-import { TravelService } from './travel/travel.service';
+import { TravelController } from './controllers/travel.controller';
+import { TravelService } from './services/travel.service';
 import { Destination } from './entities/destination.entity';
 import { DestinationRepository } from './repositories/destination.repository';
 import { TravelRepository } from './repositories/travel.repository';

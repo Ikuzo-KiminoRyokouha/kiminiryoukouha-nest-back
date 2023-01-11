@@ -8,7 +8,11 @@ import { ShowPlansOutput } from '../dtos/plan/show-plans.dto';
 import { CreateTravelInput } from '../dtos/travel/create-travel.dto';
 import { DestinationRepository } from '../repositories/destination.repository';
 import { TravelRepository } from '../repositories/travel.repository';
-import { planRepository } from './plan.repository';
+import { planRepository } from '../repositories/plan.repository';
+import {
+  CreateRandomPlanInput,
+  CreateRandomPlanOutput,
+} from '../dtos/plan/craete-random-plan.dto';
 
 @Injectable()
 export class PlanService {
@@ -63,6 +67,61 @@ export class PlanService {
         message: 'create plan',
       };
     } catch (error) {
+      return {
+        ok: false,
+        error: 'failed to create plan',
+      };
+    }
+  }
+
+  async createRandomPlan(
+    randomPlanInput: CreateRandomPlanInput,
+  ): Promise<CreateRandomPlanOutput> {
+    try {
+      //여행 계획 생성
+      const plan = await this.planRepository.createPlan(randomPlanInput);
+      if (!plan) return { ok: false, message: 'failed to create plan' };
+      //출발날짜
+      const startDay = new Date(randomPlanInput.start);
+      //모든 목적지수
+      const countDestination = await this.destinationRepository.getCountDes();
+      //여행기간
+      const travelPeriod =
+        new Date(randomPlanInput.end).getDate() -
+        new Date(randomPlanInput.start).getDate() +
+        1;
+
+      //여행 개수
+      const destination = new Array(travelPeriod * randomPlanInput.dayPerDes);
+      for (let i = 0; i < destination.length; i++) {
+        console.log(destination.length);
+        const min = 1;
+        const max = countDestination;
+        const ranNum = Math.floor(Math.random() * (max - min + 1)) + min;
+        console.log(ranNum);
+        const destinationItem = await this.destinationRepository.getRaondomDes(
+          ranNum,
+        );
+        startDay.setDate(
+          startDay.getDate() + Math.floor(i / randomPlanInput.dayPerDes),
+        );
+        const createTravelInput: CreateTravelInput = {
+          startDay,
+          order: i % randomPlanInput.dayPerDes,
+          planId: plan.id,
+          destinationId: destinationItem.id,
+        };
+        console.log(createTravelInput);
+        const travel = await this.travelRepositoy.creatTravel(
+          createTravelInput,
+        );
+        if (!travel) return { ok: false, error: 'failed to create plan' };
+      }
+      return {
+        ok: true,
+        message: 'create plan',
+      };
+    } catch (e) {
       return {
         ok: false,
         error: 'failed to create plan',
