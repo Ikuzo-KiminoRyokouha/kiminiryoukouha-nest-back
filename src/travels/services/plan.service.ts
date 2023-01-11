@@ -78,6 +78,9 @@ export class PlanService {
     randomPlanInput: CreateRandomPlanInput,
   ): Promise<CreateRandomPlanOutput> {
     try {
+      if (randomPlanInput.title == null) {
+        randomPlanInput.title = `${randomPlanInput.city}여행 ${randomPlanInput.start} 시작`;
+      }
       //여행 계획 생성
       const plan = await this.planRepository.createPlan(randomPlanInput);
       if (!plan) return { ok: false, message: 'failed to create plan' };
@@ -94,11 +97,9 @@ export class PlanService {
       //여행 개수
       const destination = new Array(travelPeriod * randomPlanInput.dayPerDes);
       for (let i = 0; i < destination.length; i++) {
-        console.log(destination.length);
         const min = 1;
         const max = countDestination;
         const ranNum = Math.floor(Math.random() * (max - min + 1)) + min;
-        console.log(ranNum);
         const destinationItem = await this.destinationRepository.getRaondomDes(
           ranNum,
         );
@@ -111,7 +112,6 @@ export class PlanService {
           planId: plan.id,
           destinationId: destinationItem.id,
         };
-        console.log(createTravelInput);
         const travel = await this.travelRepositoy.creatTravel(
           createTravelInput,
         );

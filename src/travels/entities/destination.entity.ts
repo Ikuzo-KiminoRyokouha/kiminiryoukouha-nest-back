@@ -26,6 +26,10 @@ export class Destination extends BasicEntity {
 
   @Column()
   @IsString()
+  cat3: string;
+
+  @Column()
+  @IsString()
   contentid: string;
 
   @Column()

@@ -15,9 +15,10 @@ import { Travel } from './travel.entity';
 export class Plan extends BasicEntity {
   @Column()
   @IsString()
+  @IsOptional()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   @IsOptional()
   description: string;

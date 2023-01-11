@@ -49,8 +49,6 @@ export async function getAllDestinationInfo(contentTypeId) {
   url += '&' + 'numOfRows' + '=' + 500;
   url += '&' + 'areaCode' + '=' + '35';
   url += '&' + 'sigunguCode' + '=' + '2';
-  url += '&' + 'cat1' + '=' + '';
-  url += '&' + 'cat2' + '=' + '';
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
   const data = await axios
     .get(url)
