@@ -5,7 +5,9 @@ import { UserRespository } from 'src/users/users.repository';
 import { Repository } from 'typeorm';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import { CreatePlanInput } from '../dtos/plan/create-plan.dto';
+import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
 import { Plan } from '../entities/plan.entity';
+import { Travel } from '../entities/travel.entity';
 
 @Injectable()
 @CustomRepository(Plan)
@@ -44,8 +46,35 @@ export class planRepository {
 
   async showPlan(planId) {
     try {
-      const plan = await this.planRepository.findOne({ where: { id: planId } });
+      // const plan = await this.planRepository.findOne({ where: { id: planId } });
+      // console.log(plan);
+      // return plan;
+
+      const plan = await this.planRepository
+        .createQueryBuilder('plan')
+        .select([
+          'plan.id',
+          'plan.title',
+          'plan.description',
+          'plan.start',
+          'plan.end',
+          'plan.city',
+          'plan.totalCost',
+          'travel.id',
+          'travel.startDay',
+          'destination.title',
+          'destination.mapx',
+          'destination.mapy',
+          'destination.firstimg',
+          'destination.contentid',
+          'destination.contenttypeid',
+        ])
+        .leftJoin('plan.travels', 'travel')
+        .leftJoin('travel.destination', 'destination')
+        .where('plan.id = :planId', { planId })
+        .getOne();
       return plan;
+      console.log(plan);
     } catch (error) {
       console.log(error);
       return null;

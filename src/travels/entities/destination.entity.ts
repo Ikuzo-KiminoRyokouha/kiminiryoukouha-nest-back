@@ -1,6 +1,7 @@
 import { IsOptional, IsString } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Travel } from './travel.entity';
 
 @Entity()
 export class Destination extends BasicEntity {
@@ -30,4 +31,7 @@ export class Destination extends BasicEntity {
   @Column()
   @IsString()
   contenttypeid: string;
+
+  @OneToMany(() => Travel, (travel) => travel.plan)
+  travels: Travel[];
 }

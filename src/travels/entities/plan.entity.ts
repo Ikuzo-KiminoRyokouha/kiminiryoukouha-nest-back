@@ -8,7 +8,8 @@ import {
 } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Travel } from './travel.entity';
 
 @Entity()
 export class Plan extends BasicEntity {
@@ -47,6 +48,9 @@ export class Plan extends BasicEntity {
   @IsObject()
   @IsOptional()
   dayPerCost: object;
+
+  @OneToMany(() => Travel, (travel) => travel.plan)
+  travels: Travel[];
 
   @ManyToMany(() => User, { nullable: true })
   @JoinTable()

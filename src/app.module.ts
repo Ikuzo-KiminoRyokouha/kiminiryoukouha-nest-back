@@ -34,6 +34,7 @@ import * as ormconfig from '../ormconfig';
       // synchronize: true,
       logging: true,
       entities: [User, Plan, Diary, Board, Comment, Travel, Destination],
+      timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],
     }),
 
