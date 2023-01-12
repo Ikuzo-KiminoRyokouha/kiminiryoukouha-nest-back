@@ -38,6 +38,7 @@ export class BoardsRepository {
           'board.content',
           'board.secret',
           'board.complete',
+          'board.createdAt',
           'user.email',
           'user.id',
           'user.nickname',

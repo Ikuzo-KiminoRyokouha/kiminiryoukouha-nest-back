@@ -14,7 +14,7 @@ export class Board extends BasicEntity {
   @IsString()
   title: string;
 
-  @Column()
+  @Column({ type: 'text' })
   @IsString()
   content: string;
 
