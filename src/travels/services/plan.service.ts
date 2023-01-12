@@ -81,7 +81,7 @@ export class PlanService {
       if (randomPlanInput.title == null) {
         randomPlanInput.title = `${randomPlanInput.city}여행 ${randomPlanInput.start} 시작`;
       }
-      //여행 계획 생성
+      //여행 계획 CREATE
       const plan = await this.planRepository.createPlan(randomPlanInput);
       if (!plan) return { ok: false, message: 'failed to create plan' };
       //출발날짜
@@ -112,6 +112,7 @@ export class PlanService {
           planId: plan.id,
           destinationId: destinationItem.id,
         };
+        //여행 CREATE
         const travel = await this.travelRepositoy.creatTravel(
           createTravelInput,
         );

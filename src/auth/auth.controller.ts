@@ -37,4 +37,9 @@ export class AuthController {
   logout(@Req() req: Request) {
     this.authService.logout(req.user['sub']);
   }
+
+  @Get('token/refresh')
+  restoreToken(@Req() req: Request) {
+    return this.authService.updateAccessToken(req);
+  }
 }

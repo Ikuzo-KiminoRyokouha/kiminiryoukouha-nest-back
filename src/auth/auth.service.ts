@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserInput } from 'src/users/dtos/create-user.dto';
 import { UserRespository } from 'src/users/users.repository';
 import * as bcrypt from 'bcrypt';
+import { Request } from 'express';
 // import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -62,6 +63,26 @@ export class AuthService {
   // hashData(data: string) {
   //   return argon2.hash(data);
   // }
+
+  async updateAccessToken(req: Request) {
+    const verifyedUser = this.jwtService.verify(req.cookies.refresh_token, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+    });
+
+    const user = await this.usersRepository.findOneBy({ id: verifyedUser.sub });
+    return {
+      accessToken: await this.jwtService.signAsync(
+        {
+          sub: user.id,
+          username: user.nickname,
+        },
+        {
+          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+          expiresIn: '15m',
+        },
+      ),
+    };
+  }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
     await this.usersRepository.updateRefreshToken(userId, {
