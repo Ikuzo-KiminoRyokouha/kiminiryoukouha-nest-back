@@ -1,27 +1,8 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { destinationCode } from './dataSet/destination-code';
 
-const key = process.env.DES_INFO;
-// const key =
-//   'nWTuUPTKOjIdZDakR%2FUff%2F4Otqjll4bathvgyQ%2BOM50Wj4gIY8HU06d1I6VqXPkIF%2Fhg%2F0yFWiTkotWQPVT1kA%3D%3D';
-
-//searchKeyword /
-function commonUrl(type) {
-  const endPoint = 'http://apis.data.go.kr/B551011/KorService/' + type;
-  let queryParams = '?' + 'ServiceKey' + '=' + key;
-  queryParams += '&' + 'MobileOS' + '=' + 'ETC';
-  queryParams += '&' + 'MobileApp' + '=' + 'AppTest';
-  queryParams += '&' + '_type' + '=' + 'json';
-  return endPoint + queryParams;
-}
-
-export class DestinationInfoOutput {
-  mapx: string;
-  mapy: string;
-  firstimage: string;
-  contentid: string;
-  contenttypeid: string;
-}
+const APIKEY = process.env.DES_INFO;
 
 //관광지 검ㅐ
 export async function getDestinationInfo(destination, cat1 = '', cat2 = '') {
@@ -50,15 +31,16 @@ export async function getAllDestinationInfo(contentTypeId) {
   url += '&' + 'areaCode' + '=' + '35';
   url += '&' + 'sigunguCode' + '=' + '2';
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
+  console.log('start');
   const data = await axios
     .get(url)
     .then((res) => {
-      return res.data.response.body.items.item;
+      const destination = codeToTag(res.data.response.body.items.item);
+      return destination;
     })
     .catch((e) => {
       return null;
     });
-  // console.log(data);
   return data;
 }
 
@@ -77,4 +59,20 @@ export async function getDestinationDetail(contentId, contentTypeId) {
       return null;
     });
   return data;
+}
+
+function codeToTag(destinationInfo) {
+  destinationInfo.forEach((destination) => {
+    destination.cat3 = destinationCode[destination.cat3];
+  });
+  return destinationInfo.filter((destination) => destination.cat3 != undefined);
+}
+//searchKeyword
+function commonUrl(type) {
+  const endPoint = 'http://apis.data.go.kr/B551011/KorService/' + type;
+  let queryParams = '?' + 'ServiceKey' + '=' + APIKEY;
+  queryParams += '&' + 'MobileOS' + '=' + 'ETC';
+  queryParams += '&' + 'MobileApp' + '=' + 'AppTest';
+  queryParams += '&' + '_type' + '=' + 'json';
+  return endPoint + queryParams;
 }

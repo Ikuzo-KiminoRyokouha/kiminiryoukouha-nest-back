@@ -10,10 +10,6 @@ export class Travel extends BasicEntity {
   @IsNumber()
   startDay: Date;
 
-  @Column()
-  @IsNumber()
-  order: number;
-
   @Column({ default: false })
   @IsBoolean()
   clear: boolean;

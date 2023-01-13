@@ -50,7 +50,6 @@ export class PlanService {
             return { ok: false, error: 'failed to create plan' };
           const createTravelInput: CreateTravelInput = {
             startDay,
-            order,
             planId: plan.id,
             destinationId: checkDestination.id,
           };
@@ -75,49 +74,53 @@ export class PlanService {
   }
 
   async createRandomPlan(
-    randomPlanInput: CreateRandomPlanInput,
+    createRandomPlanInput: CreateRandomPlanInput,
   ): Promise<CreateRandomPlanOutput> {
     try {
-      if (randomPlanInput.title == null) {
-        randomPlanInput.title = `${randomPlanInput.city}여행 ${randomPlanInput.start} 시작`;
+      if (createRandomPlanInput.title == null) {
+        createRandomPlanInput.title = `${createRandomPlanInput.city}여행 ${createRandomPlanInput.start} 시작`;
       }
       //여행 계획 CREATE
-      const plan = await this.planRepository.createPlan(randomPlanInput);
+      const plan = await this.planRepository.createPlan(createRandomPlanInput);
       if (!plan) return { ok: false, message: 'failed to create plan' };
-      //출발날짜
-      const startDay = new Date(randomPlanInput.start);
-      //모든 목적지수
-      const countDestination = await this.destinationRepository.getCountDes();
+      //출발날짜 string -> date
       //여행기간
       const travelPeriod =
-        new Date(randomPlanInput.end).getDate() -
-        new Date(randomPlanInput.start).getDate() +
+        new Date(createRandomPlanInput.end).getDate() -
+        new Date(createRandomPlanInput.start).getDate() +
         1;
 
-      //여행 개수
-      const destination = new Array(travelPeriod * randomPlanInput.dayPerDes);
-      for (let i = 0; i < destination.length; i++) {
-        const min = 1;
-        const max = countDestination;
-        const ranNum = Math.floor(Math.random() * (max - min + 1)) + min;
-        const destinationItem = await this.destinationRepository.getRaondomDes(
-          ranNum,
+      for (let i = 0; i < travelPeriod; i++) {
+        const dayPerDes = await this.recommandDestinaitonByTag(
+          createRandomPlanInput.tag[0],
         );
-        startDay.setDate(
-          startDay.getDate() + Math.floor(i / randomPlanInput.dayPerDes),
-        );
-        const createTravelInput: CreateTravelInput = {
-          startDay,
-          order: i % randomPlanInput.dayPerDes,
-          planId: plan.id,
-          destinationId: destinationItem.id,
-        };
+        let checkDesNum = 0;
+        let dayPerDes2;
+        while (checkDesNum < 1) {
+          dayPerDes2 = await this.recommandDestinaitonByTag(
+            createRandomPlanInput.tag[0],
+          );
+          if (dayPerDes == dayPerDes2) continue;
+          checkDesNum++;
+        }
         //여행 CREATE
-        const travel = await this.travelRepositoy.creatTravel(
-          createTravelInput,
+        const travel = this.createTravel(
+          createRandomPlanInput,
+          plan,
+          dayPerDes,
+          i,
         );
-        if (!travel) return { ok: false, error: 'failed to create plan' };
+        if (!travel) return;
+
+        const travel2 = this.createTravel(
+          createRandomPlanInput,
+          plan,
+          dayPerDes2,
+          i,
+        );
+        if (!travel2) return { ok: false, error: 'failed to create plan' };
       }
+
       return {
         ok: true,
         message: 'create plan',
@@ -161,5 +164,26 @@ export class PlanService {
         error: 'failed to sho plans',
       };
     }
+  }
+
+  async recommandDestinaitonByTag(tagArr: string[]) {
+    const destinationItem = await this.destinationRepository.getRaondomDes(
+      tagArr,
+    );
+    return destinationItem;
+  }
+
+  async createTravel(createRandomPlanInput, plan, dayPerDes, i) {
+    const startDay = new Date(createRandomPlanInput.start);
+
+    const createTravelInput: CreateTravelInput = {
+      startDay: new Date(startDay.setDate(startDay.getDate() + i)),
+      planId: plan.id,
+      destinationId: dayPerDes.id,
+    };
+    console.log(i);
+    console.log(createTravelInput.startDay);
+    const travel = await this.travelRepositoy.creatTravel(createTravelInput);
+    return travel;
   }
 }

@@ -46,10 +46,6 @@ export class planRepository {
 
   async showPlan(planId) {
     try {
-      // const plan = await this.planRepository.findOne({ where: { id: planId } });
-      // console.log(plan);
-      // return plan;
-
       const plan = await this.planRepository
         .createQueryBuilder('plan')
         .select([
@@ -74,7 +70,6 @@ export class planRepository {
         .where('plan.id = :planId', { planId })
         .getOne();
       return plan;
-      console.log(plan);
     } catch (error) {
       console.log(error);
       return null;

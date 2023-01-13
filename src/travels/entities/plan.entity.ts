@@ -18,10 +18,10 @@ export class Plan extends BasicEntity {
   @IsOptional()
   title: string;
 
-  @Column({ nullable: true })
-  @IsString()
+  @Column({ type: 'json', nullable: true })
+  @IsObject()
   @IsOptional()
-  description: string;
+  tag: object;
 
   @Column()
   @IsDateString()

@@ -15,7 +15,6 @@ export class CreateInitialUserData implements Seeder {
     this.data = await getAllDestinationInfo(12);
     this.data2 = await getAllDestinationInfo(14);
     this.setData = this.data.concat(this.data2);
-    console.log(this.setData);
     await connection
       .createQueryBuilder()
       .insert()

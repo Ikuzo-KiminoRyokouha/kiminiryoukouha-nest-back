@@ -63,11 +63,18 @@ export class DestinationRepository {
     }
   }
 
-  async getRaondomDes(id) {
-    const randomDestination = await this.destinationRepository.findOne({
-      where: { id },
-    });
-    return randomDestination;
+  async getRaondomDes(tagArr: string[]) {
+    try {
+      const randomDestination = await this.destinationRepository
+        .createQueryBuilder('destination')
+        .where('destination.cat3 IN (:tagArr)', { tagArr })
+        .getMany();
+      const max = randomDestination.length;
+      const ranNum = Math.floor(Math.random() * max) + 1;
+      return randomDestination[ranNum];
+    } catch (error) {
+      return null;
+    }
   }
 
   async getCountDes() {
