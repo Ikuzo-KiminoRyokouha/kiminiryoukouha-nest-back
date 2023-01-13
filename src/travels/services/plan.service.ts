@@ -84,12 +84,12 @@ export class PlanService {
       const plan = await this.planRepository.createPlan(createRandomPlanInput);
       if (!plan) return { ok: false, message: 'failed to create plan' };
       //출발날짜 string -> date
-      //여행기간
+      // //여행기간  두 날의 차이 / 단위 ms(천분의 1초) / 나누기 하루를 초로 낸것에 1000을 곱
       const travelPeriod =
-        new Date(createRandomPlanInput.end).getDate() -
-        new Date(createRandomPlanInput.start).getDate() +
+        (new Date(createRandomPlanInput.end).getTime() -
+          new Date(createRandomPlanInput.start).getTime()) /
+          (1000 * 60 * 60 * 24) +
         1;
-
       for (let i = 0; i < travelPeriod; i++) {
         const dayPerDes = await this.recommandDestinaitonByTag(
           createRandomPlanInput.tag[0],
