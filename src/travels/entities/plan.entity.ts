@@ -50,7 +50,9 @@ export class Plan extends BasicEntity {
   @IsOptional()
   dayPerCost: object;
 
-  @OneToMany(() => Travel, (travel) => travel.plan)
+  @OneToMany(() => Travel, (travel) => travel.plan, {
+    cascade: true,
+  })
   travels: Travel[];
 
   @ManyToMany(() => User, { nullable: true })

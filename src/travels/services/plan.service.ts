@@ -13,6 +13,7 @@ import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
+import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
 
 @Injectable()
 export class PlanService {
@@ -26,8 +27,6 @@ export class PlanService {
     createPlanInput: CreatePlanInput,
   ): Promise<CreatePlanOutput> {
     try {
-      const destinationStartDay = new Date(createPlanInput.start);
-
       //계획 생성
       const plan = await this.planRepository.createPlan(createPlanInput);
       if (!plan) return { ok: false, message: 'failed to create plan' };
@@ -163,6 +162,20 @@ export class PlanService {
         ok: false,
         error: 'failed to sho plans',
       };
+    }
+  }
+
+  async deletePlan(pageId: number): Promise<DeletePlanOutput> {
+    try {
+      const deletePlan = await this.planRepository.deletePlan(pageId);
+      if (!deletePlan) return { ok: false, error: 'failed to delete plan' };
+      if (deletePlan.affected == 0)
+        return { ok: false, message: 'not found this plan' };
+      return { ok: true, message: 'delete plan' };
+    } catch (error) {
+      {
+        return { ok: false, error: 'failed to delete plan' };
+      }
     }
   }
 

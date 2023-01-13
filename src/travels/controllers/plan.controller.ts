@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
@@ -7,6 +7,7 @@ import {
   CreatePlanInput,
   CreatePlanOutput,
 } from '../dtos/plan/create-plan.dto';
+import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
 import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
 import { ShowPlansOutput } from '../dtos/plan/show-plans.dto';
 import { PlanService } from '../services/plan.service';
@@ -37,5 +38,10 @@ export class PlanController {
   @Get('/all/:page')
   showPlans(@Param('page') page: number): Promise<ShowPlansOutput> {
     return this.planService.showPlans(page);
+  }
+
+  @Delete('/:id')
+  deletePlan(@Param('id') planId: number): Promise<DeletePlanOutput> {
+    return this.planService.deletePlan(planId);
   }
 }

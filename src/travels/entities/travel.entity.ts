@@ -14,7 +14,9 @@ export class Travel extends BasicEntity {
   @IsBoolean()
   clear: boolean;
 
-  @ManyToOne(() => Plan, (plan) => plan.id)
+  @ManyToOne(() => Plan, (plan) => plan.id, {
+    onDelete: 'CASCADE',
+  })
   plan: Plan;
   @RelationId((travel: Travel) => travel.plan)
   @IsNumber()

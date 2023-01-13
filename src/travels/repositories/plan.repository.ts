@@ -123,10 +123,10 @@ export class planRepository {
     }
   }
 
-  async deleteBaord(palnId) {
+  async deletePlan(planId) {
     try {
-      await this.planRepository.softDelete({ id: palnId });
-      return true;
+      const deletePlan = await this.planRepository.softDelete({ id: planId });
+      return deletePlan;
     } catch (error) {
       return false;
     }
