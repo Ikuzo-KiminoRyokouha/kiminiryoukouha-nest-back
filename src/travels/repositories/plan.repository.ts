@@ -39,6 +39,7 @@ export class planRepository {
       const plan = await this.planRepository.save(
         this.planRepository.create({}),
       );
+      return plan;
     } catch (e) {
       return null;
     }
@@ -51,7 +52,6 @@ export class planRepository {
         .select([
           'plan.id',
           'plan.title',
-          'plan.description',
           'plan.start',
           'plan.end',
           'plan.city',
@@ -61,13 +61,14 @@ export class planRepository {
           'destination.title',
           'destination.mapx',
           'destination.mapy',
-          'destination.firstimg',
+          'destination.firstimage',
           'destination.contentid',
           'destination.contenttypeid',
         ])
         .leftJoin('plan.travels', 'travel')
         .leftJoin('travel.destination', 'destination')
         .where('plan.id = :planId', { planId })
+        .orderBy('travel.startDay')
         .getOne();
       return plan;
     } catch (error) {

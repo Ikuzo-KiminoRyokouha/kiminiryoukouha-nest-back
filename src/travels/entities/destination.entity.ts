@@ -22,7 +22,7 @@ export class Destination extends BasicEntity {
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
-  firstimg: string;
+  firstimage: string;
 
   @Column()
   @IsString()

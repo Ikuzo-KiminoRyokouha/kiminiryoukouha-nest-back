@@ -52,6 +52,7 @@ export async function getDestinationDetail(contentId, contentTypeId) {
   const data = await axios
     .get(url)
     .then((res) => {
+      console.log(res.data.response.body.items.item);
       return res.data.response.body.items.item;
     })
     .catch((e) => {
