@@ -94,7 +94,7 @@ export class BoardsService {
           error: 'board not found',
         };
       }
-      if (user.sub != board.id) {
+      if (user.sub != board.userId) {
         return {
           ok: false,
           error: 'you can not update this board',
