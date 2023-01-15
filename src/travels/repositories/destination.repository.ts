@@ -16,7 +16,6 @@ export class DestinationRepository {
     try {
       //좌표 구하거나 받아서 하기
       const searchedDes = await getDestinationInfo(destinationName);
-      console.log(searchedDes);
 
       const { mapx, mapy, firstimage, contentid, contenttypeid, title } =
         searchedDes;
@@ -65,10 +64,18 @@ export class DestinationRepository {
 
   async getRaondomDes(tagArr: string[]) {
     try {
-      const randomDestination = await this.destinationRepository
-        .createQueryBuilder('destination')
-        .where('destination.cat3 IN (:tagArr)', { tagArr })
-        .getMany();
+      let randomDestination;
+      if (tagArr == null) {
+        randomDestination = await this.destinationRepository
+          .createQueryBuilder('destination')
+          .getMany();
+      } else {
+        randomDestination = await this.destinationRepository
+          .createQueryBuilder('destination')
+          .where('destination.cat3 IN (:tagArr)', { tagArr })
+          .getMany();
+      }
+
       const max = randomDestination.length;
       const ranNum = Math.floor(Math.random() * max) + 1;
       return randomDestination[ranNum];

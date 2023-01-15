@@ -90,6 +90,7 @@ export class PlanService {
           (1000 * 60 * 60 * 24) +
         1;
       for (let i = 0; i < travelPeriod; i++) {
+        //태그에 따른 여행지 찾기
         const dayPerDes = await this.recommandDestinaitonByTag(
           createRandomPlanInput.tag[0],
         );
@@ -97,7 +98,7 @@ export class PlanService {
         let dayPerDes2;
         while (checkDesNum < 1) {
           dayPerDes2 = await this.recommandDestinaitonByTag(
-            createRandomPlanInput.tag[0],
+            createRandomPlanInput.tag[i],
           );
           if (dayPerDes == dayPerDes2) continue;
           checkDesNum++;
@@ -194,8 +195,6 @@ export class PlanService {
       planId: plan.id,
       destinationId: dayPerDes.id,
     };
-    console.log(i);
-    console.log(createTravelInput.startDay);
     const travel = await this.travelRepositoy.creatTravel(createTravelInput);
     return travel;
   }
