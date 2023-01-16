@@ -6,4 +6,6 @@ export class CreateRandomPlanInput extends OmitType(CreatePlanInput, [
   'destination',
 ]) {}
 
-export class CreateRandomPlanOutput extends CreatePlanOutput {}
+export class CreateRandomPlanOutput extends CreatePlanOutput {
+  'plan'?;
+}

@@ -25,55 +25,6 @@ export class PlanService {
     private travelRepositoy: TravelRepository,
   ) {}
 
-  async createPlan(
-    createPlanInput: CreatePlanInput,
-  ): Promise<CreatePlanOutput> {
-    try {
-      //계획 생성
-      const plan = await this.planRepository.createPlan(createPlanInput);
-      if (!plan) return { ok: false, message: 'failed to create plan' };
-
-      //사용자의 계획에서 여행지만 받기 ex) {"1":[{"1":"석가탑"} , {"2":"석굴암"}],"2":[{"1":"황룡사"},{"2":"다보탑"}],"3":[{"1":"첨성대"}]}
-      const travel = createPlanInput.destination;
-
-      Object.keys(travel).forEach(async (day) => {
-        const startDay = new Date(createPlanInput.start); // 여행 몇번째 날 인지
-        const nubmerDay = Number(day);
-        startDay.setDate(startDay.getDate() + nubmerDay);
-        travel[day].forEach(async (destination) => {
-          const order = +Object.keys(destination)[0]; // 그 날에 갈 곳 중에 순서
-          // DB에서 목적지 정보가 있는 지 확인 후 추가 or 그냥 진행
-          const checkDestination =
-            await this.destinationRepository.checkDestination(
-              Object.values(destination)[0],
-            );
-          if (!checkDestination)
-            return { ok: false, error: 'failed to create plan' };
-          const createTravelInput: CreateTravelInput = {
-            startDay,
-            planId: plan.id,
-            destinationId: checkDestination.id,
-          };
-          // 각 날자와 순서별로 여행테이블에 여행 생성
-          const travel = await this.travelRepositoy.creatTravel(
-            createTravelInput,
-          );
-          if (!travel) return { ok: false, error: 'failed to create plan' };
-        });
-      });
-
-      return {
-        ok: true,
-        message: 'create plan',
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error: 'failed to create plan',
-      };
-    }
-  }
-
   async createRandomPlan(
     createRandomPlanInput: CreateRandomPlanInput,
   ): Promise<CreateRandomPlanOutput> {
@@ -94,8 +45,6 @@ export class PlanService {
           new Date(createRandomPlanInput.start).getTime()) /
           (1000 * 60 * 60 * 24) +
         1;
-
-      let imgURLArr: string[];
 
       //여행지 생성
       for (let i = 0; i < travelPeriod; i++) {
@@ -128,7 +77,7 @@ export class PlanService {
         );
         if (!travel) return;
 
-        const travel2 = this.createTravel(
+        const travel2 = await this.createTravel(
           createRandomPlanInput,
           plan,
           dayPerDes2,
@@ -136,10 +85,11 @@ export class PlanService {
         );
         if (!travel2) return { ok: false, error: 'failed to create plan' };
       }
-
+      const tempPlan = await this.planRepository.showPlan(plan.id);
       return {
         ok: true,
         message: 'create plan',
+        plan: tempPlan,
       };
     } catch (e) {
       return {
@@ -206,5 +156,54 @@ export class PlanService {
     };
     const travel = await this.travelRepositoy.creatTravel(createTravelInput);
     return travel;
+  }
+
+  async createPlan(
+    createPlanInput: CreatePlanInput,
+  ): Promise<CreatePlanOutput> {
+    try {
+      //계획 생성
+      const plan = await this.planRepository.createPlan(createPlanInput);
+      if (!plan) return { ok: false, message: 'failed to create plan' };
+
+      //사용자의 계획에서 여행지만 받기 ex) {"1":[{"1":"석가탑"} , {"2":"석굴암"}],"2":[{"1":"황룡사"},{"2":"다보탑"}],"3":[{"1":"첨성대"}]}
+      const travel = createPlanInput.destination;
+
+      Object.keys(travel).forEach(async (day) => {
+        const startDay = new Date(createPlanInput.start); // 여행 몇번째 날 인지
+        const nubmerDay = Number(day);
+        startDay.setDate(startDay.getDate() + nubmerDay);
+        travel[day].forEach(async (destination) => {
+          const order = +Object.keys(destination)[0]; // 그 날에 갈 곳 중에 순서
+          // DB에서 목적지 정보가 있는 지 확인 후 추가 or 그냥 진행
+          const checkDestination =
+            await this.destinationRepository.checkDestination(
+              Object.values(destination)[0],
+            );
+          if (!checkDestination)
+            return { ok: false, error: 'failed to create plan' };
+          const createTravelInput: CreateTravelInput = {
+            startDay,
+            planId: plan.id,
+            destinationId: checkDestination.id,
+          };
+          // 각 날자와 순서별로 여행테이블에 여행 생성
+          const travel = await this.travelRepositoy.creatTravel(
+            createTravelInput,
+          );
+          if (!travel) return { ok: false, error: 'failed to create plan' };
+        });
+      });
+
+      return {
+        ok: true,
+        message: 'create plan',
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: 'failed to create plan',
+      };
+    }
   }
 }
