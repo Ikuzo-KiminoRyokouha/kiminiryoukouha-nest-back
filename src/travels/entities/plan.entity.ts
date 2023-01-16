@@ -40,6 +40,11 @@ export class Plan extends BasicEntity {
   @IsOptional()
   destination: object;
 
+  @Column({ type: 'json', nullable: true })
+  @IsObject()
+  @IsOptional()
+  img: object;
+
   @Column({ nullable: true })
   @IsNumber()
   @IsOptional()

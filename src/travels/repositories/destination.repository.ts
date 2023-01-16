@@ -75,12 +75,12 @@ export class DestinationRepository {
           .where('destination.cat3 IN (:tagArr)', { tagArr })
           .getMany();
       }
-
+      if (randomDestination[0] == null) return null;
       const max = randomDestination.length;
       const ranNum = Math.floor(Math.random() * max) + 1;
-      return randomDestination[ranNum];
+      return randomDestination[ranNum - 1];
     } catch (error) {
-      return null;
+      return false;
     }
   }
 

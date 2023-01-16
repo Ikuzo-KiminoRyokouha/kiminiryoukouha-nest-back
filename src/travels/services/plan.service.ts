@@ -14,6 +14,8 @@ import {
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
 import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
+import { throwError } from 'rxjs';
+import { Destination } from '../entities/destination.entity';
 
 @Injectable()
 export class PlanService {
@@ -76,12 +78,15 @@ export class PlanService {
     createRandomPlanInput: CreateRandomPlanInput,
   ): Promise<CreateRandomPlanOutput> {
     try {
+      //여행 제목 설정
       if (createRandomPlanInput.title == null) {
         createRandomPlanInput.title = `${createRandomPlanInput.city}여행 ${createRandomPlanInput.start} 시작`;
       }
+
       //여행 계획 CREATE
       const plan = await this.planRepository.createPlan(createRandomPlanInput);
-      if (!plan) return { ok: false, message: 'failed to create plan' };
+      if (!plan) throwError;
+
       //출발날짜 string -> date
       // //여행기간  두 날의 차이 / 단위 ms(천분의 1초) / 나누기 하루를 초로 낸것에 1000을 곱
       const travelPeriod =
@@ -89,20 +94,31 @@ export class PlanService {
           new Date(createRandomPlanInput.start).getTime()) /
           (1000 * 60 * 60 * 24) +
         1;
+
+      let imgURLArr: string[];
+
+      //여행지 생성
       for (let i = 0; i < travelPeriod; i++) {
         //태그에 따른 여행지 찾기
-        const dayPerDes = await this.recommandDestinaitonByTag(
-          createRandomPlanInput.tag[0],
+        const dayPerDes = await this.destinationRepository.getRaondomDes(
+          createRandomPlanInput.tag[i],
         );
+
+        if (dayPerDes === false) throwError;
+        if (dayPerDes === null)
+          return { ok: false, message: `this city dosen't have ~~` };
         let checkDesNum = 0;
         let dayPerDes2;
         while (checkDesNum < 1) {
-          dayPerDes2 = await this.recommandDestinaitonByTag(
+          dayPerDes2 = await this.destinationRepository.getRaondomDes(
             createRandomPlanInput.tag[i],
           );
-          if (dayPerDes == dayPerDes2) continue;
+          if (dayPerDes.id == dayPerDes2.id) continue;
           checkDesNum++;
         }
+        if (dayPerDes2 === false) throwError;
+        if (dayPerDes2 === null)
+          return { ok: false, message: `this city dosen't have ~~` };
         //여행 CREATE
         const travel = this.createTravel(
           createRandomPlanInput,
@@ -178,13 +194,6 @@ export class PlanService {
         return { ok: false, error: 'failed to delete plan' };
       }
     }
-  }
-
-  async recommandDestinaitonByTag(tagArr: string[]) {
-    const destinationItem = await this.destinationRepository.getRaondomDes(
-      tagArr,
-    );
-    return destinationItem;
   }
 
   async createTravel(createRandomPlanInput, plan, dayPerDes, i) {

@@ -79,13 +79,27 @@ export class planRepository {
 
   async showPlans(page) {
     try {
-      const [plans, count] = await this.planRepository.findAndCount({
-        skip: (page - 1) * 6,
-        take: 6,
-      });
+      const tempPlans = await this.planRepository
+        .createQueryBuilder('plan')
+        .select([
+          'plan.id',
+          'plan.title',
+          'plan.start',
+          'plan.end',
+          'plan.city',
+          'plan.totalCost',
+          'travel.id',
+          'travel.startDay',
+          'destination.title',
+          'destination.firstimage',
+        ])
+        .leftJoin('plan.travels', 'travel')
+        .leftJoin('travel.destination', 'destination')
+        .orderBy('travel.startDay')
+        .getManyAndCount();
       return {
-        plans,
-        pages: Math.ceil(count / 6),
+        plans: tempPlans[0],
+        pages: Math.ceil(tempPlans[1] / 6),
       };
     } catch (error) {
       return null;
