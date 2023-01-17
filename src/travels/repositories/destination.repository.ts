@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
-import { getDestinationInfo } from 'src/common/util/destinationInfo';
+import {
+  getDestinationDetail,
+  getDestinationInfo,
+} from 'src/common/util/destinationInfo';
 
 import { Repository } from 'typeorm';
 import { Destination } from '../entities/destination.entity';
@@ -42,6 +45,32 @@ export class DestinationRepository {
       const max = randomDestination.length;
       const ranNum = Math.floor(Math.random() * max) + 1;
       return randomDestination[ranNum - 1];
+    } catch (error) {
+      throws;
+    }
+  }
+
+  async createDestinationDetail(contentId: string, contentTypeId: string) {
+    const detail = await getDestinationDetail(contentId, contentTypeId);
+  }
+
+  async showDestinationDetail(destinaitonId: number) {
+    try {
+      const detail = await this.destinationRepository.findOne({
+        where: { id: destinaitonId },
+      });
+    } catch (error) {}
+  }
+
+  async updateDestination(
+    destinaitonId,
+    destination: Destination,
+  ): Promise<Destination> {
+    try {
+      const updateDestination = await this.destinationRepository.save([
+        { id: destinaitonId, ...destination },
+      ]);
+      return updateDestination[0];
     } catch (error) {
       throws;
     }

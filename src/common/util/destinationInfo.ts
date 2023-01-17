@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { destinationCode } from './dataSet/destination-code';
 
-const APIKEY = process.env.DES_INFO;
+// const APIKEY = `oyf4zlvsJqCJu6xE7lTdpCCkWU0tY2zhJJnk6bKu3JaRVfpYoVa4xxC4PwO2pj%2BAwJkkG5VQ9kDEHOhguwhkXA%3D%3D`;
 
 //관광지 검ㅐ
 export async function getDestinationInfo(destination, cat1 = '', cat2 = '') {
@@ -31,7 +31,6 @@ export async function getAllDestinationInfo(contentTypeId) {
   url += '&' + 'areaCode' + '=' + '35';
   url += '&' + 'sigunguCode' + '=' + '2';
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
-  console.log('start');
   const data = await axios
     .get(url)
     .then((res) => {
@@ -52,11 +51,9 @@ export async function getDestinationDetail(contentId, contentTypeId) {
   const data = await axios
     .get(url)
     .then((res) => {
-      console.log(res.data.response.body.items.item);
-      return res.data.response.body.items.item;
+      return res.data.response.body.items.item[0];
     })
     .catch((e) => {
-      console.log('e : ', e);
       return null;
     });
   return data;
@@ -70,6 +67,7 @@ function codeToTag(destinationInfo) {
 }
 //searchKeyword
 function commonUrl(type) {
+  const APIKEY = process.env.DES_INFO;
   const endPoint = 'http://apis.data.go.kr/B551011/KorService/' + type;
   let queryParams = '?' + 'ServiceKey' + '=' + APIKEY;
   queryParams += '&' + 'MobileOS' + '=' + 'ETC';

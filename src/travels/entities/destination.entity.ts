@@ -36,6 +36,11 @@ export class Destination extends BasicEntity {
   @IsString()
   contenttypeid: string;
 
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
+  @IsString()
+  description: string;
+
   @OneToMany(() => Travel, (travel) => travel.plan)
   travels: Travel[];
 }
