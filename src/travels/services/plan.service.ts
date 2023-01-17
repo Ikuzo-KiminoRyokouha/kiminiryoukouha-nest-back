@@ -52,8 +52,6 @@ export class PlanService {
         const dayPerDes = await this.destinationRepository.getRaondomDes(
           createRandomPlanInput.tag[i],
         );
-
-        if (dayPerDes === false) throwError;
         if (dayPerDes === null)
           return { ok: false, message: `this city dosen't have ~~` };
         let checkDesNum = 0;
@@ -177,7 +175,7 @@ export class PlanService {
           const order = +Object.keys(destination)[0]; // 그 날에 갈 곳 중에 순서
           // DB에서 목적지 정보가 있는 지 확인 후 추가 or 그냥 진행
           const checkDestination =
-            await this.destinationRepository.checkDestination(
+            await this.destinationRepository.showDestinationById(
               Object.values(destination)[0],
             );
           if (!checkDestination)

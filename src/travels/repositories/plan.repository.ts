@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { throws } from 'assert';
 import { CustomRepository } from 'src/repositories/custom-repository.decorater';
 import { UserRespository } from 'src/users/users.repository';
 import { Repository } from 'typeorm';
@@ -17,7 +18,9 @@ export class planRepository {
     private readonly userRepository: UserRespository,
   ) {}
 
-  async createPlan(createPlanInput: CreatePlanInput | CreateRandomPlanInput) {
+  async createPlan(
+    createPlanInput: CreatePlanInput | CreateRandomPlanInput,
+  ): Promise<Plan> {
     try {
       // const thisUser = await this.userRepository.findOne({
       //   where: { id: user.sub },
@@ -28,10 +31,9 @@ export class planRepository {
           // users: [thisUser],
         }),
       );
-
       return plan;
     } catch (error) {
-      return null;
+      throws;
     }
   }
   async createRandomPlan() {
@@ -41,11 +43,11 @@ export class planRepository {
       );
       return plan;
     } catch (e) {
-      return null;
+      throws;
     }
   }
 
-  async showPlan(planId) {
+  async showPlan(planId): Promise<Plan> {
     try {
       const plan = await this.planRepository
         .createQueryBuilder('plan')
@@ -70,10 +72,10 @@ export class planRepository {
         .where('plan.id = :planId', { planId })
         .orderBy('travel.startDay')
         .getOne();
+      if (!plan) return null;
       return plan;
     } catch (error) {
-      console.log(error);
-      return null;
+      throws;
     }
   }
 
@@ -102,24 +104,7 @@ export class planRepository {
         pages: Math.ceil(tempPlans[1] / 6),
       };
     } catch (error) {
-      return null;
-    }
-  }
-
-  async showMyPlans(page, userId) {
-    try {
-      const [plans, pages] = await this.planRepository.findAndCount({
-        where: userId,
-        skip: (page - 1) * 6,
-        take: 6,
-      });
-      if (!plans) return null;
-      return {
-        plans,
-        pages,
-      };
-    } catch (error) {
-      return null;
+      throws;
     }
   }
 
@@ -133,7 +118,7 @@ export class planRepository {
       ]);
       return true;
     } catch (error) {
-      return false;
+      throws;
     }
   }
 
@@ -142,7 +127,7 @@ export class planRepository {
       const deletePlan = await this.planRepository.softDelete({ id: planId });
       return deletePlan;
     } catch (error) {
-      return false;
+      throws;
     }
   }
 
