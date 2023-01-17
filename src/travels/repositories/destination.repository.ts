@@ -81,6 +81,7 @@ export class DestinationRepository {
       const tag = await this.destinationRepository
         .createQueryBuilder('destination')
         .select('destination.cat3 AS tag')
+        .addSelect('COUNT(*) AS tagCount')
         .groupBy('destination.cat3')
         .getRawMany();
       return tag;

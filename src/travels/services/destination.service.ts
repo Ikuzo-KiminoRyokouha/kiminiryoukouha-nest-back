@@ -29,9 +29,9 @@ export class DestinationService {
 
   async showDestinationTag(): Promise<ShowDestinationCode> {
     try {
-      const tag = await this.destinationRespository.showDestinationTag();
-      if (!tag[0]) return { ok: false, error: 'not found any tag' };
-      return { ok: true, tag };
+      const tags = await this.destinationRespository.showDestinationTag();
+      if (!tags[0]) return { ok: false, error: 'not found any tag' };
+      return { ok: true, tags };
     } catch (error) {
       return { ok: false, error: 'failed to show tag' };
     }
