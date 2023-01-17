@@ -75,4 +75,17 @@ export class DestinationRepository {
       throws;
     }
   }
+
+  async showDestinationTag() {
+    try {
+      const tag = await this.destinationRepository
+        .createQueryBuilder('destination')
+        .select('destination.cat3 AS tag')
+        .groupBy('destination.cat3')
+        .getRawMany();
+      return tag;
+    } catch (error) {
+      throws;
+    }
+  }
 }

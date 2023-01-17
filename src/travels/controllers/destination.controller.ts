@@ -7,7 +7,12 @@ export class DestinationController {
   constructor(private destinationService: DestinationService) {}
 
   @Get('/detail/:destinationId')
-  async createDestinationDetail(@Param('destinationId') destinationId: number) {
+  async showDestinationDetail(@Param('destinationId') destinationId: number) {
     return this.destinationService.showDestinationDetail(destinationId);
+  }
+
+  @Get('/tag')
+  async showDestinationTag() {
+    return this.destinationService.showDestinationTag();
   }
 }
