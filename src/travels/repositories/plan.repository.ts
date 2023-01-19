@@ -60,6 +60,7 @@ export class planRepository {
           'plan.totalCost',
           'travel.id',
           'travel.startDay',
+          'destination.id',
           'destination.title',
           'destination.mapx',
           'destination.mapy',

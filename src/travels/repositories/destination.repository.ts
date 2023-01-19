@@ -28,17 +28,19 @@ export class DestinationRepository {
     }
   }
 
-  async getRaondomDes(tagArr: string[]): Promise<Destination> {
+  async getRaondomDes(tagArr: string[], checkDes): Promise<Destination> {
     try {
       let randomDestination;
       if (tagArr == null) {
         randomDestination = await this.destinationRepository
           .createQueryBuilder('destination')
+          .where('destination.id NOT IN (:checkDes)', { checkDes })
           .getMany();
       } else {
         randomDestination = await this.destinationRepository
           .createQueryBuilder('destination')
           .where('destination.cat3 IN (:tagArr)', { tagArr })
+          .andWhere('destination.id NOT IN (:checkDes)', { checkDes })
           .getMany();
       }
       if (randomDestination[0] == null) return null;
@@ -49,6 +51,14 @@ export class DestinationRepository {
       throws;
     }
   }
+
+  // async duplicateDestinationCheck(chedkedItem, destinaiton) {
+  //   try {
+  //     const check =
+  //   } catch (error) {
+  //     throws;
+  //   }
+  // }
 
   async createDestinationDetail(contentId: string, contentTypeId: string) {
     const detail = await getDestinationDetail(contentId, contentTypeId);

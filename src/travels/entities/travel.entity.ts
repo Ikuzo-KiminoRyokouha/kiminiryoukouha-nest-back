@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { Destination } from './destination.entity';
 import { Plan } from './plan.entity';
 
@@ -17,6 +17,7 @@ export class Travel extends BasicEntity {
   @ManyToOne(() => Plan, (plan) => plan.id, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'planId' })
   plan: Plan;
   @RelationId((travel: Travel) => travel.plan)
   @IsNumber()

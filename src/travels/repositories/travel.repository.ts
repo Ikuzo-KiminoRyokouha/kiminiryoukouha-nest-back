@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
 import { Repository } from 'typeorm';
 import { Destination } from '../entities/destination.entity';
+import { Plan } from '../entities/plan.entity';
 import { Travel } from '../entities/travel.entity';
 
 @Injectable()
@@ -23,6 +24,20 @@ export class TravelRepository {
       throws;
     }
   }
+
+  // async showTravelsByPlanId(planId) {
+  //   try {
+  //     console.log(planId);
+  //     const travels = await this.travelRepository.find({
+  //       where: { planId },
+  //     });
+  //     console.log('ddd', travels);
+  //     return travels;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throws;
+  //   }
+  // }
 
   async creatTravel(createTravelInput): Promise<Travel[]> {
     try {
@@ -51,5 +66,10 @@ export class TravelRepository {
     } catch (error) {
       throws;
     }
+  }
+
+  async addRandomTravel({ planId, tag }, travels) {
+    console.log(travels);
+    // const newTravel = await this.travelRepository.createQueryBuilder('travel').where('travel')
   }
 }
