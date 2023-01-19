@@ -18,7 +18,7 @@ export class User extends BasicEntity {
   @IsString()
   password: string;
 
-  @Column()
+  @Column({ unique: true })
   @IsString()
   nickname: string;
 

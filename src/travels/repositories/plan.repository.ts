@@ -90,6 +90,7 @@ export class planRepository {
           'plan.start',
           'plan.end',
           'plan.city',
+          'plan.tag',
           'plan.totalCost',
           'travel.id',
           'travel.startDay',

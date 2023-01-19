@@ -18,40 +18,58 @@ export class AuthService {
   ) {}
 
   async signUp(createUserDto: CreateUserInput, res: Response): Promise<any> {
-    // Check if user exists
-    const userExists = await this.usersRepository.existsUser(
-      createUserDto.email,
-    );
-    if (userExists) {
-      throw new BadRequestException('User already exists');
-    }
+    try {
+      // Check if user exists
+      const userExists = await this.usersRepository.existsUser(
+        createUserDto.email,
+      );
+      if (userExists) {
+        return { ok: false, error: 'this email already exists' };
+      }
 
-    // Hash password
-    const hash = await bcrypt.hash(createUserDto.password, 10);
-    const newUser = await this.usersRepository.createUser(
-      createUserDto.email,
-      hash,
-      createUserDto.role,
-      createUserDto.nickname,
-    );
-    const tokens = await this.getTokens(newUser.id + '', newUser.email);
-    await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-    res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
-    return { accessToken: tokens.accessToken };
+      const nicknameExists = await this.usersRepository.existsNickname(
+        createUserDto.nickname,
+      );
+
+      if (nicknameExists)
+        return { ok: false, error: 'this nickname already exists' };
+
+      // Hash password
+      const hash = await bcrypt.hash(createUserDto.password, 10);
+      const newUser = await this.usersRepository.createUser(
+        createUserDto.email,
+        hash,
+        createUserDto.role,
+        createUserDto.nickname,
+      );
+      const tokens = await this.getTokens(newUser.id + '', newUser.email);
+      await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
+      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      return { accessToken: tokens.accessToken };
+    } catch (error) {
+      return { ok: false, error: 'failed to create user' };
+    }
   }
 
   async signIn(data: AuthDto, res: Response) {
-    // Check if user exists
-    const user = await this.usersRepository.existsUser(data.email);
-    if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatches = await bcrypt.compare(data.password, user.password);
+    try {
+      // Check if user exists
+      const user = await this.usersRepository.existsUser(data.email);
+      if (!user) throw new BadRequestException('User does not exist');
+      const passwordMatches = await bcrypt.compare(
+        data.password,
+        user.password,
+      );
 
-    if (!passwordMatches)
-      throw new BadRequestException('Password is incorrect');
-    const tokens = await this.getTokens(user.id + '', user.email);
-    await this.updateRefreshToken(user.id + '', tokens.refreshToken);
-    res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
-    return { accessToken: tokens.accessToken };
+      if (!passwordMatches)
+        throw new BadRequestException('Password is incorrect');
+      const tokens = await this.getTokens(user.id + '', user.email);
+      await this.updateRefreshToken(user.id + '', tokens.refreshToken);
+      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      return { accessToken: tokens.accessToken };
+    } catch (error) {
+      return { ok: false, error: 'failed to sign in' };
+    }
   }
 
   async logout(userId: string) {
