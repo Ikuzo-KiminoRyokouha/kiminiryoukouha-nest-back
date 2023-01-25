@@ -14,6 +14,7 @@ import { Board } from './boards/entities/board.entity';
 import { Comment } from './boards/entities/comment.entity';
 import { Travel } from './travels/entities/travel.entity';
 import { Destination } from './travels/entities/destination.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as ormconfig from '../ormconfig';
 
 @Module({
@@ -23,6 +24,7 @@ import * as ormconfig from '../ormconfig';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
     }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,

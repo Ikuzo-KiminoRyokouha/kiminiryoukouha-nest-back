@@ -11,6 +11,7 @@ import { UpdateTravelClearOutput } from '../dtos/travel/update-travel-clear.dto'
 import { DestinationRepository } from '../repositories/destination.repository';
 import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TravelService {
@@ -108,5 +109,10 @@ export class TravelService {
     } catch (error) {
       return { ok: false, error: 'faield to add travel' };
     }
+  }
+
+  @Cron('0 23 16 * * *')
+  test() {
+    console.log('scheduler');
   }
 }
