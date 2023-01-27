@@ -15,6 +15,8 @@ import { Travel } from './travels/entities/travel.entity';
 import { Destination } from './travels/entities/destination.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as ormconfig from '../ormconfig';
+import { Rating } from './travels/entities/rating.entity';
+import { TestController } from './travels/controllers/test.controller';
 
 @Module({
   imports: [
@@ -34,7 +36,16 @@ import * as ormconfig from '../ormconfig';
       synchronize: process.env.NODE_ENV !== 'prod',
       // synchronize: true,
       logging: true,
-      entities: [User, Plan, Diary, Board, Comment, Travel, Destination],
+      entities: [
+        User,
+        Plan,
+        Diary,
+        Board,
+        Comment,
+        Travel,
+        Destination,
+        Rating,
+      ],
       timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],
     }),

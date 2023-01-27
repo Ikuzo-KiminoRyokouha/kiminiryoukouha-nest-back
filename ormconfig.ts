@@ -7,6 +7,7 @@ import { Plan } from './src/travels/entities/plan.entity';
 import { Travel } from './src/travels/entities/travel.entity';
 import { User } from './src/users/entities/user.entity';
 import * as dotenv from 'dotenv';
+import { Rating } from './src/travels/entities/rating.entity';
 
 const config: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -18,7 +19,7 @@ const config: TypeOrmModuleOptions = {
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
   logging: true,
-  entities: [User, Plan, Diary, Board, Comment, Travel, Destination],
+  entities: [User, Plan, Diary, Board, Comment, Travel, Destination, Rating],
 };
 
 export = config;
