@@ -4,7 +4,7 @@ import { throws } from 'assert';
 import {
   getDestinationDetail,
   getDestinationInfo,
-} from 'src/common/util/destinationInfo';
+} from 'src/util/destinationInfo';
 
 import { Repository } from 'typeorm';
 import { Destination } from '../entities/destination.entity';

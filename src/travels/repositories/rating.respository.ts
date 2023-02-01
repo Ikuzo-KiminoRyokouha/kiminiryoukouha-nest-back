@@ -12,9 +12,7 @@ export class RatingRepository {
   ) {}
   async create(createRatingInput) {
     try {
-      console.log(createRatingInput);
       const rating = await this.ratingRepository.save({ ...createRatingInput });
-      console.log(rating);
     } catch (error) {
       console.log(error);
     }

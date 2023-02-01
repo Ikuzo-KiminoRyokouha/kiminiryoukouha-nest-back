@@ -4,7 +4,7 @@ import { Factory, Seeder } from 'typeorm-seeding';
 import {
   getAllDestinationInfo,
   getDestinationDetail,
-} from '../../common/util/destinationInfo';
+} from '../../util/destinationInfo';
 // import faker from '@faker-js/faker';
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';

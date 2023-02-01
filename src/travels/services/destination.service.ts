@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { getDestinationDetail } from 'src/common/util/destinationInfo';
+import { getDestinationDetail } from 'src/util/destinationInfo';
 import { ShowDetinationDetail } from '../dtos/destination/show-destination-detail.dto';
 import { ShowDestinationCode } from '../dtos/destination/show-destination-tag.dto';
 import { DestinationRepository } from '../repositories/destination.repository';
