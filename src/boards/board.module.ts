@@ -1,27 +1,48 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardsController } from './board/boards.controller';
-import { BoardsService } from './board/boards.service';
-import { Board } from './entities/board.entity';
-import { BoardsRepository } from './board/boards.repository';
-import { CommentsRepository } from './comment/comments.repository';
-import { Comment } from './entities/comment.entity';
-import { CommentsController } from './comment/comments.controller';
-import { CommentsService } from './comment/comments.service';
-import { UserRespository } from 'src/users/users.repository';
 import { TypeOrmExModule } from 'src/repositories/custom-repository.module';
+import { UserRespository } from 'src/users/users.repository';
+
+import {
+  BoardsController,
+  CommentsController,
+  CommunityController,
+  DiaryController,
+} from './controller';
+import { Board, Comment, Community, Diary } from './entities';
+import {
+  BoardsRepository,
+  CommentsRepository,
+  CommunityRepository,
+  DiaryRepository,
+} from './repositories';
+import {
+  BoardsService,
+  CommentsService,
+  CommunityService,
+  DiaryService,
+} from './services';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Board, Comment]),
+    TypeOrmModule.forFeature([Board, Comment, Diary, Community]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
-  controllers: [BoardsController, CommentsController],
+  controllers: [
+    BoardsController,
+    CommentsController,
+    CommunityController,
+    DiaryController,
+  ],
   providers: [
     BoardsService,
     CommentsService,
+    CommunityService,
+    DiaryService,
     BoardsRepository,
     CommentsRepository,
+    CommunityRepository,
+    DiaryRepository,
   ],
 })
 export class BoardModule {}

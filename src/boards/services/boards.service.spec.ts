@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { BoardsRepository } from './boards.repository';
+import { BoardsRepository } from '../repositories/boards.repository';
 
 describe('BoardService', () => {
   let boardRepository: BoardsRepository;
