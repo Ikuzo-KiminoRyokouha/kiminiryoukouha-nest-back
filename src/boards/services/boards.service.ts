@@ -3,7 +3,7 @@ import {
   CreateBoardInput,
   CreateBoardOutput,
 } from '../dtos/board/create-board.dto';
-import { BoardsRepository } from './boards.repository';
+import { BoardsRepository } from '../repositories/boards.repository';
 import { ShowBoardOutput } from '../dtos/board/show-board.dto';
 import {
   UpdateBoardInput,

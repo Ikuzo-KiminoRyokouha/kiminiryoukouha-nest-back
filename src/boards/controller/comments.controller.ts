@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CommentsService } from './comments.service';
+import { CommentsService } from '../services/comments.service';
 import {
   CreateCommentInput,
   CreateCommentOutput,

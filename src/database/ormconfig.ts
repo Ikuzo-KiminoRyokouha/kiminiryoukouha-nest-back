@@ -1,8 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Board } from 'src/boards/entities/board.entity';
-import { Comment } from 'src/boards/entities/comment.entity';
+import { Board, Comment, Diary, Community } from 'src/boards/entities';
 import { Destination } from 'src/travels/entities/destination.entity';
-import { Diary } from 'src/travels/entities/diary.eneity';
 import { Plan } from 'src/travels/entities/plan.entity';
 import { Travel } from 'src/travels/entities/travel.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -17,7 +15,7 @@ const config: TypeOrmModuleOptions = {
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
   logging: true,
-  entities: [User, Plan, Diary, Board, Comment, Travel, Destination],
+  entities: [User, Plan, Diary, Board, Comment, Travel, Destination, Community],
 };
 
 export = config;

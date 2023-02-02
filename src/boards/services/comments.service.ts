@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommentsRepository } from './comments.repository';
+import { CommentsRepository } from '../repositories/comments.repository';
 import {
   CreateCommentInput,
   CreateCommentOutput,

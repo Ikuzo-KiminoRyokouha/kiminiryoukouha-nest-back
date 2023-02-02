@@ -7,16 +7,14 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { TravelModule } from './travels/travel.module';
 import { Plan } from './travels/entities/plan.entity';
-import { Diary } from './travels/entities/diary.eneity';
 import { BoardModule } from './boards/board.module';
-import { Board } from './boards/entities/board.entity';
-import { Comment } from './boards/entities/comment.entity';
+
 import { Travel } from './travels/entities/travel.entity';
 import { Destination } from './travels/entities/destination.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as ormconfig from '../ormconfig';
 import { Rating } from './travels/entities/rating.entity';
-import { TestController } from './travels/controllers/test.controller';
+import { Board, Comment, Community, Diary } from './boards/entities';
 
 @Module({
   imports: [
@@ -39,12 +37,13 @@ import { TestController } from './travels/controllers/test.controller';
       entities: [
         User,
         Plan,
-        Diary,
         Board,
         Comment,
         Travel,
         Destination,
         Rating,
+        Community,
+        Diary,
       ],
       timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],

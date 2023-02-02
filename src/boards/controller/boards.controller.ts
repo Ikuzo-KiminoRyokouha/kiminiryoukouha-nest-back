@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { BoardsService } from './boards.service';
+import { BoardsService } from '../services/boards.service';
 import {
   CreateBoardInput,
   CreateBoardOutput,
