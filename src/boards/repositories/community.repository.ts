@@ -8,6 +8,7 @@ import { ShowCommunityInput } from '../dtos/community/show-community.dto';
 import { UpdateCommunityInput } from '../dtos/community/update-community.dto';
 import { Community } from '../entities';
 import { Plan } from '../../travels/entities/plan.entity';
+import { User } from '../../users/entities/user.entity';
 
 interface LimitOffset extends ShowCommunityInput {}
 
@@ -19,6 +20,8 @@ export class CommunityRepository {
     private communityRepository: Repository<Community>,
     @InjectRepository(Plan)
     private planRepository: Repository<Plan>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   /**
@@ -31,11 +34,12 @@ export class CommunityRepository {
     try {
       const { planId } = createCommunityInputDto;
       const plan = await this.planRepository.findOneBy({ id: planId });
+      const user = await this.userRepository.findOneBy({ id: userId });
 
       return await this.communityRepository.save({
         ...createCommunityInputDto,
         plan,
-        userId,
+        user,
       });
     } catch (error) {
       throw new HttpException("Can't Created", HttpStatus.BAD_REQUEST);
@@ -50,15 +54,18 @@ export class CommunityRepository {
   async update(updateCommunityInputDto: UpdateCommunityInput, userId: number) {
     try {
       /* 기타 property와 id 분리 */
-      const { id, ...property } = updateCommunityInputDto;
+      const { id, planId, ...property } = updateCommunityInputDto;
 
-      const community = await this.communityRepository.findOneBy({ id });
+      const plan = await this.planRepository.findOneBy({ id: planId });
 
       /* 생성자 본인의 요청인지 확인 */
-      // if (community.userId !== userId)
-      //   throw new HttpException('Unauthorized Access', HttpStatus.UNAUTHORIZED);
-      return await this.communityRepository.update(id, property);
+      this.checkUser(id, userId);
+      return await this.communityRepository.update(id, {
+        plan,
+        ...property,
+      });
     } catch (error) {
+      console.log(error);
       throw new HttpException("Can't Update", HttpStatus.BAD_REQUEST);
     }
   }
@@ -77,12 +84,59 @@ export class CommunityRepository {
     const { limit, offset } = option;
     try {
       return await this.communityRepository.find({
+        select: {
+          id: true,
+          img: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+          deleteAt: true,
+        },
         take: limit,
         skip: offset,
-        relations: ['plan'],
+        relations: { plan: true },
+        loadRelationIds: {
+          relations: ['user'],
+        },
       });
     } catch (error) {
       throw new HttpException("Can't Found", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @description 커뮤니티 조회 데이터 베이스 로직입니다. 나의 정보만 받아옵니다.
+   * @param userId: 유저 식별에 필요한 id 입니다
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
+   */
+  async findMyInfo(userId: number) {
+    try {
+      return await this.communityRepository.findBy({ userId });
+    } catch (error) {
+      throw new HttpException("Can't Found", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @description 커뮤니티 수정 데이터 베이스 로직입니다
+   * @param id  : 커뮤니티 삭제에 필요한 community의 id 값입니다
+   * @param userId : 유저 식별에 필요한 id 입니다
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Deleted
+   */
+  async delete(id: number, userId: number) {
+    try {
+      this.checkUser(id, userId);
+      return await this.communityRepository.softDelete(id);
+    } catch (error) {
+      throw new HttpException("Can't Deleted", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async checkUser(id: number, userId: number) {
+    const community = await this.communityRepository.findOneBy({ id });
+
+    if (community.userId != userId) {
+      throw new HttpException('Unauthorized Access', HttpStatus.UNAUTHORIZED);
     }
   }
 }

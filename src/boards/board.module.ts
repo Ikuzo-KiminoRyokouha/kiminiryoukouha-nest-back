@@ -16,10 +16,11 @@ import {
 } from './repositories';
 import { BoardsService, CommentsService, CommunityService } from './services';
 import { Plan } from '../travels/entities/plan.entity';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Board, Comment, Community, Plan]),
+    TypeOrmModule.forFeature([Board, Comment, Community, Plan, User]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
   controllers: [BoardsController, CommentsController, CommunityController],

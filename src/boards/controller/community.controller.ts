@@ -19,6 +19,7 @@ import { Request } from 'express';
 import { CreateCommunityInput } from '../dtos/community/create-community.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { UpdateCommunityInput } from '../dtos/community/update-community.dto';
+import { DeleteCommunityInput } from '../dtos/community/delete-community.dto';
 
 @Controller('community')
 export class CommunityController {
@@ -65,11 +66,30 @@ export class CommunityController {
     return this.communityService.updateCommunity(updateCommunityInputDto, req);
   }
 
+  /**
+   * @description [DELETE] 커뮤니티 생성  컨트롤러입니다
+   * @param deleteCommunityInputDto  : 커뮤니티 수정에 필요한 정보들의 전송계층입니다.
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
+   */
   @UseGuards(AccessTokenGuard)
-  @Delete('/:id')
-  deleteCommunity() {}
+  @Delete('/')
+  deleteCommunity(
+    @Body() deleteCommunityInputDto: DeleteCommunityInput,
+    @Req() req: Request,
+  ) {
+    return this.communityService.deleteCommunity(
+      deleteCommunityInputDto.id,
+      req,
+    );
+  }
 
+  /**
+   * @description [GET] 커뮤니티 내가 쓴 정보 조회  컨트롤러입니다
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
+   */
   @UseGuards(AccessTokenGuard)
   @Get('/my')
-  showMyStroy() {}
+  showMyStroy(@Req() req: Request) {
+    return this.communityService.showMyCommunity(req);
+  }
 }

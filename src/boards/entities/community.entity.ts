@@ -21,13 +21,17 @@ export class Community extends BasicEntity {
   @IsString()
   content: string;
 
-  @OneToOne(() => Plan, (plan) => plan.id, {
+  @ManyToOne(() => Plan, (plan) => plan.id, {
     onDelete: 'CASCADE',
   })
   plan: Plan;
+  @Column({ nullable: true })
+  planId: number;
 
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
   })
   user: User;
+  @Column({ nullable: true })
+  userId: number;
 }

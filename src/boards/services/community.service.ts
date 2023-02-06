@@ -51,4 +51,23 @@ export class CommunityService {
       req.user['sub'],
     );
   }
+
+  /**
+   * @description 커뮤니티 수정 데이터 서비스 로직입니다
+   * @param id  : 커뮤니티 삭제에 필요한 id 값입니다
+   * @param req : 요청에 대한 정보
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Created
+   */
+  async deleteCommunity(id: number, req: Request) {
+    return await this.communityRepository.delete(id, req.user['sub']);
+  }
+
+  /**
+   * @description 커뮤니티 내 정보 조회 데이터 서비스 로직입니다
+   * @param req : 요청에 대한 정보
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
+   */
+  async showMyCommunity(req: Request) {
+    return await this.communityRepository.findMyInfo(req.user['sub']);
+  }
 }
