@@ -14,7 +14,7 @@ import { Destination } from './travels/entities/destination.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as ormconfig from '../ormconfig';
 import { Rating } from './travels/entities/rating.entity';
-import { Board, Comment, Community, Diary } from './boards/entities';
+import { Board, Comment, Community } from './boards/entities';
 
 @Module({
   imports: [
@@ -43,7 +43,6 @@ import { Board, Comment, Community, Diary } from './boards/entities';
         Destination,
         Rating,
         Community,
-        Diary,
       ],
       timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],

@@ -4,18 +4,13 @@ import { Plan } from 'src/travels/entities/plan.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToOne, RelationId } from 'typeorm';
 
-import { Diary } from './diary.entity';
-
 @Entity()
 export class Community extends BasicEntity {
-  @OneToOne(() => Diary, (diary) => diary.id, { onDelete: 'CASCADE' })
-  diary: Diary;
-
   @Column({ nullable: true })
   @IsString()
   img: string;
 
-  @Column({ nullable: true })
+  @Column()
   @IsString()
   content: string;
 
