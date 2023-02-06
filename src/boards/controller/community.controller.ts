@@ -53,7 +53,7 @@ export class CommunityController {
   }
 
   /**
-   * @description [PUT] 커뮤니티 생성  컨트롤러입니다
+   * @description [PUT] 커뮤니티 수정  컨트롤러입니다
    * @param updateCommunityInputDto  : 커뮤니티 수정에 필요한 정보들의 전송계층입니다.
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
    */
@@ -72,15 +72,9 @@ export class CommunityController {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
    */
   @UseGuards(AccessTokenGuard)
-  @Delete('/')
-  deleteCommunity(
-    @Body() deleteCommunityInputDto: DeleteCommunityInput,
-    @Req() req: Request,
-  ) {
-    return this.communityService.deleteCommunity(
-      deleteCommunityInputDto.id,
-      req,
-    );
+  @Delete('/:id')
+  deleteCommunity(@Param('id') id: number, @Req() req: Request) {
+    return this.communityService.deleteCommunity(id, req);
   }
 
   /**
