@@ -7,6 +7,7 @@ import { CreateCommunityInput } from '../dtos/community/create-community.dto';
 import { ShowCommunityInput } from '../dtos/community/show-community.dto';
 import { UpdateCommunityInput } from '../dtos/community/update-community.dto';
 import { Community } from '../entities';
+import { Plan } from '../../travels/entities/plan.entity';
 
 interface LimitOffset extends ShowCommunityInput {}
 
@@ -16,6 +17,8 @@ export class CommunityRepository {
   constructor(
     @InjectRepository(Community)
     private communityRepository: Repository<Community>,
+    @InjectRepository(Plan)
+    private planRepository: Repository<Plan>,
   ) {}
 
   /**
@@ -26,8 +29,12 @@ export class CommunityRepository {
    */
   async create(createCommunityInputDto: CreateCommunityInput, userId: number) {
     try {
+      const { planId } = createCommunityInputDto;
+      const plan = await this.planRepository.findOneBy({ id: planId });
+
       return await this.communityRepository.save({
         ...createCommunityInputDto,
+        plan,
         userId,
       });
     } catch (error) {
@@ -46,11 +53,10 @@ export class CommunityRepository {
       const { id, ...property } = updateCommunityInputDto;
 
       const community = await this.communityRepository.findOneBy({ id });
-      console.log(community.userId);
-      console.log(userId);
+
       /* 생성자 본인의 요청인지 확인 */
-      if (community.userId !== userId)
-        throw new HttpException('Unauthorized Access', HttpStatus.UNAUTHORIZED);
+      // if (community.userId !== userId)
+      //   throw new HttpException('Unauthorized Access', HttpStatus.UNAUTHORIZED);
       return await this.communityRepository.update(id, property);
     } catch (error) {
       throw new HttpException("Can't Update", HttpStatus.BAD_REQUEST);
@@ -73,6 +79,7 @@ export class CommunityRepository {
       return await this.communityRepository.find({
         take: limit,
         skip: offset,
+        relations: ['plan'],
       });
     } catch (error) {
       throw new HttpException("Can't Found", HttpStatus.BAD_REQUEST);

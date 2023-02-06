@@ -46,7 +46,6 @@ export class CommunityService {
     updateCommunityInputDto: UpdateCommunityInput,
     req: Request,
   ) {
-    console.log(req.user);
     return await this.communityRepository.update(
       updateCommunityInputDto,
       req.user['sub'],
