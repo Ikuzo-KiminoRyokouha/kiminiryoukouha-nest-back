@@ -7,42 +7,29 @@ import {
   BoardsController,
   CommentsController,
   CommunityController,
-  DiaryController,
 } from './controller';
-import { Board, Comment, Community, Diary } from './entities';
+import { Board, Comment, Community } from './entities';
 import {
   BoardsRepository,
   CommentsRepository,
   CommunityRepository,
-  DiaryRepository,
 } from './repositories';
-import {
-  BoardsService,
-  CommentsService,
-  CommunityService,
-  DiaryService,
-} from './services';
+import { BoardsService, CommentsService, CommunityService } from './services';
+import { Plan } from '../travels/entities/plan.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Board, Comment, Diary, Community]),
+    TypeOrmModule.forFeature([Board, Comment, Community, Plan]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
-  controllers: [
-    BoardsController,
-    CommentsController,
-    CommunityController,
-    DiaryController,
-  ],
+  controllers: [BoardsController, CommentsController, CommunityController],
   providers: [
     BoardsService,
     CommentsService,
     CommunityService,
-    DiaryService,
     BoardsRepository,
     CommentsRepository,
     CommunityRepository,
-    DiaryRepository,
   ],
 })
 export class BoardModule {}

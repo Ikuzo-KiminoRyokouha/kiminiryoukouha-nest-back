@@ -5,7 +5,7 @@ import { Travel } from './src/travels/entities/travel.entity';
 import { User } from './src/users/entities/user.entity';
 import * as dotenv from 'dotenv';
 import { Rating } from './src/travels/entities/rating.entity';
-import { Board, Comment, Community, Diary } from './src/boards/entities';
+import { Board, Comment, Community } from './src/boards/entities';
 
 const config: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -25,7 +25,6 @@ const config: TypeOrmModuleOptions = {
     Travel,
     Destination,
     Rating,
-    Diary,
     Community,
   ],
 };
