@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmExModule } from 'src/repositories/custom-repository.module';
-import { UserRespository } from 'src/users/users.repository';
+import { UserRespository } from 'src/users/repositories/users.repository';
 
 import {
   BoardsController,
   CommentsController,
   CommunityController,
-} from './controller';
+} from './controllers';
 import { Board, Comment, Community } from './entities';
 import {
   BoardsRepository,

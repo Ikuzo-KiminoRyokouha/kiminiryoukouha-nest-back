@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
 import { CustomRepository } from 'src/repositories/custom-repository.decorater';
-import { UserRespository } from 'src/users/users.repository';
+import { UserRespository } from 'src/users/repositories/users.repository';
 import { Repository } from 'typeorm';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import { CreatePlanInput } from '../dtos/plan/create-plan.dto';

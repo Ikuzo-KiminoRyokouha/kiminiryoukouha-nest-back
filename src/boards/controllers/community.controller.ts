@@ -20,6 +20,7 @@ import { CreateCommunityInput } from '../dtos/community/create-community.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { UpdateCommunityInput } from '../dtos/community/update-community.dto';
 import { DeleteCommunityInput } from '../dtos/community/delete-community.dto';
+import { Query } from '@nestjs/common/decorators';
 
 @Controller('community')
 export class CommunityController {
@@ -33,7 +34,7 @@ export class CommunityController {
    */
   @Get('/')
   showCommunity(
-    @Param() showCommunityInput: ShowCommunityInput,
+    @Query() showCommunityInput: ShowCommunityInput,
   ): ShowCommunityOutput {
     return this.communityService.showCommunity(showCommunityInput);
   }
