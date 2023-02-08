@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserInput } from 'src/users/dtos/create-user.dto';
-import { UserRespository } from 'src/users/users.repository';
+import { UserRespository } from 'src/users/repositories/users.repository';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 // import * as argon2 from 'argon2';
