@@ -21,21 +21,27 @@ export class TravelService {
     private planRepository: planRepository,
   ) {}
 
-  async createNewTravel(
+  async createTravelPerDay(
     createRandomPlanInput: CreateRandomPlanInput,
-    plan,
+    planId,
     dayPerDes,
     i,
   ) {
     const startDay = new Date(createRandomPlanInput.start);
 
-    const createTravelInput: CreateTravelInput = {
-      startDay: new Date(startDay.setDate(startDay.getDate() + i)),
-      planId: plan.id,
-      destinationId: dayPerDes.id,
-    };
-    const travel = await this.travelRespository.creatTravel(createTravelInput);
-    return travel;
+    const travels = [];
+    for (let i = 0; i < 2; i++) {
+      const createTravelInput: CreateTravelInput = {
+        startDay: new Date(startDay.setDate(startDay.getDate() + i)),
+        planId: planId,
+        destinationId: dayPerDes[i].id,
+      };
+      const travel = await this.travelRespository.creatTravel(
+        createTravelInput,
+      );
+      travels.push(travel);
+    }
+    return travels;
   }
 
   async updateTravelClear(travelId: number): Promise<UpdateTravelClearOutput> {

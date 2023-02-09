@@ -17,6 +17,7 @@ import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
 import { throwError } from 'rxjs';
 import { Destination } from '../entities/destination.entity';
 import { TravelService } from './travel.service';
+import { getPersonalityDestination } from 'src/util/personalityDestination';
 
 @Injectable()
 export class PlanService {
@@ -53,36 +54,25 @@ export class PlanService {
       //여행지 생성
       for (let i = 0; i < travelPeriod; i++) {
         //태그에 따른 여행지 찾기
-        const dayPerDes = await this.destinationRepository.getRaondomDes(
-          createRandomPlanInput.tag[i],
-          checkDestinationArr,
-        );
-        if (dayPerDes === null)
-          return { ok: false, message: `this city dosen't have ~~` };
-        checkDestinationArr.push(dayPerDes.id);
-        const dayPerDes2 = await this.destinationRepository.getRaondomDes(
-          createRandomPlanInput.tag[i],
-          checkDestinationArr,
-        );
-        checkDestinationArr.push(dayPerDes2.id);
-        if (dayPerDes2 === null)
-          return { ok: false, message: `this city dosen't have ~~` };
-        //여행 CREATE
-        const travel = this.travelService.createNewTravel(
-          createRandomPlanInput,
-          plan,
-          dayPerDes,
-          i,
-        );
-        if (!travel) return;
+        const tempDayPerDesArr: Destination[] = [];
+        for (let j = 0; j < 2; j++) {
+          const dayPerDes = await this.destinationRepository.getRaondomDes(
+            createRandomPlanInput.tag[i],
+            checkDestinationArr,
+          );
+          if (dayPerDes === null)
+            return { ok: false, message: `this city dosen't have ~~` };
+          checkDestinationArr.push(dayPerDes.id);
+          tempDayPerDesArr.push(dayPerDes);
+        }
 
-        const travel2 = await this.travelService.createNewTravel(
+        const travel = await this.travelService.createTravelPerDay(
           createRandomPlanInput,
-          plan,
-          dayPerDes2,
+          plan.id,
+          tempDayPerDesArr,
           i,
         );
-        if (!travel2) return { ok: false, error: 'failed to create plan' };
+        if (!travel) return { ok: false, error: 'failed to create plan' };
       }
       const tempPlan = await this.planRepository.showPlan(plan.id);
       return {
@@ -96,6 +86,49 @@ export class PlanService {
         error: 'failed to create plan',
       };
     }
+  }
+
+  async createPersonalityPlan(
+    createPersonPlanInput: CreateRandomPlanInput,
+  ): Promise<CreateRandomPlanOutput> {
+    if (createPersonPlanInput.title == null) {
+      createPersonPlanInput.title = `${createPersonPlanInput.city}여행 ${createPersonPlanInput.start} 시작`;
+    }
+
+    //여행 계획 CREATE
+    const plan = await this.planRepository.createPlan(createPersonPlanInput);
+    if (!plan) throwError;
+    // // 출발날짜 string -> date
+    // //여행기간  두 날의 차이 / 단위 ms(천분의 1초) / 나누기 하루를 초로 낸것에 1000을 곱
+    const travelPeriod =
+      (new Date(createPersonPlanInput.end).getTime() -
+        new Date(createPersonPlanInput.start).getTime()) /
+        (1000 * 60 * 60 * 24) +
+      1;
+    for (let i = 0; i < travelPeriod; i++) {
+      console.log(i);
+      // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
+      const destinations = await getPersonalityDestination(
+        1, //user
+        0, //start
+        2, // end
+        createPersonPlanInput.tag[i], //tag
+        plan.id,
+      );
+      const travel = await this.travelService.createTravelPerDay(
+        createPersonPlanInput,
+        plan.id,
+        [{ id: destinations[0][0] }, { id: destinations[1][0] }],
+        i,
+      );
+      if (!travel) return;
+    }
+    const tempPlan = await this.planRepository.showPlan(plan.id);
+    return {
+      ok: true,
+      message: 'create plan',
+      plan: tempPlan,
+    };
   }
 
   async showPlan(planId: number): Promise<ShowPlanOutput> {

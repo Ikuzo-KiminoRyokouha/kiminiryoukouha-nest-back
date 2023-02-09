@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-
+import { Request } from 'express';
 import { UsersService } from '../services/users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
@@ -33,7 +33,7 @@ export class UsersController {
   @UseGuards(AccessTokenGuard)
   @Get()
   getUser(@Req() req: Request) {
-    return req.user;
+    // return req.user;
   }
 
   @Post('/unfollow')
