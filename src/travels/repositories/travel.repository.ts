@@ -25,19 +25,19 @@ export class TravelRepository {
     }
   }
 
-  // async showTravelsByPlanId(planId) {
-  //   try {
-  //     console.log(planId);
-  //     const travels = await this.travelRepository.find({
-  //       where: { planId },
-  //     });
-  //     console.log('ddd', travels);
-  //     return travels;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throws;
-  //   }
-  // }
+  async showTravelsByPlanId(planId) {
+    try {
+      console.log(planId);
+      const travels = await this.travelRepository.find({
+        where: { planId },
+      });
+      console.log('ddd', travels);
+      return travels;
+    } catch (error) {
+      console.log(error);
+      throws;
+    }
+  }
 
   async creatTravel(createTravelInput): Promise<Travel[]> {
     try {

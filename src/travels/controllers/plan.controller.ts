@@ -30,6 +30,13 @@ export class PlanController {
     return this.planService.createRandomPlan(createRandomPlanInput);
   }
 
+  @Post('/personality')
+  createPersonalityPlan(
+    @Body() createPersonPlanInput: CreateRandomPlanInput,
+  ): Promise<CreatePlanOutput> {
+    return this.planService.createPersonalityPlan(createPersonPlanInput);
+  }
+
   @Get('/:id')
   showPlan(@Param('id') planId: number): Promise<ShowPlanOutput> {
     return this.planService.showPlan(planId);
