@@ -13,5 +13,6 @@ import { TypeOrmExModule } from '../repositories/custom-repository.module';
   ],
   controllers: [UsersController],
   providers: [UsersService, UserRespository],
+  exports: [UserRespository, TypeOrmModule],
 })
 export class UsersModule {}
