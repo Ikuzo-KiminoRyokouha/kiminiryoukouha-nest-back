@@ -79,6 +79,12 @@ export class UsersController {
     return await this.usersService.followUser(req.user['sub'], targetId);
   }
 
+  @UseGuards(AccessTokenGuard)
+  @Get()
+  getUser(@Req() req: Request) {
+    return req.user;
+  }
+
   /**
    * @description [POST] 유저 언팔로우 눌렀을 때 발생하는 이벤트 컨트롤러입니다.
    * @param FollowUserInput 유저 언팔로우에 대한 정보의 전송계층입니다.
