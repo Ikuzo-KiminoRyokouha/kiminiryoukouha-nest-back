@@ -35,7 +35,7 @@ export class UsersController {
    * @description [GET] 유저의 팔로워 정보 조회 컨트롤러입니다.
    * @returns  success : 성공한 유저의 팔로워에 대한 정보  error : Status Code 400 Can't Found
    */
-  @Get('/info/follwer')
+  @Get('/info/follower')
   async getFollowerInfo(@Req() req: Request) {
     return await this.usersService.getFollowersInfo(req.user['sub']);
   }
@@ -44,7 +44,7 @@ export class UsersController {
    * @description [GET] 유저의 팔로잉 정보 조회 컨트롤러입니다.
    * @returns  success : 성공한 유저의 팔로잉에 대한 정보  error : Status Code 400 Can't Found
    */
-  @Get('/info/follwee')
+  @Get('/info/followee')
   async getFolloweeInfo(@Req() req: Request) {
     return await this.usersService.getFolloweesInfo(req.user['sub']);
   }
@@ -79,7 +79,6 @@ export class UsersController {
     return await this.usersService.followUser(req.user['sub'], targetId);
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get()
   getUser(@Req() req: Request) {
     return req.user;

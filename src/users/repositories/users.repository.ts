@@ -135,13 +135,14 @@ export class UserRespository {
       });
 
       // 팔로우를 눌려진 사람에게는 팔로이를 삭제해줍니다.
-      targetUser.followers = targetUser.followers.filter((el, idx) => {
+      targetUser.followees = targetUser.followees.filter((el, idx) => {
         return el.id !== sourceUser.id;
       });
 
       this.userRepository.save(sourceUser);
       this.userRepository.save(targetUser);
     } catch (error) {
+      console.log(error);
       throw new HttpException("Can't UnFollowed", HttpStatus.BAD_REQUEST);
     }
   }
