@@ -1,8 +1,8 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { BasicOutput } from 'src/common/dtos/output.dto';
 
 export class GetUserInput {
-  @IsNumber()
+  @IsString()
   userId: number;
 }
 

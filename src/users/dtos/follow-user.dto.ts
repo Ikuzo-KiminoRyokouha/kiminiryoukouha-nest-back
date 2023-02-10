@@ -3,8 +3,6 @@ import { BasicOutput } from 'src/common/dtos/output.dto';
 
 export class FollowUserInput {
   @IsNumber()
-  sourceId: number;
-  @IsNumber()
   targetId: number;
 }
 

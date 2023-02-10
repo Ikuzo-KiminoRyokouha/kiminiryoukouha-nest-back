@@ -68,6 +68,7 @@ export class AuthService {
       res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
       return { accessToken: tokens.accessToken };
     } catch (error) {
+      console.log(error);
       return { ok: false, error: 'failed to sign in' };
     }
   }
@@ -87,7 +88,7 @@ export class AuthService {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });
 
-    const user = await this.usersRepository.findOneBy({ id: verifyedUser.sub });
+    const user = await this.usersRepository.getUser(verifyedUser['sub']);
     return {
       accessToken: await this.jwtService.signAsync(
         {

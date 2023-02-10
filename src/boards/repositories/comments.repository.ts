@@ -25,9 +25,7 @@ export class CommentsRepository {
           content,
         }),
       );
-      const checkUserRole = await this.userRespository.findOne({
-        where: { id: user.sub },
-      });
+      const checkUserRole = await this.userRespository.getUser(user['sub']);
 
       if (checkUserRole.role == 'Manager') {
         const check = await this.boardRepository.updateBoard(comment.board, {

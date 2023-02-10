@@ -12,9 +12,10 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 
 @Module({
   imports: [
-    JwtModule.register({}),
-    TypeOrmExModule.forCustomRepository([UserRespository]),
     UsersModule,
+    JwtModule.register({}),
+    TypeOrmModule.forFeature([User]),
+    TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
   controllers: [AuthController],
   providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
