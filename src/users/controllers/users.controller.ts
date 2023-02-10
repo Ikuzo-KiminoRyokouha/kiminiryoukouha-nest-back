@@ -79,7 +79,6 @@ export class UsersController {
     return await this.usersService.followUser(req.user['sub'], targetId);
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get()
   getUser(@Req() req: Request) {
     return req.user;
