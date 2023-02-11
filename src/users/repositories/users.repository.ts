@@ -154,7 +154,7 @@ export class UserRespository {
    */
   async getFollowersInfo(userId: number) {
     try {
-      return await this.userRepository.findOne({
+      return await this.userRepository.find({
         select: ['followers'],
         where: { id: userId },
         relations: ['followers'],
@@ -172,7 +172,7 @@ export class UserRespository {
    */
   async getFolloweesInfo(userId: number) {
     try {
-      return await this.userRepository.findOne({
+      return await this.userRepository.find({
         select: ['followees'],
         where: { id: userId },
         relations: ['followees'],
