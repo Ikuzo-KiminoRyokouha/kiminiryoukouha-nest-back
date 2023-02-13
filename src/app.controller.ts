@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller('board')
-export class BoardsController {
+@Controller()
+export class AppController {
   constructor() {}
   @Get()
   sayHello() {

@@ -15,6 +15,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import * as ormconfig from '../ormconfig';
 import { Rating } from './travels/entities/rating.entity';
 import { Board, Comment, Community } from './boards/entities';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -54,7 +55,7 @@ import { Board, Comment, Community } from './boards/entities';
     TravelModule,
     BoardModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
