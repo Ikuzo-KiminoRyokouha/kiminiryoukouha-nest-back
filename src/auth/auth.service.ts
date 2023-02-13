@@ -42,7 +42,7 @@ export class AuthService {
         createUserDto.role,
         createUserDto.nickname,
       );
-      const tokens = await this.getTokens(newUser.id + '', newUser.email);
+      const tokens = await this.getTokens(String(newUser.id), newUser.nickname,newUser.email);
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
       res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
       return { accessToken: tokens.accessToken };
@@ -63,7 +63,7 @@ export class AuthService {
 
       if (!passwordMatches)
         throw new BadRequestException('Password is incorrect');
-      const tokens = await this.getTokens(user.id + '', user.email);
+      const tokens = await this.getTokens(String(user.id), user.nickname,user.email);
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
       res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
       return { accessToken: tokens.accessToken };
@@ -94,6 +94,7 @@ export class AuthService {
         {
           sub: user.id,
           username: user.nickname,
+          email : user.email
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -109,13 +110,14 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userId: string, username: string,email : string) {
     // console.log('gettoken');
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           username,
+          email ,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -126,6 +128,7 @@ export class AuthService {
         {
           sub: userId,
           username,
+          email
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
