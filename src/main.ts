@@ -18,6 +18,6 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(cookieParser());
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT || 8000);
 }
 bootstrap();
