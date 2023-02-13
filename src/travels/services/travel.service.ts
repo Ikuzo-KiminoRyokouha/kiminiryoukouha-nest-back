@@ -82,6 +82,32 @@ export class TravelService {
     }
   }
 
+  async updateTravelByDestinationId(travelId: number, destinationId: number) {
+    try {
+      const destination = await this.destinaitonRespoeitory.showDestinationById(
+        destinationId,
+      );
+      if (!destination)
+        return { ok: false, error: 'not found this destination' };
+      const travel = await this.travelRespository.showTravel(travelId);
+      if (!travel) return { ok: false, error: 'not found this travel' };
+      const updateTravle = await this.travelRespository.updateTravel(travelId, {
+        ...travel,
+        destination,
+      });
+      if (!updateTravle) throwError;
+      return {
+        ok: true,
+        message: 'success to update travel',
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: 'failed to update travel',
+      };
+    }
+  }
+
   async addRandomTravel(
     addRandomTravelInput: AddRandomTravelInput,
   ): Promise<AddRandomTravelOutput> {

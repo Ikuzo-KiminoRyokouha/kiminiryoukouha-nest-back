@@ -1,4 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  ShowTravelBySurpriseInput,
+  ShowTravelBySurpriseOutput,
+} from '../dtos/destination/show-travel-bySurprise.dto';
 
 import { DestinationService } from '../services/destination.service';
 
@@ -14,5 +18,14 @@ export class DestinationController {
   @Get('/tag')
   async showDestinationTag() {
     return this.destinationService.showDestinationTag();
+  }
+
+  @Post('/personality')
+  async showTravelBySurprise(
+    @Body() UpdateTravelBySurpriseInput: ShowTravelBySurpriseInput,
+  ): Promise<ShowTravelBySurpriseOutput> {
+    return await this.destinationService.showTravleDesBySurprise(
+      UpdateTravelBySurpriseInput,
+    );
   }
 }
