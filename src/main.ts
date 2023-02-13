@@ -12,8 +12,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  console.log('host : ', process.env.CLIENT_HOST);
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_HOST,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
