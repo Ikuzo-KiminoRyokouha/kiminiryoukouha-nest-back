@@ -13,11 +13,11 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_HOST,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
   app.use(cookieParser());
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT || 8000);
 }
 bootstrap();
