@@ -18,13 +18,22 @@ import { DestinationService } from './services/destination.service';
 import { PlanService } from './services/plan.service';
 import { TravelService } from './services/travel.service';
 import { User } from '../users/entities/user.entity';
+import { RatingService } from './services/rating.service';
+import { RatingController } from './controllers/rating.controller';
+import { TestController } from './controllers/test.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Plan, Destination, Travel, Rating, User]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
-  controllers: [TravelController, PlanController, DestinationController],
+  controllers: [
+    TravelController,
+    PlanController,
+    DestinationController,
+    RatingController,
+    TestController,
+  ],
   providers: [
     TravelService,
     PlanService,
@@ -33,6 +42,7 @@ import { User } from '../users/entities/user.entity';
     DestinationRepository,
     TravelRepository,
     RatingRepository,
+    RatingService,
   ],
 })
 export class TravelModule {}

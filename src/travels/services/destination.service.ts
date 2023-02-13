@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { getDestinationDetail } from 'src/util/destinationInfo';
+import { getPersonalityDestination } from 'src/util/personalityDestination';
 import { ShowDetinationDetail } from '../dtos/destination/show-destination-detail.dto';
 import { ShowDestinationCode } from '../dtos/destination/show-destination-tag.dto';
+import {
+  ShowTravelBySurpriseInput,
+  ShowTravelBySurpriseOutput,
+} from '../dtos/destination/show-travel-bySurprise.dto';
 import { DestinationRepository } from '../repositories/destination.repository';
 
 @Injectable()
@@ -34,6 +39,32 @@ export class DestinationService {
       return { ok: true, tags };
     } catch (error) {
       return { ok: false, error: 'failed to show tag' };
+    }
+  }
+
+  async showTravleDesBySurprise({
+    userId,
+    planId,
+    tag,
+    count,
+  }: ShowTravelBySurpriseInput): Promise<ShowTravelBySurpriseOutput> {
+    try {
+      const personalizedDestination = await getPersonalityDestination(
+        userId,
+        (count - 1) * 5,
+        count * 5,
+        tag,
+        planId,
+      );
+      return {
+        ok: true,
+        destination: personalizedDestination,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: 'can not show travel',
+      };
     }
   }
 }
