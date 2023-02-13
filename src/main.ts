@@ -12,7 +12,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  console.log('host : ', process.env.CLIENT_HOST);
   app.enableCors({
     origin: process.env.CLIENT_HOST,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
