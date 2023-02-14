@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 import { getDestinationDetail } from 'src/util/destinationInfo';
 import { getPersonalityDestination } from 'src/util/personalityDestination';
 import { ShowDetinationDetail } from '../dtos/destination/show-destination-detail.dto';
@@ -42,15 +43,13 @@ export class DestinationService {
     }
   }
 
-  async showTravleDesBySurprise({
-    userId,
-    planId,
-    tag,
-    count,
-  }: ShowTravelBySurpriseInput): Promise<ShowTravelBySurpriseOutput> {
+  async showTravleDesBySurprise(
+    { userId, planId, tag, count }: ShowTravelBySurpriseInput,
+    req: Request,
+  ): Promise<ShowTravelBySurpriseOutput> {
     try {
       const personalizedDestination = await getPersonalityDestination(
-        userId,
+        req.user['sub'],
         (count - 1) * 5,
         count * 5,
         tag,

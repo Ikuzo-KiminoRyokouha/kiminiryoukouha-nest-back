@@ -8,7 +8,16 @@ import {
 } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  RelationId,
+} from 'typeorm';
 import { Travel } from './travel.entity';
 
 @Entity()
@@ -60,8 +69,16 @@ export class Plan extends BasicEntity {
   })
   travels: Travel[];
 
-  @ManyToMany(() => User, { nullable: true })
-  @JoinTable()
-  @IsOptional()
-  users: User[];
+  // @ManyToMany(() => User, { nullable: true })
+  // @JoinTable()
+  // @IsOptional()
+  // users: User[];
+  @ManyToOne(() => User, (user) => user.id, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'userId' })
+  user: User;
+  @Column()
+  @IsNumber()
+  userId: number;
 }

@@ -11,12 +11,12 @@ export class RatingRepository {
     @InjectRepository(Rating)
     private readonly ratingRepository: Repository<Rating>,
   ) {}
-  async createRating(createRatingInput: CreateRatingInput) {
+  async createRating(createRatingInput: CreateRatingInput, userId) {
     try {
       const rating = await this.ratingRepository.save(
         this.ratingRepository.create({
           ...createRatingInput,
-          userId: 1,
+          userId,
         }),
       );
       return rating;
