@@ -45,6 +45,10 @@ import { AppController } from './app.controller';
         Rating,
         Community,
       ],
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false,
       timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],
     }),
