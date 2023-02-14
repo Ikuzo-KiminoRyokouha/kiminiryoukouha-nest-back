@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserInput } from 'src/users/dtos/create-user.dto';
-import { UserRespository } from 'src/users/repositories/users.repository';
+import { CreateUserInput } from '../users/dtos/create-user.dto';
+import { UserRespository } from '../users/repositories/users.repository';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 // import * as argon2 from 'argon2';
@@ -42,7 +42,11 @@ export class AuthService {
         createUserDto.role,
         createUserDto.nickname,
       );
-      const tokens = await this.getTokens(String(newUser.id), newUser.nickname,newUser.email);
+      const tokens = await this.getTokens(
+        String(newUser.id),
+        newUser.nickname,
+        newUser.email,
+      );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
       res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
       return { accessToken: tokens.accessToken };
@@ -63,7 +67,11 @@ export class AuthService {
 
       if (!passwordMatches)
         throw new BadRequestException('Password is incorrect');
-      const tokens = await this.getTokens(String(user.id), user.nickname,user.email);
+      const tokens = await this.getTokens(
+        String(user.id),
+        user.nickname,
+        user.email,
+      );
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
       res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
       return { accessToken: tokens.accessToken };
@@ -94,7 +102,7 @@ export class AuthService {
         {
           sub: user.id,
           username: user.nickname,
-          email : user.email
+          email: user.email,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -110,14 +118,14 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: string, username: string,email : string) {
+  async getTokens(userId: string, username: string, email: string) {
     // console.log('gettoken');
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           username,
-          email ,
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -128,7 +136,7 @@ export class AuthService {
         {
           sub: userId,
           username,
-          email
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),

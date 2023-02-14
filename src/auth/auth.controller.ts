@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateUserInput } from 'src/users/dtos/create-user.dto';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { CreateUserInput } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 

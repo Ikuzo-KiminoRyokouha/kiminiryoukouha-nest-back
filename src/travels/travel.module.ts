@@ -20,7 +20,7 @@ import { TravelService } from './services/travel.service';
 import { User } from '../users/entities/user.entity';
 import { RatingService } from './services/rating.service';
 import { RatingController } from './controllers/rating.controller';
-import { TestController } from './controllers/test.controller';
+// import { TestController } from './controllers/test.controller';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { TestController } from './controllers/test.controller';
     PlanController,
     DestinationController,
     RatingController,
-    TestController,
+    // TestController,
   ],
   providers: [
     TravelService,

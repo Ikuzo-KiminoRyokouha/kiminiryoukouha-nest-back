@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { BasicOutput } from 'src/common/dtos/output.dto';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { BasicOutput } from '../../common/dtos/output.dto';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   AddRandomTravelInput,
   AddRandomTravelOutput,

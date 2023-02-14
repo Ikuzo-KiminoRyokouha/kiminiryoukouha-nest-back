@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CustomRepository } from 'src/repositories/custom-repository.decorater';
+import { CustomRepository } from '../../repositories/custom-repository.decorater';
 import { Repository } from 'typeorm';
 import { Board } from '../entities/board.entity';
 

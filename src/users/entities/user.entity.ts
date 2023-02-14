@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 
@@ -28,12 +28,10 @@ export class User extends BasicEntity {
 
   @ManyToMany(() => User, { nullable: true })
   @JoinTable()
-  @IsOptional()
   followers: User[];
 
   @ManyToMany(() => User, { nullable: true })
   @JoinTable()
-  @IsOptional()
   followees: User[];
 
   @Column({ type: 'enum', enum: UserRole })

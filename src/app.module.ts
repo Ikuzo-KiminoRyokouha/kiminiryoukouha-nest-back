@@ -21,8 +21,8 @@ import { AppController } from './app.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env',
+      // ignoreEnvFile: process.env.NODE_ENV === 'prod',
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
@@ -45,6 +45,10 @@ import { AppController } from './app.controller';
         Rating,
         Community,
       ],
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false,
       timezone: 'KST',
       //   seeds: ['src/database/seeds/**/*.ts'],
     }),
