@@ -4,8 +4,10 @@ import { Destination } from '../travels/entities/destination.entity';
 import { Plan } from '../travels/entities/plan.entity';
 import { Travel } from '../travels/entities/travel.entity';
 import { User } from '../users/entities/user.entity';
+import { Rating } from '../travels/entities/rating.entity';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-const config: TypeOrmModuleOptions = {
+export const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT,
@@ -14,8 +16,27 @@ const config: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
+  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  migrationsTableName: 'custom_migration_table',
   logging: true,
-  entities: [User, Plan, Board, Comment, Travel, Destination, Community],
+  entities: [
+    User,
+    Plan,
+    Board,
+    Comment,
+    Travel,
+    Destination,
+    Rating,
+    Community,
+  ],
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
+  timezone: 'KST',
+  //   seeds: ['src/database/seeds/**/*.ts'],
 };
 
-export = config;
+const dataSource = new DataSource(dataSourceOptions);
+
+export default dataSource;

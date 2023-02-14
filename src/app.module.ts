@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -12,10 +15,11 @@ import { BoardModule } from './boards/board.module';
 import { Travel } from './travels/entities/travel.entity';
 import { Destination } from './travels/entities/destination.entity';
 import { ScheduleModule } from '@nestjs/schedule';
-import * as ormconfig from '../ormconfig';
 import { Rating } from './travels/entities/rating.entity';
 import { Board, Comment, Community } from './boards/entities';
 import { AppController } from './app.controller';
+import { dataSourceOptions } from './database/ormconfig';
+import { ormConfig } from '../ormconfig';
 
 @Module({
   imports: [
@@ -25,33 +29,7 @@ import { AppController } from './app.controller';
       // ignoreEnvFile: process.env.NODE_ENV === 'prod',
     }),
     ScheduleModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== 'prod',
-      // synchronize: true,
-      logging: true,
-      entities: [
-        User,
-        Plan,
-        Board,
-        Comment,
-        Travel,
-        Destination,
-        Rating,
-        Community,
-      ],
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
-      timezone: 'KST',
-      //   seeds: ['src/database/seeds/**/*.ts'],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
 
     UsersModule,
     CommonModule,

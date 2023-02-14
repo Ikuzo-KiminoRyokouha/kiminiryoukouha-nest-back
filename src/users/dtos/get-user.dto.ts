@@ -3,7 +3,7 @@ import { BasicOutput } from '../../common/dtos/output.dto';
 
 export class GetUserInput {
   @IsString()
-  userId: number;
+  userId?: number;
 }
 
 export class GetUserOutput extends BasicOutput {}

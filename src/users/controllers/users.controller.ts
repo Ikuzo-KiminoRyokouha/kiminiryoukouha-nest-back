@@ -36,8 +36,13 @@ export class UsersController {
    * @returns  success : 성공한 유저의 팔로워에 대한 정보  error : Status Code 400 Can't Found
    */
   @Get('/info/follower')
-  async getFollowerInfo(@Req() req: Request) {
-    return await this.usersService.getFollowersInfo(req.user['sub']);
+  async getFollowerInfo(
+    @Req() req: Request,
+    @Query() getUserInputDto: GetUserInput,
+  ) {
+    const { userId } = getUserInputDto;
+
+    return await this.usersService.getFollowersInfo(userId | req.user['sub']);
   }
 
   /**
@@ -45,8 +50,12 @@ export class UsersController {
    * @returns  success : 성공한 유저의 팔로잉에 대한 정보  error : Status Code 400 Can't Found
    */
   @Get('/info/followee')
-  async getFolloweeInfo(@Req() req: Request) {
-    return await this.usersService.getFolloweesInfo(req.user['sub']);
+  async getFolloweeInfo(
+    @Req() req: Request,
+    @Query() getUserInputDto: GetUserInput,
+  ) {
+    const { userId } = getUserInputDto;
+    return await this.usersService.getFolloweesInfo(userId | req.user['sub']);
   }
 
   /**
