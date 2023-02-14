@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { getDestinationDetail } from 'src/util/destinationInfo';
-import { getPersonalityDestination } from 'src/util/personalityDestination';
+
+import { getDestinationDetail } from '../../util/destinationInfo';
+import { getPersonalityDestination } from '../../util/personalityDestination';
 import { ShowDetinationDetail } from '../dtos/destination/show-destination-detail.dto';
 import { ShowDestinationCode } from '../dtos/destination/show-destination-tag.dto';
 import {

@@ -1,9 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Board, Comment, Community } from 'src/boards/entities';
-import { Destination } from 'src/travels/entities/destination.entity';
-import { Plan } from 'src/travels/entities/plan.entity';
-import { Travel } from 'src/travels/entities/travel.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Board, Comment, Community } from '../boards/entities';
+import { Destination } from '../travels/entities/destination.entity';
+import { Plan } from '../travels/entities/plan.entity';
+import { Travel } from '../travels/entities/travel.entity';
+import { User } from '../users/entities/user.entity';
 
 const config: TypeOrmModuleOptions = {
   type: 'mysql',

@@ -1,5 +1,5 @@
-import { Comment } from 'src/boards/entities/comment.entity';
-import { BasicOutput } from 'src/common/dtos/output.dto';
+import { Comment } from '../../../boards/entities/comment.entity';
+import { BasicOutput } from '../../../common/dtos/output.dto';
 
 export class ShowCommentsOutput extends BasicOutput {
   comments?: Comment[];

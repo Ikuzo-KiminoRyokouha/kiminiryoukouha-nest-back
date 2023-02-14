@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { throwError } from 'rxjs';
-import { BasicOutput } from 'src/common/dtos/output.dto';
+
+import { BasicOutput } from '../../common/dtos/output.dto';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import {
   AddRandomTravelInput,
@@ -11,7 +13,6 @@ import { UpdateTravelClearOutput } from '../dtos/travel/update-travel-clear.dto'
 import { DestinationRepository } from '../repositories/destination.repository';
 import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
-import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TravelService {

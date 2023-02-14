@@ -1,23 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CreatePlanInput,
-  CreatePlanOutput,
-} from '../dtos/plan/create-plan.dto';
-import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
-import { ShowPlansOutput } from '../dtos/plan/show-plans.dto';
-import { CreateTravelInput } from '../dtos/travel/create-travel.dto';
-import { DestinationRepository } from '../repositories/destination.repository';
-import { TravelRepository } from '../repositories/travel.repository';
-import { planRepository } from '../repositories/plan.repository';
+import { throwError } from 'rxjs';
+
+import { getPersonalityDestination } from '../../util/personalityDestination';
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
+import {
+  CreatePlanInput,
+  CreatePlanOutput,
+} from '../dtos/plan/create-plan.dto';
 import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
-import { throwError } from 'rxjs';
+import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
+import { ShowPlansOutput } from '../dtos/plan/show-plans.dto';
+import { CreateTravelInput } from '../dtos/travel/create-travel.dto';
 import { Destination } from '../entities/destination.entity';
+import { DestinationRepository } from '../repositories/destination.repository';
+import { planRepository } from '../repositories/plan.repository';
+import { TravelRepository } from '../repositories/travel.repository';
 import { TravelService } from './travel.service';
-import { getPersonalityDestination } from 'src/util/personalityDestination';
 
 @Injectable()
 export class PlanService {

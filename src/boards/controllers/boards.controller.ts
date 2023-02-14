@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { BoardsService } from '../services/boards.service';
 import {
   CreateBoardInput,

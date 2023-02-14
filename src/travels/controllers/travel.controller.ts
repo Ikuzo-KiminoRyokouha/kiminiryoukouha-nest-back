@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { BasicOutput } from 'src/common/dtos/output.dto';
+import { BasicOutput } from '../../common/dtos/output.dto';
 import {
   AddRandomTravelInput,
   AddRandomTravelOutput,

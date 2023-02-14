@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
-import { BasicOutput } from 'src/common/dtos/output.dto';
+
+import { BasicOutput } from '../../common/dtos/output.dto';
 import { CreateRatingInput } from '../dtos/rating/create-rating.dto';
 import { RatingRepository } from '../repositories/rating.respository';
 
