@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { BasicOutput } from 'src/common/dtos/output.dto';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { BasicOutput } from '../../common/dtos/output.dto';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { CreateRatingInput } from '../dtos/rating/create-rating.dto';
 import { RatingService } from '../services/rating.service';
 
