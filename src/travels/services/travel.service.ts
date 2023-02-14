@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { throwError } from 'rxjs';
-
+import { Request } from 'express';
 import { BasicOutput } from '../../common/dtos/output.dto';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import {
@@ -13,6 +13,7 @@ import { UpdateTravelClearOutput } from '../dtos/travel/update-travel-clear.dto'
 import { DestinationRepository } from '../repositories/destination.repository';
 import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
+import { AddTraveOutPut } from '../dtos/travel/add-travel.dto';
 
 @Injectable()
 export class TravelService {
@@ -22,34 +23,18 @@ export class TravelService {
     private planRepository: planRepository,
   ) {}
 
-  async createTravelPerDay(
-    createRandomPlanInput: CreateRandomPlanInput,
-    planId,
-    dayPerDes,
-    i,
-  ) {
-    const startDay = new Date(createRandomPlanInput.start);
-
-    const travels = [];
-    for (let i = 0; i < 2; i++) {
-      const createTravelInput: CreateTravelInput = {
-        startDay: new Date(startDay.setDate(startDay.getDate() + i)),
-        planId: planId,
-        destinationId: dayPerDes[i].id,
-      };
-      const travel = await this.travelRespository.creatTravel(
-        createTravelInput,
-      );
-      travels.push(travel);
-    }
-    return travels;
-  }
-
-  async updateTravelClear(travelId: number): Promise<UpdateTravelClearOutput> {
+  async updateTravelClear(
+    travelId: number,
+    req: Request,
+  ): Promise<UpdateTravelClearOutput> {
     try {
       const travel = await this.travelRespository.showTravel(travelId);
       if (!travel) return { ok: false, message: 'cannot find this travel' };
-
+      console.log(travel.planId);
+      const plan = await this.planRepository.showPlan(travel.planId);
+      console.log(plan);
+      if (plan.userId != req.user['sub'])
+        return { ok: false, error: 'you can not update this travel' };
       await this.travelRespository.updateTravel(travelId, {
         ...travel,
         clear: !travel.clear,
@@ -60,11 +45,16 @@ export class TravelService {
     }
   }
 
-  async updateTravelDes(travelId: number): Promise<BasicOutput> {
+  async updateTravelRandomDes(
+    travelId: number,
+    req: Request,
+  ): Promise<BasicOutput> {
     try {
       const travel = await this.travelRespository.showTravel(travelId);
       if (!travel) return { ok: false, message: 'cannot find this travel' };
-      console.log('travel', travel);
+      const plan = await this.planRepository.showPlan(travel.planId);
+      if (plan.userId != req.user['sub'])
+        return { ok: false, message: 'you can not update this travel' };
       const destination = await this.destinaitonRespoeitory.showDestinationById(
         travel.destinationId,
       );
@@ -83,15 +73,24 @@ export class TravelService {
     }
   }
 
-  async updateTravelByDestinationId(travelId: number, destinationId: number) {
+  async updateTravelByDestinationId(
+    travelId: number,
+    destinationId: number,
+    req: Request,
+  ) {
     try {
       const destination = await this.destinaitonRespoeitory.showDestinationById(
         destinationId,
       );
       if (!destination)
         return { ok: false, error: 'not found this destination' };
+
       const travel = await this.travelRespository.showTravel(travelId);
       if (!travel) return { ok: false, error: 'not found this travel' };
+      const plan = await this.planRepository.showPlan(travel.planId);
+      if (plan.userId != req.user['sub'])
+        return { ok: false, message: 'you can not update this travel' };
+
       const updateTravle = await this.travelRespository.updateTravel(travelId, {
         ...travel,
         destination,
@@ -109,14 +108,48 @@ export class TravelService {
     }
   }
 
+  async addTravelByDestinationId(
+    planId,
+    destinationId,
+    req: Request,
+  ): Promise<AddTraveOutPut> {
+    try {
+      const plan = await this.planRepository.showPlan(planId);
+      if (!plan) return { ok: false, message: 'this plan not found' };
+      if (plan.userId != req.user['sub'])
+        return { ok: false, message: 'you can not add travel in this plan' };
+      const startDay = new Date(); // 여행 몇번째 날 인지
+
+      const createTravelInput: CreateTravelInput = {
+        startDay,
+        planId: plan.id,
+        destinationId,
+      };
+      const travel = await this.travelRespository.creatTravel(
+        createTravelInput,
+      );
+      if (!travel) throwError;
+      return { ok: true, travel };
+    } catch (error) {
+      return { ok: false, message: 'failed to add travel' };
+    }
+  }
+
+  @Cron('0 23 16 * * *')
+  test() {
+    console.log('scheduler');
+  }
   async addRandomTravel(
     addRandomTravelInput: AddRandomTravelInput,
+    req: Request,
   ): Promise<AddRandomTravelOutput> {
     try {
       //여행 계획 플랜 가져오기
       const plan = await this.planRepository.showPlan(
         addRandomTravelInput.planId,
       );
+      if (plan.userId != req.user['sub'])
+        return { ok: false, message: 'you cannot add travel' };
       //여행지 id 담을 임시 배열
       const tempTravelIdArr = [];
       //임시배열에 여행지 id만 담음
@@ -144,8 +177,26 @@ export class TravelService {
     }
   }
 
-  @Cron('0 23 16 * * *')
-  test() {
-    console.log('scheduler');
+  async createTravelPerDay(
+    createRandomPlanInput: CreateRandomPlanInput,
+    planId,
+    dayPerDes,
+    i,
+  ) {
+    const startDay = new Date(createRandomPlanInput.start);
+
+    const travels = [];
+    for (let i = 0; i < 2; i++) {
+      const createTravelInput: CreateTravelInput = {
+        startDay: new Date(startDay.setDate(startDay.getDate() + i)),
+        planId: planId,
+        destinationId: dayPerDes[i].id,
+      };
+      const travel = await this.travelRespository.creatTravel(
+        createTravelInput,
+      );
+      travels.push(travel);
+    }
+    return travels;
   }
 }

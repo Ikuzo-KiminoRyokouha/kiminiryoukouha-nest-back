@@ -11,5 +11,5 @@ export class AddRandomTravelInput {
 }
 
 export class AddRandomTravelOutput extends BasicOutput {
-  travel?: Travel[];
+  travel?: Travel;
 }

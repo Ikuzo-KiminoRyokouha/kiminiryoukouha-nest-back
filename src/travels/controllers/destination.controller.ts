@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import {
   ShowTravelBySurpriseInput,
   ShowTravelBySurpriseOutput,
@@ -20,12 +30,15 @@ export class DestinationController {
     return this.destinationService.showDestinationTag();
   }
 
+  @UseGuards(AccessTokenGuard)
   @Post('/personality')
   async showTravelBySurprise(
     @Body() UpdateTravelBySurpriseInput: ShowTravelBySurpriseInput,
+    @Req() req: Request,
   ): Promise<ShowTravelBySurpriseOutput> {
     return await this.destinationService.showTravleDesBySurprise(
       UpdateTravelBySurpriseInput,
+      req,
     );
   }
 }

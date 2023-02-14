@@ -12,7 +12,6 @@ export class CreatePlanInput extends PickType(Plan, [
   'destination',
   'totalCost',
   'dayPerCost',
-  'users',
 ]) {}
 
 export class CreatePlanOutput extends BasicOutput {}

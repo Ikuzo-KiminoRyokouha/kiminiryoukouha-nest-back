@@ -17,16 +17,18 @@ export class Travel extends BasicEntity {
   @ManyToOne(() => Plan, (plan) => plan.id, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'planId' })
   plan: Plan;
-  @RelationId((travel: Travel) => travel.plan)
+  @Column()
   @IsNumber()
   planId: number;
 
   @ManyToOne(() => Destination, (destination) => destination.id, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'destinationId' })
   destination: Destination;
-  @RelationId((travel: Travel) => travel.destination)
+  @Column()
   @IsNumber()
   destinationId: number;
 }
