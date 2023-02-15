@@ -13,7 +13,7 @@ export async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: process.env.CLIENT_HOST,
+    origin: 'https://kiminiryoukouha-web.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     exposedHeaders: ['Set-Cookie'],
