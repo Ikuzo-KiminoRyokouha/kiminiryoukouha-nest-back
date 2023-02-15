@@ -14,7 +14,7 @@ export async function bootstrap() {
   );
   app.enableCors({
     origin: process.env.CLIENT_HOST,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
   app.use(cookieParser());
