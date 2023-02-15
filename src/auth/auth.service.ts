@@ -48,7 +48,10 @@ export class AuthService {
         newUser.email,
       );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      res.cookie('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'prod' ? false : true,
+      });
       return { accessToken: tokens.accessToken };
     } catch (error) {
       return { ok: false, error: 'failed to create user' };
