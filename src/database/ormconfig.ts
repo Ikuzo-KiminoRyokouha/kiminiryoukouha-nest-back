@@ -16,8 +16,6 @@ export const ormOptions: DataSourceOptions = {
   database: process.env.DB_NAME,
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-  migrationsTableName: 'custom_migration_table',
   logging: true,
   entities: [
     User,
