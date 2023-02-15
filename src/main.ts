@@ -16,6 +16,7 @@ export async function bootstrap() {
     origin: process.env.CLIENT_HOST,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    exposedHeaders: ['Set-Cookie'],
   });
   app.use(cookieParser());
   await app.listen(process.env.PORT || 8000);
