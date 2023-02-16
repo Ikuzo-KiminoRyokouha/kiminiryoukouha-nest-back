@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto/auth.dto';
 import { Response } from 'express';
+import { sendHttpOnlyCookie } from '../util/sendCookie';
 
 @Injectable()
 export class AuthService {
@@ -48,7 +49,7 @@ export class AuthService {
         newUser.email,
       );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
       return { ok: false, error: 'failed to create user' };
@@ -73,7 +74,7 @@ export class AuthService {
         user.email,
       );
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
       console.log(error);
@@ -82,7 +83,8 @@ export class AuthService {
   }
 
   async logout(userId: string, res: Response) {
-    res.cookie('refresh_token', '', { maxAge: 0 });
+    sendHttpOnlyCookie(res, 'refresh_toklen', undefined, { maxAge: 0 });
+
     return this.usersRepository.updateRefreshToken(userId, {
       refreshToken: null,
     });
