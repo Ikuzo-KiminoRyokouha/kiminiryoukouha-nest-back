@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserInput } from '../users/dtos/create-user.dto';
 import { UserRespository } from '../users/repositories/users.repository';
 import * as bcrypt from 'bcrypt';
@@ -33,7 +38,7 @@ export class AuthService {
       );
 
       if (nicknameExists)
-        return { ok: false, error: 'this nickname already exists' };
+        throw new HttpException('nickname is exist', HttpStatus.BAD_REQUEST);
 
       // Hash password
       const hash = await bcrypt.hash(createUserDto.password, 10);
@@ -52,7 +57,7 @@ export class AuthService {
       sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      return { ok: false, error: 'failed to create user' };
+      throw new HttpException("Can't Create", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -77,8 +82,7 @@ export class AuthService {
       sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      console.log(error);
-      return { ok: false, error: 'failed to sign in' };
+      throw new HttpException('Fail to Sign In', HttpStatus.BAD_REQUEST);
     }
   }
 
