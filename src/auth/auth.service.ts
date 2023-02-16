@@ -81,7 +81,8 @@ export class AuthService {
     }
   }
 
-  async logout(userId: string) {
+  async logout(userId: string, res: Response) {
+    res.cookie('refresh_token', '', { maxAge: 0 });
     return this.usersRepository.updateRefreshToken(userId, {
       refreshToken: null,
     });
