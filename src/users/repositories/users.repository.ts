@@ -85,20 +85,20 @@ export class UserRespository {
         where: {
           id: sourceId,
         },
-        relations: ['followers'],
+        relations: ['followees'],
       });
       const targetUser = await this.userRepository.findOne({
         where: {
           id: targetId,
         },
-        relations: ['followees'],
+        relations: ['followers'],
       });
 
       // 팔로우를 누른 사람에게는 팔로워를 추가해줍니다.
-      sourceUser.followers = [...sourceUser.followers, targetUser];
+      sourceUser.followees = [...sourceUser.followers, targetUser];
 
       // 팔로우를 눌려진 사람에게는 팔로이를 추가해줍니다.
-      targetUser.followees = [...targetUser.followees, sourceUser];
+      targetUser.followers = [...targetUser.followees, sourceUser];
 
       this.userRepository.save(sourceUser);
       this.userRepository.save(targetUser);
