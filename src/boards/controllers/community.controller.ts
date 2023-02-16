@@ -83,8 +83,9 @@ export class CommunityController {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
    */
   @UseGuards(AccessTokenGuard)
-  @Get('/my')
-  showMyStroy(@Req() req: Request) {
-    return this.communityService.showMyCommunity(req);
+  @Get('/user')
+  showMyStroy(@Req() req: Request, @Query() query: { userId: string }) {
+    const { userId } = query;
+    return this.communityService.showUserCommunity(userId || req.user['sub']);
   }
 }
