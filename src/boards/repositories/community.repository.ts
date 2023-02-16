@@ -111,7 +111,10 @@ export class CommunityRepository {
    */
   async findMyInfo(userId: number) {
     try {
-      return await this.communityRepository.findBy({ userId });
+      return await this.communityRepository.find({
+        where: { userId },
+        relations: { user: true },
+      });
     } catch (error) {
       throw new HttpException("Can't Found", HttpStatus.BAD_REQUEST);
     }
