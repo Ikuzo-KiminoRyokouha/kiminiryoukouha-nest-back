@@ -11,9 +11,6 @@ export const sendHttpOnlyCookie = (
     httpOnly: true,
     sameSite: 'none',
     secure: process.env.NODE_ENV != 'dev',
-    domain: process.env.CLIENT_HOST.replace('https://', '').replace(
-      'http://',
-      '',
-    ),
+    domain: '*',
   });
 };
