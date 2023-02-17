@@ -9,7 +9,7 @@ export const sendHttpOnlyCookie = (
   res.cookie(key, value, {
     ...options,
     httpOnly: true,
-    sameSite: 'none',
+    sameSite: 'lax',
     secure: process.env.NODE_ENV != 'dev',
     domain:
       process.env.NODE_ENV != 'dev'
