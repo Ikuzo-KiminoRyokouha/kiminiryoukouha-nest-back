@@ -91,12 +91,11 @@ def deletePlanDestination( getPlanDestination , unclearDestination ):
     for destination in getPlanDestination:
         if(destination['destinationId'] in unclearDestination ):
             unclearDestination.remove(destination['destinationId'])
-
     return unclearDestination
   
 
 unclear_destination = getUnclearDestination(ratings, destinations, userId)
-delete_plan_destination = deletePlanDestination(getDestinationInfo.getPlanDestination(planId),unclear_destination)
+delete_plan_destination = deletePlanDestination(getDestinationInfo.getPlanDestination(userId),unclear_destination)
 top_destination_preds = recommDestinationBySurprise(algo, userId, delete_plan_destination,start, end)
 for top_destination in top_destination_preds:
     print(json.dumps(top_destination))
