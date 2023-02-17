@@ -11,6 +11,9 @@ export const sendHttpOnlyCookie = (
     httpOnly: true,
     sameSite: 'none',
     secure: process.env.NODE_ENV != 'dev',
-    domain: process.env.NODE_ENV != 'dev' ? '.vercel.app' : 'localhost',
+    domain:
+      process.env.NODE_ENV != 'dev'
+        ? '.kiminiryoukouha-web.vercel.app'
+        : 'localhost',
   });
 };
