@@ -99,7 +99,6 @@ export class AuthService {
   // }
 
   async updateAccessToken(req: Request) {
-    console.log(req.cookies);
     const verifyedUser = this.jwtService.verify(req.cookies.refresh_token, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });

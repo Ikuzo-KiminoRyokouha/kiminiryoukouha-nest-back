@@ -5,7 +5,7 @@ import { Rating } from './src/travels/entities/rating.entity';
 import { Travel } from './src/travels/entities/travel.entity';
 import { User } from './src/users/entities/user.entity';
 
-export const ormConfig = {
+const ormConfig = {
   type: 'mysql' as 'mysql',
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT,
@@ -32,3 +32,5 @@ export const ormConfig = {
   timezone: 'KST',
   //   seeds: ['src/database/seeds/**/*.ts'],
 };
+
+export default ormConfig;

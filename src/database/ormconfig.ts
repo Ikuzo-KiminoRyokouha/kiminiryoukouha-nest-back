@@ -5,10 +5,9 @@ import { Plan } from '../travels/entities/plan.entity';
 import { Travel } from '../travels/entities/travel.entity';
 import { User } from '../users/entities/user.entity';
 import { Rating } from '../travels/entities/rating.entity';
-import { DataSourceOptions } from 'typeorm';
 
-export const ormOptions: DataSourceOptions = {
-  type: 'mysql',
+export const ormOptions: TypeOrmModuleOptions = {
+  type: 'mysql' as 'mysql',
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT,
   username: process.env.DB_USERNAME,
@@ -32,6 +31,6 @@ export const ormOptions: DataSourceOptions = {
       ? { rejectUnauthorized: false }
       : false,
   timezone: 'KST',
-  migrationsRun: true,
-  //   seeds: ['src/database/seeds/**/*.ts'],
+  // migrationsRun: true,
+  // seeds: ['src/database/seed s/**/*.ts'],
 };
