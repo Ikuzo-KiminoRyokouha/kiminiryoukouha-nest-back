@@ -135,10 +135,6 @@ export class TravelService {
     }
   }
 
-  @Cron('0 23 16 * * *')
-  test() {
-    console.log('scheduler');
-  }
   async addRandomTravel(
     addRandomTravelInput: AddRandomTravelInput,
     req: Request,
@@ -184,14 +180,15 @@ export class TravelService {
     i,
   ) {
     const startDay = new Date(createRandomPlanInput.start);
-
+    startDay.setDate(startDay.getDate() + i);
     const travels = [];
-    for (let i = 0; i < 2; i++) {
+    for (let j = 0; j < 2; j++) {
       const createTravelInput: CreateTravelInput = {
-        startDay: new Date(startDay.setDate(startDay.getDate() + i)),
+        startDay,
         planId: planId,
-        destinationId: dayPerDes[i].id,
+        destinationId: dayPerDes[j].id,
       };
+
       const travel = await this.travelRespository.creatTravel(
         createTravelInput,
       );
