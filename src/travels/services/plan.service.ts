@@ -50,10 +50,9 @@ export class PlanService {
         (1000 * 60 * 60 * 24) +
       1;
     for (let i = 0; i < travelPeriod; i++) {
-      console.log(i);
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
       const destinations = await getPersonalityDestination(
-        1, //user
+        req.user['sub'], //user
         0, //start
         2, // end
         createPersonPlanInput.tag[i], //tag
