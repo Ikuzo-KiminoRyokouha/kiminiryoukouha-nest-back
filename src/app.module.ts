@@ -1,21 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
-import { CommonModule } from './common/common.module';
-import { AuthModule } from './auth/auth.module';
-import { TravelModule } from './travels/travel.module';
-import { Plan } from './travels/entities/plan.entity';
-import { BoardModule } from './boards/board.module';
-
-import { Travel } from './travels/entities/travel.entity';
-import { Destination } from './travels/entities/destination.entity';
 import { ScheduleModule } from '@nestjs/schedule';
-import * as ormconfig from '../ormconfig';
-import { Rating } from './travels/entities/rating.entity';
-import { Board, Comment, Community } from './boards/entities';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
+import { BoardModule } from './boards/board.module';
+import { CommonModule } from './common/common.module';
+import { ormOptions } from './database/ormconfig';
+import { TravelModule } from './travels/travel.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -25,33 +21,7 @@ import { AppController } from './app.controller';
       // ignoreEnvFile: process.env.NODE_ENV === 'prod',
     }),
     ScheduleModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== 'prod',
-      // synchronize: true,
-      logging: true,
-      entities: [
-        User,
-        Plan,
-        Board,
-        Comment,
-        Travel,
-        Destination,
-        Rating,
-        Community,
-      ],
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
-      timezone: 'KST',
-      //   seeds: ['src/database/seeds/**/*.ts'],
-    }),
+    TypeOrmModule.forRoot(ormOptions),
 
     UsersModule,
     CommonModule,

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserInput } from '../users/dtos/create-user.dto';
 import { UserRespository } from '../users/repositories/users.repository';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto/auth.dto';
 import { Response } from 'express';
+import { sendHttpOnlyCookie } from '../util/sendCookie';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +38,7 @@ export class AuthService {
       );
 
       if (nicknameExists)
-        return { ok: false, error: 'this nickname already exists' };
+        throw new HttpException('nickname is exist', HttpStatus.BAD_REQUEST);
 
       // Hash password
       const hash = await bcrypt.hash(createUserDto.password, 10);
@@ -48,10 +54,10 @@ export class AuthService {
         newUser.email,
       );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      return { ok: false, error: 'failed to create user' };
+      throw new HttpException("Can't Create", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -73,15 +79,16 @@ export class AuthService {
         user.email,
       );
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      console.log(error);
-      return { ok: false, error: 'failed to sign in' };
+      throw new HttpException('Fail to Sign In', HttpStatus.BAD_REQUEST);
     }
   }
 
-  async logout(userId: string) {
+  async logout(userId: string, res: Response) {
+    sendHttpOnlyCookie(res, 'refresh_toklen', undefined, { maxAge: 0 });
+
     return this.usersRepository.updateRefreshToken(userId, {
       refreshToken: null,
     });
