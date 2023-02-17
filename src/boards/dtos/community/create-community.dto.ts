@@ -7,8 +7,8 @@ export class CreateCommunityInput extends PickType(Community, [
   'img',
   'content',
 ]) {
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   planId: number;
 }
 
