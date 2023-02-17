@@ -54,7 +54,7 @@ export class AuthService {
         newUser.email,
       );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
+      sendHttpOnlyCookie(res, 'refresh_token', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
       throw new HttpException("Can't Create", HttpStatus.BAD_REQUEST);
@@ -79,7 +79,7 @@ export class AuthService {
         user.email,
       );
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
-      sendHttpOnlyCookie(res, 'refresh_toklen', tokens.refreshToken);
+      sendHttpOnlyCookie(res, 'refresh_token', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
       throw new HttpException('Fail to Sign In', HttpStatus.BAD_REQUEST);
@@ -87,7 +87,7 @@ export class AuthService {
   }
 
   async logout(userId: string, res: Response) {
-    sendHttpOnlyCookie(res, 'refresh_toklen', undefined, { maxAge: 0 });
+    sendHttpOnlyCookie(res, 'refresh_token', undefined, { maxAge: 0 });
 
     return this.usersRepository.updateRefreshToken(userId, {
       refreshToken: null,
@@ -99,6 +99,7 @@ export class AuthService {
   // }
 
   async updateAccessToken(req: Request) {
+    console.log(req.cookies);
     const verifyedUser = this.jwtService.verify(req.cookies.refresh_token, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });
