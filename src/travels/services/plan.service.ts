@@ -188,6 +188,7 @@ export class PlanService {
     req: Request,
   ): Promise<CreateRandomPlanOutput> {
     try {
+      console.log('ho');
       //여행 제목 설정
       if (createRandomPlanInput.title == null) {
         createRandomPlanInput.title = `${createRandomPlanInput.city}여행 ${createRandomPlanInput.start} 시작`;

@@ -13,7 +13,7 @@ export const sendHttpOnlyCookie = (
     secure: process.env.NODE_ENV != 'dev',
     domain:
       process.env.NODE_ENV != 'dev'
-        ? '.kiminiryoukouha-web.vercel.app'
+        ? 'kiminiyoukouha-web.vercel.app'
         : 'localhost',
   });
 };
