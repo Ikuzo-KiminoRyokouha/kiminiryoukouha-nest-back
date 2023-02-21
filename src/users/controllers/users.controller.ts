@@ -42,7 +42,7 @@ export class UsersController {
   ) {
     const { userId } = getUserInputDto;
 
-    return await this.usersService.getFollowersInfo(userId | req.user['sub']);
+    return await this.usersService.getFollowersInfo(userId || req.user['sub']);
   }
 
   /**
@@ -55,7 +55,7 @@ export class UsersController {
     @Query() getUserInputDto: GetUserInput,
   ) {
     const { userId } = getUserInputDto;
-    return await this.usersService.getFolloweesInfo(userId | req.user['sub']);
+    return await this.usersService.getFolloweesInfo(userId || req.user['sub']);
   }
 
   /**
