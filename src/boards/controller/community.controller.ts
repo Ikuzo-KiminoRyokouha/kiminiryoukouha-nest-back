@@ -37,6 +37,10 @@ export class CommunityController {
   ): ShowCommunityOutput {
     return this.communityService.showCommunity(showCommunityInput);
   }
+  @Get('/:id')
+  getBoardByid(@Param('id') id: number) {
+    return this.communityService.getBoardById(id);
+  }
 
   /**
    * @description [POST] 커뮤니티 생성  컨트롤러입니다
@@ -74,6 +78,8 @@ export class CommunityController {
   @UseGuards(AccessTokenGuard)
   @Delete('/:id')
   deleteCommunity(@Param('id') id: number, @Req() req: Request) {
+    console.log(req);
+    console.log('123123');
     return this.communityService.deleteCommunity(id, req);
   }
 

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,7 +15,7 @@ import { Community } from '../entities';
 import { Plan } from '../../travels/entities/plan.entity';
 import { User } from '../../users/entities/user.entity';
 
-interface LimitOffset extends ShowCommunityInput {}
+type LimitOffset = ShowCommunityInput;
 
 @Injectable()
 @CustomRepository(Community)
@@ -20,7 +25,7 @@ export class CommunityRepository {
     private communityRepository: Repository<Community>,
     @InjectRepository(Plan)
     private planRepository: Repository<Plan>,
-    @InjectRepository(User)
+    @InjectRepository(User
     private userRepository: Repository<User>,
   ) {}
 
@@ -42,8 +47,17 @@ export class CommunityRepository {
         user,
       });
     } catch (error) {
+      console.log(error)
       throw new HttpException("Can't Created", HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async getBoardById(id: number) {
+    const found = await this.communityRepository.findOne({ where: { id } });
+    if (!found) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
+    return found;
   }
 
   /**
@@ -82,6 +96,7 @@ export class CommunityRepository {
    */
   async findByLimitOffset(option: LimitOffset) {
     const { limit, offset } = option;
+    console.log(limit, offset);
     try {
       return await this.communityRepository.find({
         select: {
