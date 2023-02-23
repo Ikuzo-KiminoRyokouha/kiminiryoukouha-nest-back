@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
@@ -16,18 +27,31 @@ import { PlanService } from '../services/plan.service';
 export class PlanController {
   constructor(private planService: PlanService) {}
 
-  // @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard)
   @Post()
   createPlan(
     @Body() createPlanInput: CreatePlanInput,
-    // @Req() req: Request,
+    @Req() req: Request,
   ): Promise<CreatePlanOutput> {
-    return this.planService.createPlan(createPlanInput);
+    return this.planService.createPlan(createPlanInput, req);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Post('/random')
-  createRandomPlan(@Body() createRandomPlanInput: CreateRandomPlanInput) {
-    return this.planService.createRandomPlan(createRandomPlanInput);
+  createRandomPlan(
+    @Body() createRandomPlanInput: CreateRandomPlanInput,
+    @Req() req: Request,
+  ) {
+    return this.planService.createRandomPlan(createRandomPlanInput, req);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('/personality')
+  createPersonalityPlan(
+    @Body() createPersonPlanInput: CreateRandomPlanInput,
+    @Req() req: Request,
+  ): Promise<CreatePlanOutput> {
+    return this.planService.createPersonalityPlan(createPersonPlanInput, req);
   }
 
   @Get('/:id')
@@ -35,13 +59,21 @@ export class PlanController {
     return this.planService.showPlan(planId);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('/all/:page')
-  showPlans(@Param('page') page: number): Promise<ShowPlansOutput> {
-    return this.planService.showPlans(page);
+  showPlans(
+    @Param('page') page: number,
+    @Req() req: Request,
+  ): Promise<ShowPlansOutput> {
+    return this.planService.showPlans(page, req);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete('/:id')
-  deletePlan(@Param('id') planId: number): Promise<DeletePlanOutput> {
-    return this.planService.deletePlan(planId);
+  deletePlan(
+    @Param('id') planId: number,
+    @Req() req: Request,
+  ): Promise<DeletePlanOutput> {
+    return this.planService.deletePlan(planId, req);
   }
 }

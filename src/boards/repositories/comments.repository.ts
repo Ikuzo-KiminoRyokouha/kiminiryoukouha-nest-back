@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRespository } from 'src/users/users.repository';
+import { UserRespository } from '../../users/repositories/users.repository';
 import { Repository } from 'typeorm';
 import { BoardsRepository } from './boards.repository';
 import { Comment } from '../entities/comment.entity';
@@ -25,9 +25,7 @@ export class CommentsRepository {
           content,
         }),
       );
-      const checkUserRole = await this.userRespository.findOne({
-        where: { id: user.sub },
-      });
+      const checkUserRole = await this.userRespository.getUser(user['sub']);
 
       if (checkUserRole.role == 'Manager') {
         const check = await this.boardRepository.updateBoard(comment.board, {

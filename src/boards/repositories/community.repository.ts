@@ -124,9 +124,12 @@ export class CommunityRepository {
    * @param userId: 유저 식별에 필요한 id 입니다
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
-  async findMyInfo(userId: number) {
+  async findUserInfo(userId: number) {
     try {
-      return await this.communityRepository.findBy({ userId });
+      return await this.communityRepository.find({
+        where: { userId },
+        relations: { user: true },
+      });
     } catch (error) {
       throw new HttpException("Can't Found", HttpStatus.BAD_REQUEST);
     }

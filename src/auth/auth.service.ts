@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserInput } from 'src/users/dtos/create-user.dto';
-import { UserRespository } from 'src/users/users.repository';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
+import { CreateUserInput } from '../users/dtos/create-user.dto';
+import { UserRespository } from '../users/repositories/users.repository';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 // import * as argon2 from 'argon2';
@@ -8,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto/auth.dto';
 import { Response } from 'express';
+import { sendHttpOnlyCookie } from '../util/sendCookie';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +38,7 @@ export class AuthService {
       );
 
       if (nicknameExists)
-        return { ok: false, error: 'this nickname already exists' };
+        throw new HttpException('nickname is exist', HttpStatus.BAD_REQUEST);
 
       // Hash password
       const hash = await bcrypt.hash(createUserDto.password, 10);
@@ -42,12 +48,16 @@ export class AuthService {
         createUserDto.role,
         createUserDto.nickname,
       );
-      const tokens = await this.getTokens(newUser.id + '', newUser.email);
+      const tokens = await this.getTokens(
+        String(newUser.id),
+        newUser.nickname,
+        newUser.email,
+      );
       await this.updateRefreshToken(newUser.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_token', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      return { ok: false, error: 'failed to create user' };
+      throw new HttpException("Can't Create", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -63,16 +73,22 @@ export class AuthService {
 
       if (!passwordMatches)
         throw new BadRequestException('Password is incorrect');
-      const tokens = await this.getTokens(user.id + '', user.email);
+      const tokens = await this.getTokens(
+        String(user.id),
+        user.nickname,
+        user.email,
+      );
       await this.updateRefreshToken(user.id + '', tokens.refreshToken);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      sendHttpOnlyCookie(res, 'refresh_token', tokens.refreshToken);
       return { accessToken: tokens.accessToken };
     } catch (error) {
-      return { ok: false, error: 'failed to sign in' };
+      throw new HttpException('Fail to Sign In', HttpStatus.BAD_REQUEST);
     }
   }
 
-  async logout(userId: string) {
+  async logout(userId: string, res: Response) {
+    sendHttpOnlyCookie(res, 'refresh_token', undefined, { maxAge: 0 });
+
     return this.usersRepository.updateRefreshToken(userId, {
       refreshToken: null,
     });
@@ -87,12 +103,13 @@ export class AuthService {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });
 
-    const user = await this.usersRepository.findOneBy({ id: verifyedUser.sub });
+    const user = await this.usersRepository.getUser(verifyedUser['sub']);
     return {
       accessToken: await this.jwtService.signAsync(
         {
           sub: user.id,
           username: user.nickname,
+          email: user.email,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -108,13 +125,14 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userId: string, username: string, email: string) {
     // console.log('gettoken');
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           username,
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -125,6 +143,7 @@ export class AuthService {
         {
           sub: userId,
           username,
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
-import { CustomRepository } from 'src/repositories/custom-repository.decorater';
-import { UserRespository } from 'src/users/users.repository';
+import { CustomRepository } from '../../repositories/custom-repository.decorater';
+import { UserRespository } from '../../users/repositories/users.repository';
 import { Repository } from 'typeorm';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import { CreatePlanInput } from '../dtos/plan/create-plan.dto';
@@ -20,15 +20,14 @@ export class planRepository {
 
   async createPlan(
     createPlanInput: CreatePlanInput | CreateRandomPlanInput,
+    userId,
   ): Promise<Plan> {
     try {
-      // const thisUser = await this.userRepository.findOne({
-      //   where: { id: user.sub },
-      // });
+      console.log(userId);
       const plan = await this.planRepository.save(
         this.planRepository.create({
           ...createPlanInput,
-          // users: [thisUser],
+          userId,
         }),
       );
       return plan;
@@ -58,6 +57,7 @@ export class planRepository {
           'plan.end',
           'plan.city',
           'plan.totalCost',
+          'plan.userId',
           'travel.id',
           'travel.startDay',
           'destination.id',
@@ -80,7 +80,7 @@ export class planRepository {
     }
   }
 
-  async showPlans(page) {
+  async showPlans(page, user) {
     try {
       const tempPlans = await this.planRepository
         .createQueryBuilder('plan')
@@ -99,6 +99,7 @@ export class planRepository {
         ])
         .leftJoin('plan.travels', 'travel')
         .leftJoin('travel.destination', 'destination')
+        .where('plan.userId = :user', { user })
         .orderBy('travel.startDay')
         .getManyAndCount();
       return {

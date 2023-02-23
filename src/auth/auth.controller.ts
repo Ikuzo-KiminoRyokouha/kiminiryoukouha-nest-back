@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateUserInput } from 'src/users/dtos/create-user.dto';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { CreateUserInput } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 
@@ -34,8 +34,8 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Get('logout')
-  logout(@Req() req: Request) {
-    this.authService.logout(req.user['sub']);
+  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    this.authService.logout(req.user['sub'], res);
   }
 
   @Get('token/refresh')

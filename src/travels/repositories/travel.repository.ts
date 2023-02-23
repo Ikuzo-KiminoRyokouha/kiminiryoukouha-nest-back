@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
 import { Repository } from 'typeorm';
+import { CreateTravelInput } from '../dtos/travel/create-travel.dto';
 import { Destination } from '../entities/destination.entity';
 import { Plan } from '../entities/plan.entity';
 import { Travel } from '../entities/travel.entity';
@@ -25,27 +26,27 @@ export class TravelRepository {
     }
   }
 
-  // async showTravelsByPlanId(planId) {
-  //   try {
-  //     console.log(planId);
-  //     const travels = await this.travelRepository.find({
-  //       where: { planId },
-  //     });
-  //     console.log('ddd', travels);
-  //     return travels;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throws;
-  //   }
-  // }
+  async showTravelsByPlanId(planId) {
+    try {
+      console.log(planId);
+      const travels = await this.travelRepository.find({
+        where: { planId },
+      });
+      console.log('ddd', travels);
+      return travels;
+    } catch (error) {
+      console.log(error);
+      throws;
+    }
+  }
 
-  async creatTravel(createTravelInput): Promise<Travel[]> {
+  async creatTravel(createTravelInput: CreateTravelInput): Promise<Travel> {
     try {
       const travel = await this.travelRepository.save(
         this.travelRepository.create({
           ...createTravelInput,
-          plan: createTravelInput.planId,
-          destination: createTravelInput.destinationId,
+          planId: createTravelInput.planId,
+          destinationId: createTravelInput.destinationId,
         }),
       );
       return travel;

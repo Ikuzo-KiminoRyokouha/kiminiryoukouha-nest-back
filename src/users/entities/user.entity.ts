@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 
 export enum UserRole {
   Client = 'Client',
@@ -21,6 +21,18 @@ export class User extends BasicEntity {
   @Column({ unique: true })
   @IsString()
   nickname: string;
+
+  @Column({ nullable: true })
+  @IsString()
+  description: string;
+
+  @ManyToMany(() => User, { nullable: true })
+  @JoinTable()
+  followers: User[];
+
+  @ManyToMany(() => User, { nullable: true })
+  @JoinTable()
+  followees: User[];
 
   @Column({ type: 'enum', enum: UserRole })
   @IsEnum(UserRole)
