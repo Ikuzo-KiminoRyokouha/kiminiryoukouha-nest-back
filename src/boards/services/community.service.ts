@@ -20,7 +20,9 @@ export class CommunityService {
       showCommunityInputDto,
     );
   }
-
+  async getBoardById(id) {
+    return this.communityRepository.getBoardById(id);
+  }
   /**
    * @description 커뮤니티 생성  서비스 로직입니다
    * @param createCommunityInputDto  : 커뮤니티 생성시 필요한 Property를 담은 전송 계층 입니다.
@@ -46,6 +48,7 @@ export class CommunityService {
     updateCommunityInputDto: UpdateCommunityInput,
     req: Request,
   ) {
+    console.log(updateCommunityInputDto);
     return await this.communityRepository.update(
       updateCommunityInputDto,
       req.user['sub'],
