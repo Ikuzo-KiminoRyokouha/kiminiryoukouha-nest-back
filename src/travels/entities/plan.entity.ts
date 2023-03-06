@@ -65,14 +65,10 @@ export class Plan extends BasicEntity {
   dayPerCost: object;
 
   @OneToMany(() => Travel, (travel) => travel.plan, {
-    cascade: true,
+    cascade: ['remove', 'soft-remove', 'recover'],
   })
   travels: Travel[];
 
-  // @ManyToMany(() => User, { nullable: true })
-  // @JoinTable()
-  // @IsOptional()
-  // users: User[];
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
   })
