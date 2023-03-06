@@ -23,10 +23,11 @@ export class planRepository {
     userId,
   ): Promise<Plan> {
     try {
-      console.log(userId);
       const plan = await this.planRepository.save(
         this.planRepository.create({
           ...createPlanInput,
+          start: new Date(createPlanInput.start),
+          end: new Date(createPlanInput.end),
           userId,
         }),
       );
@@ -46,6 +47,31 @@ export class planRepository {
     }
   }
 
+  async getMaxId() {
+    try {
+      const maxId = await this.planRepository
+        .createQueryBuilder('plan')
+        .select('MAX(plan.id) AS max')
+        .getRawOne();
+      return maxId;
+    } catch (error) {}
+  }
+
+  async copyPlan(plan: Plan, start, end) {
+    try {
+      const maxId = await this.getMaxId();
+      const copyPlan = await this.planRepository.save({
+        ...plan,
+        id: maxId.max + 1,
+        start,
+        end,
+      });
+      return copyPlan;
+    } catch (error) {
+      throws;
+    }
+  }
+
   async showPlan(planId): Promise<Plan> {
     try {
       const plan = await this.planRepository
@@ -56,6 +82,7 @@ export class planRepository {
           'plan.start',
           'plan.end',
           'plan.city',
+          'plan.tag',
           'plan.totalCost',
           'plan.userId',
           'travel.id',
