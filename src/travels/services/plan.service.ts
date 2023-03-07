@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
 import { Request } from 'express';
-import { getPersonalityDestination } from '../../util/personalityDestination';
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
@@ -20,9 +19,10 @@ import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
 import { TravelService } from './travel.service';
 import { CreateCopyPlanInput } from '../dtos/plan/create-copy-plan.dto';
-import { BasicOutput } from 'src/common/dtos/output.dto';
+import { BasicOutput } from '../../common/dtos/output.dto';
 import { throws } from 'assert';
-import { isSameDate, subtractDate } from 'src/util/dateCal';
+import { isSameDate, subtractDate } from '../..//util/dateCal';
+import axios from 'axios';
 
 @Injectable()
 export class PlanService {
@@ -55,13 +55,24 @@ export class PlanService {
       1;
     for (let i = 0; i < travelPeriod; i++) {
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
-      const destinations = await getPersonalityDestination(
-        req.user['sub'], //user
-        0, //start
-        2, // end
-        createPersonPlanInput.tag[i], //tag
-        plan.id,
-      );
+      const rawItem = await axios
+        .post('http://localhost:8000/destinations', {
+          data: {
+            userId: req.user['sub'],
+            tag: createPersonPlanInput.tag[i],
+            start: 0,
+            end: 2,
+          },
+        })
+        .then((res) => {
+          return res.data;
+        });
+      const splitItem = rawItem.split(')(');
+      const destinations = splitItem.map((item) => {
+        const newItem = item.replace(/[()]/g, '').split(',');
+        return [parseInt(newItem[0]), parseFloat(newItem[1])];
+      });
+
       const travel = await this.travelService.createTravelPerDay(
         createPersonPlanInput,
         plan.id,
@@ -165,6 +176,7 @@ export class PlanService {
     try {
       // check user
       const plan = await this.planRepository.showPlan(pageId);
+      console.log(plan, req.user['sub']);
       if (plan.userId != req.user['sub'])
         return { ok: false, message: 'you can not delete this plan' };
 
