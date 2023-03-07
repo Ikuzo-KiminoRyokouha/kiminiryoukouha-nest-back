@@ -95,10 +95,10 @@ export class UserRespository {
       });
 
       // 팔로우를 누른 사람에게는 팔로워를 추가해줍니다.
-      sourceUser.followees = [...sourceUser.followers, targetUser];
+      sourceUser.followees = [...sourceUser.followees, targetUser];
 
       // 팔로우를 눌려진 사람에게는 팔로이를 추가해줍니다.
-      targetUser.followers = [...targetUser.followees, sourceUser];
+      targetUser.followers = [...targetUser.followers, sourceUser];
 
       this.userRepository.save(sourceUser);
       this.userRepository.save(targetUser);
@@ -120,22 +120,22 @@ export class UserRespository {
         where: {
           id: sourceId,
         },
-        relations: ['followers'],
+        relations: ['followees'],
       });
       const targetUser = await this.userRepository.findOne({
         where: {
           id: targetId,
         },
-        relations: ['followees'],
+        relations: ['followers'],
       });
 
       // 언팔로우를 누른 사람에게는 팔로워를 삭제해줍니다.
-      sourceUser.followers = sourceUser.followers.filter((el, idx) => {
+      sourceUser.followees = sourceUser.followees.filter((el, idx) => {
         return el.id !== targetUser.id;
       });
 
       // 팔로우를 눌려진 사람에게는 팔로이를 삭제해줍니다.
-      targetUser.followees = targetUser.followees.filter((el, idx) => {
+      targetUser.followers = targetUser.followers.filter((el, idx) => {
         return el.id !== sourceUser.id;
       });
 

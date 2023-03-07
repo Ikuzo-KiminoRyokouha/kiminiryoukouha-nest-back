@@ -9,11 +9,11 @@ export const sendHttpOnlyCookie = (
   res.cookie(key, value, {
     ...options,
     httpOnly: true,
-    sameSite: 'none',
+    sameSite: process.env.NODE_ENV != 'dev' ? 'none' : 'lax',
     secure: process.env.NODE_ENV != 'dev',
     domain:
       process.env.NODE_ENV != 'dev'
-        ? '.kiminiryoukouha-web.vercel.app'
+        ? 'kiminiryoukouha-nest-back.vercel.app'
         : 'localhost',
   });
 };
