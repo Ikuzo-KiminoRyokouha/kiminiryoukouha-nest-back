@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Request } from 'express';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { getDestinationDetail } from '../../util/destinationInfo';
 import { ShowDetinationDetail } from '../dtos/destination/show-destination-detail.dto';
 import { ShowDestinationCode } from '../dtos/destination/show-destination-tag.dto';
@@ -49,21 +52,20 @@ export class DestinationService {
   ): Promise<ShowTravelBySurpriseOutput> {
     try {
       const rawItem = await axios
-        .post('http://localhost:8000/destinations', {
+        .post(process.env.DJANGO_API + 'destinations', {
           data: { userId, tag, start: (count - 1) * 5, end: count * 5 },
         })
         .then((res) => {
           return res.data;
         });
       const splitItem = rawItem.split(')(');
-      const result = splitItem.map((item) => {
+      const personalizedDestination = splitItem.map((item) => {
         const newItem = item.replace(/[()]/g, '').split(',');
         return [parseInt(newItem[0]), parseFloat(newItem[1])];
       });
-      console.log(result);
       return {
         ok: true,
-        // destination: personalizedDestination,
+        destination: personalizedDestination,
       };
     } catch (error) {
       return {

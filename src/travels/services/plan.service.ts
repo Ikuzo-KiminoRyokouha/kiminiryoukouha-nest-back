@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
 import { Request } from 'express';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
@@ -56,7 +59,7 @@ export class PlanService {
     for (let i = 0; i < travelPeriod; i++) {
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
       const rawItem = await axios
-        .post('http://localhost:8000/destinations', {
+        .post(process.env.DJANGO_API + 'destinations', {
           data: {
             userId: req.user['sub'],
             tag: createPersonPlanInput.tag[i],
