@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { throwError } from 'rxjs';
 import { Request } from 'express';
-import { getPersonalityDestination } from '../../util/personalityDestination';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
@@ -19,6 +21,11 @@ import { DestinationRepository } from '../repositories/destination.repository';
 import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
 import { TravelService } from './travel.service';
+import { CreateCopyPlanInput } from '../dtos/plan/create-copy-plan.dto';
+import { BasicOutput } from '../../common/dtos/output.dto';
+import { throws } from 'assert';
+import { isSameDate, subtractDate } from '../..//util/dateCal';
+import axios from 'axios';
 
 @Injectable()
 export class PlanService {
@@ -51,13 +58,24 @@ export class PlanService {
       1;
     for (let i = 0; i < travelPeriod; i++) {
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
-      const destinations = await getPersonalityDestination(
-        req.user['sub'], //user
-        0, //start
-        2, // end
-        createPersonPlanInput.tag[i], //tag
-        plan.id,
-      );
+      const rawItem = await axios
+        .post(process.env.DJANGO_API + 'destinations', {
+          data: {
+            userId: req.user['sub'],
+            tag: createPersonPlanInput.tag[i],
+            start: 0,
+            end: 2,
+          },
+        })
+        .then((res) => {
+          return res.data;
+        });
+      const splitItem = rawItem.split(')(');
+      const destinations = splitItem.map((item) => {
+        const newItem = item.replace(/[()]/g, '').split(',');
+        return [parseInt(newItem[0]), parseFloat(newItem[1])];
+      });
+
       const travel = await this.travelService.createTravelPerDay(
         createPersonPlanInput,
         plan.id,
@@ -72,6 +90,53 @@ export class PlanService {
       message: 'create plan',
       plan: tempPlan,
     };
+  }
+
+  async createCopyPlan(
+    createCopyPlanInput: CreateCopyPlanInput,
+  ): Promise<BasicOutput> {
+    try {
+      const existPlan = await this.planRepository.showPlan(
+        createCopyPlanInput.planId,
+      );
+      if (!existPlan) return { ok: false, message: 'not found exist plan' };
+
+      const travelPeriod = subtractDate(existPlan.end, existPlan.start);
+      const startDay = new Date(createCopyPlanInput.start);
+      const endDay = new Date(
+        startDay.setDate(startDay.getDate() + travelPeriod - 1),
+      );
+      const copyPlan = await this.planRepository.copyPlan(
+        existPlan,
+        createCopyPlanInput.start,
+        endDay,
+      );
+
+      if (!copyPlan) throws;
+      const travels = await this.travelRepositoy.showTravelsByPlanId(
+        createCopyPlanInput.planId,
+      );
+
+      let flag = travels[0].startDay;
+      let travelStartDay = new Date(startDay);
+
+      for (let i = 0; i < travels.length; i++) {
+        if (!isSameDate(flag, travels[i].startDay)) {
+          travelStartDay = new Date(startDay.setDate(startDay.getDate() + 1));
+          flag = travels[i].startDay;
+        }
+        const travel = await this.travelRepositoy.copyTravel(
+          travels[i],
+          travelStartDay,
+          copyPlan.id,
+        );
+        if (!travel) throwError;
+      }
+
+      return { ok: true, message: 'success to copy plan' };
+    } catch (error) {
+      return { ok: false, message: 'fail to copy plan' };
+    }
   }
 
   async showPlan(planId: number): Promise<ShowPlanOutput> {
@@ -200,7 +265,6 @@ export class PlanService {
         req.user['sub'],
       );
       if (!plan) throwError;
-      console.log(plan.id);
       //출발날짜 string -> date
       // //여행기간  두 날의 차이 / 단위 ms(천분의 1초) / 나누기 하루를 초로 낸것에 1000을 곱
       const travelPeriod =

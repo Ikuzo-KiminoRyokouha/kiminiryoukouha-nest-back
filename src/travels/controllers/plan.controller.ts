@@ -9,11 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { BasicOutput } from '../../common/dtos/output.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   CreateRandomPlanInput,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
+import { CreateCopyPlanInput } from '../dtos/plan/create-copy-plan.dto';
 import {
   CreatePlanInput,
   CreatePlanOutput,
@@ -54,6 +56,14 @@ export class PlanController {
   ): Promise<CreatePlanOutput> {
     
     return this.planService.createPersonalityPlan(createPersonPlanInput, req);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('/copy')
+  createCopyPlan(
+    @Body() createCopyPlanInput: CreateCopyPlanInput,
+  ): Promise<BasicOutput> {
+    return this.planService.createCopyPlan(createCopyPlanInput);
   }
 
   @Get('/:id')

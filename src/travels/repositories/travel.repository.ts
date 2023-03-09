@@ -28,16 +28,42 @@ export class TravelRepository {
 
   async showTravelsByPlanId(planId) {
     try {
-      console.log(planId);
       const travels = await this.travelRepository.find({
         where: { planId },
+        // order: { startDay: 'ASC' },
       });
-      console.log('ddd', travels);
       return travels;
     } catch (error) {
-      console.log(error);
       throws;
     }
+  }
+
+  async copyTravel(travel: Travel, startDay, planId) {
+    try {
+      const maxId = await this.getMaxId();
+      delete travel.createdAt;
+      delete travel.updatedAt;
+      const copyTravel = await this.travelRepository.save({
+        ...travel,
+        startDay,
+        planId,
+        clear: false,
+        id: maxId.max + 1,
+      });
+      return copyTravel;
+    } catch (error) {
+      throws;
+    }
+  }
+
+  async getMaxId() {
+    try {
+      const maxId = await this.travelRepository
+        .createQueryBuilder('travel')
+        .select('MAX(travel.id) AS max')
+        .getRawOne();
+      return maxId;
+    } catch (error) {}
   }
 
   async creatTravel(createTravelInput: CreateTravelInput): Promise<Travel> {
@@ -70,7 +96,6 @@ export class TravelRepository {
   }
 
   async addRandomTravel({ planId, tag }, travels) {
-    console.log(travels);
     // const newTravel = await this.travelRepository.createQueryBuilder('travel').where('travel')
   }
 }

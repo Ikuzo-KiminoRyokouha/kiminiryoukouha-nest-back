@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as dotenv from 'dotenv';
 import { destinationCode } from './dataSet/destination-code';
 
 // const APIKEY = `oyf4zlvsJqCJu6xE7lTdpCCkWU0tY2zhJJnk6bKu3JaRVfpYoVa4xxC4PwO2pj%2BAwJkkG5VQ9kDEHOhguwhkXA%3D%3D`;
@@ -28,8 +27,8 @@ export async function getDestinationInfo(destination, cat1 = '', cat2 = '') {
 export async function getAllDestinationInfo(contentTypeId) {
   let url = commonUrl('areaBasedList');
   url += '&' + 'numOfRows' + '=' + 500;
-  url += '&' + 'areaCode' + '=' + '35';
-  url += '&' + 'sigunguCode' + '=' + '2';
+  url += '&' + 'areaCode' + '=' + '35'; //35
+  url += '&' + 'sigunguCode' + '=' + '2'; //2
   url += '&' + 'contentTypeId' + '=' + contentTypeId;
   const data = await axios
     .get(url)
