@@ -92,6 +92,6 @@ export class CommunityController {
   @Get('/user')
   showMyStroy(@Req() req: Request, @Query() query: { userId: string }) {
     const { userId } = query;
-    return this.communityService.showUserCommunity(userId || req.user['sub']);
+    return this.communityService.showCommunity(userId || req.user['sub']);
   }
 }

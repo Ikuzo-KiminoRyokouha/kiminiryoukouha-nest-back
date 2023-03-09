@@ -42,6 +42,7 @@ export class PlanController {
     @Body() createRandomPlanInput: CreateRandomPlanInput,
     @Req() req: Request,
   ) {
+   
     return this.planService.createRandomPlan(createRandomPlanInput, req);
   }
 
@@ -51,11 +52,13 @@ export class PlanController {
     @Body() createPersonPlanInput: CreateRandomPlanInput,
     @Req() req: Request,
   ): Promise<CreatePlanOutput> {
+    
     return this.planService.createPersonalityPlan(createPersonPlanInput, req);
   }
 
   @Get('/:id')
   showPlan(@Param('id') planId: number): Promise<ShowPlanOutput> {
+    
     return this.planService.showPlan(planId);
   }
 
@@ -76,4 +79,7 @@ export class PlanController {
   ): Promise<DeletePlanOutput> {
     return this.planService.deletePlan(planId, req);
   }
+
+
 }
+

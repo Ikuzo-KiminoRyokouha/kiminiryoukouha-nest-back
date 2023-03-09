@@ -240,7 +240,8 @@ export class PlanService {
         message: 'create plan',
         plan: tempPlan,
       };
-    } catch (e) {
+    } catch (e) { 
+      console.log("ERROR : ", e)
       return {
         ok: false,
         error: 'failed to create plan',

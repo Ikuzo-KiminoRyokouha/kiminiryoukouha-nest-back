@@ -25,7 +25,7 @@ export class CommunityRepository {
     private communityRepository: Repository<Community>,
     @InjectRepository(Plan)
     private planRepository: Repository<Plan>,
-    @InjectRepository(User
+    @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
