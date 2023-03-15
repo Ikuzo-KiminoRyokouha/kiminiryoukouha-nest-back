@@ -52,7 +52,41 @@ export class DestinationRepository {
     }
   }
 
-  // async duplicateDestinationCheck(chedkedItem, destinaiton) {
+  async getRaondomDes1(checkarea,tagArr: string[], checkDes): Promise<Destination> {
+    try {
+      let randomDestination;
+      if (tagArr == null) {
+        randomDestination = await this.destinationRepository
+          .createQueryBuilder('destination')
+          .where('destination.id NOT IN (:checkDes)', { checkDes })
+          .andWhere(`destination.areacode = ${checkarea.areacode}`)
+          .andWhere(`destination.sigungucode = ${checkarea.sigungucode}`)
+         
+          .getMany();
+      } else {
+        randomDestination = await this.destinationRepository
+          .createQueryBuilder('destination')
+          .where('destination.cat3 IN (:tagArr)', { tagArr })
+          .andWhere(`destination.areacode = ${checkarea.areacode}`)
+          .andWhere(`destination.sigungucode = ${checkarea.sigungucode}`)
+          .andWhere('destination.id NOT IN (:checkDes)', { checkDes })
+          .getMany();
+      }
+      if (randomDestination[0] == null) return null;
+      const max = randomDestination.length;
+      const ranNum = Math.floor(Math.random() * max) + 1;
+      return randomDestination[ranNum - 1];
+    } catch (error) {
+      throws;
+    }
+  }
+
+
+
+
+
+
+  // async duplicateDestinationCheck(chedkedItem, destinaiton) { 일단내가한거아님
   //   try {
   //     const check =
   //   } catch (error) {
@@ -86,12 +120,14 @@ export class DestinationRepository {
     }
   }
 
-  async showDestinationTag() {
+  async showDestinationTag(areacode,sigungu) {
     try {
       const tag = await this.destinationRepository
-        .createQueryBuilder('destination')
-        .select('destination.cat3 AS tag')
-        .addSelect('COUNT(*) AS tagCount')
+        .createQueryBuilder('destination') //데이터베이스에서 destination테이블에서 
+        .select('destination.cat3 AS tag ') //바다,산 
+        .where(`destination.areacode = ${areacode}`)
+        .andWhere(`destination.sigungucode = ${sigungu}`)
+        .addSelect('COUNT(*) AS tagCount')//개수 
         .groupBy('destination.cat3')
         .getRawMany();
       return tag;
