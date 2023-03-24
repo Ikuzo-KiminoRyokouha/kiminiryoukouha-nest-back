@@ -19,7 +19,7 @@ export class planRepository {
   ) {}
 
   async createPlan(
-    createPlanInput: CreatePlanInput | CreateRandomPlanInput,
+    createPlanInput:   CreateRandomPlanInput,
     userId,
   ): Promise<Plan> {
     try {

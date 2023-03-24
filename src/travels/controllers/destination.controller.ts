@@ -25,10 +25,12 @@ export class DestinationController {
     return this.destinationService.showDestinationDetail(destinationId);
   }
 
-  @Get('/tag')
-  async showDestinationTag() {
-    return this.destinationService.showDestinationTag();
+  @Get('/tag/:areaCode/:sigungu')
+  async showDestinationTag(@Param('areaCode')areacode: string,@Param('sigungu')sigungu:string) {
+    return this.destinationService.showDestinationTag(areacode,sigungu);
   }
+  //뭔가 2개 다 들어갔을때 반환해야하니까 
+  //파라미터, 바디에 값이 2개있어야함 
 
   @UseGuards(AccessTokenGuard)
   @Post('/personality')
