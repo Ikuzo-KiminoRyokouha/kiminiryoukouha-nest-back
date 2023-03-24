@@ -103,7 +103,7 @@ export class PlanService {
       if (!existPlan) return { ok: false, message: 'not found exist plan' }; //없으면 에러메세지를 보내줌
 
       const travelPeriod = subtractDate(existPlan.end, existPlan.start); // 총기간 
-      const startDay = new Date(createCopyPlanInput.start); //시작 날짜
+      const startDay = new Date(createCopyPlanInput.start ); //시작 날짜
       const endDay = new Date(
         startDay.setDate(startDay.getDate() + travelPeriod - 1), //끝 날짜
       );
