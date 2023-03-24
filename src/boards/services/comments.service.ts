@@ -1,24 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsRepository } from '../repositories/comments.repository';
-import {
-  CreateCommentInput,
-  CreateCommentOutput,
-} from '../dtos/comment/create-comment.dto';
+import { CreateCommentInput, CreateCommentOutput } from '../dtos/comment/create-comment.dto';
 import { DeleteCommentOuput } from '../dtos/comment/delete-comment.dto';
 import { ShowCommentsOutput } from '../dtos/comment/show-comments.dto';
-import {
-  UpdateCommentInput,
-  updateCommentOutput,
-} from '../dtos/comment/update-comment.dto';
+import { UpdateCommentInput, updateCommentOutput } from '../dtos/comment/update-comment.dto';
 
 @Injectable()
 export class CommentsService {
   constructor(private readonly commentsRepository: CommentsRepository) {}
 
-  async createComment(
-    createComment: CreateCommentInput,
-    user,
-  ): Promise<CreateCommentOutput> {
+  async createComment(createComment: CreateCommentInput, user): Promise<CreateCommentOutput> {
     try {
       await this.commentsRepository.createComment(
         {
@@ -41,9 +32,7 @@ export class CommentsService {
   async showComments(boardId: number): Promise<ShowCommentsOutput> {
     try {
       console.log('ddd');
-      const { comments, count } = await this.commentsRepository.showComments(
-        boardId,
-      );
+      const { comments, count } = await this.commentsRepository.showComments(boardId);
       if (!comments[0]) {
         return {
           ok: false,
@@ -65,11 +54,7 @@ export class CommentsService {
     }
   }
 
-  async updateComment(
-    commentId: number,
-    updateCommentInput: UpdateCommentInput,
-    user,
-  ): Promise<updateCommentOutput> {
+  async updateComment(commentId: number, updateCommentInput: UpdateCommentInput, user): Promise<updateCommentOutput> {
     try {
       const comment = await this.commentsRepository.showComment(commentId);
       if (!comment) {
@@ -84,10 +69,7 @@ export class CommentsService {
           error: 'you can not update this comment',
         };
       }
-      const check = await this.commentsRepository.updateComment(
-        commentId,
-        updateCommentInput,
-      );
+      const check = await this.commentsRepository.updateComment(commentId, updateCommentInput);
       if (!check) {
         return {
           ok: false,

@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Board, Comment, Community } from '../boards/entities';
+import { Board, CommComments, Comment, Community } from '../boards/entities';
 import { Destination } from '../travels/entities/destination.entity';
 import { Plan } from '../travels/entities/plan.entity';
 import { Travel } from '../travels/entities/travel.entity';
@@ -16,20 +16,8 @@ export const ormOptions: TypeOrmModuleOptions = {
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
   logging: true,
-  entities: [
-    User,
-    Plan,
-    Board,
-    Comment,
-    Travel,
-    Destination,
-    Rating,
-    Community,
-  ],
-  ssl:
-    process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : false,
+  entities: [User, Plan, Board, Comment, Travel, Destination, Rating, Community, CommComments],
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   timezone: 'KST',
   // migrationsRun: true,
   // seeds: ['src/database/seed s/**/*.ts'],

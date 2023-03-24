@@ -1,19 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 
-import {
-  ShowCommunityInput,
-  ShowCommunityOutput,
-} from '../dtos/community/show-community.dto';
+import { ShowCommunityInput, ShowCommunityOutput } from '../dtos/community/show-community.dto';
 import { CommunityService } from '../services';
 import { Request } from 'express';
 import { CreateCommunityInput } from '../dtos/community/create-community.dto';
@@ -33,9 +20,7 @@ export class CommunityController {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
   @Get('/')
-  showCommunity(
-    @Query() showCommunityInput: ShowCommunityInput,
-  ): ShowCommunityOutput {
+  showCommunity(@Query() showCommunityInput: ShowCommunityInput): ShowCommunityOutput {
     return this.communityService.showCommunity(showCommunityInput);
   }
 
@@ -46,10 +31,7 @@ export class CommunityController {
    */
   @UseGuards(AccessTokenGuard)
   @Post('/')
-  createCommunity(
-    @Body() createCommunityInputDto: CreateCommunityInput,
-    @Req() req: Request,
-  ) {
+  createCommunity(@Body() createCommunityInputDto: CreateCommunityInput, @Req() req: Request) {
     return this.communityService.createCommunity(createCommunityInputDto, req);
   }
 
@@ -60,10 +42,7 @@ export class CommunityController {
    */
   @UseGuards(AccessTokenGuard)
   @Put('/')
-  updateCommunity(
-    @Body() updateCommunityInputDto: UpdateCommunityInput,
-    @Req() req: Request,
-  ) {
+  updateCommunity(@Body() updateCommunityInputDto: UpdateCommunityInput, @Req() req: Request) {
     return this.communityService.updateCommunity(updateCommunityInputDto, req);
   }
 

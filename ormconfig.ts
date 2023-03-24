@@ -1,4 +1,4 @@
-import { Board, Comment, Community } from './src/boards/entities';
+import { Board, CommComments, Comment, Community } from './src/boards/entities';
 import { Destination } from './src/travels/entities/destination.entity';
 import { Plan } from './src/travels/entities/plan.entity';
 import { Rating } from './src/travels/entities/rating.entity';
@@ -15,20 +15,8 @@ const ormConfig = {
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
   logging: true,
-  entities: [
-    User,
-    Plan,
-    Board,
-    Comment,
-    Travel,
-    Destination,
-    Rating,
-    Community,
-  ],
-  ssl:
-    process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : false,
+  entities: [User, Plan, Board, Comment, Travel, Destination, Rating, Community, CommComments],
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   timezone: 'KST',
   //   seeds: ['src/database/seeds/**/*.ts'],
 };
