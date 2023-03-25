@@ -6,6 +6,7 @@ dotenv.config();
 
 import {
   CreateRandomPlanInput,
+  CreateRandomPlanInput1,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
 import {
@@ -37,7 +38,7 @@ export class PlanService {
   ) {}
 
   async createPersonalityPlan(
-    createPersonPlanInput: CreateRandomPlanInput,
+    createPersonPlanInput: CreateRandomPlanInput|CreateRandomPlanInput1,
     req: Request,
   ): Promise<CreateRandomPlanOutput> {
     if (createPersonPlanInput.title == null) {
@@ -96,23 +97,23 @@ export class PlanService {
     createCopyPlanInput: CreateCopyPlanInput,
   ): Promise<BasicOutput> {
     try {
-      const existPlan = await this.planRepository.showPlan(
+      const existPlan = await this.planRepository.showPlan( //원하는 번호를 불러옴 
         createCopyPlanInput.planId,
       );
-      if (!existPlan) return { ok: false, message: 'not found exist plan' };
+      if (!existPlan) return { ok: false, message: 'not found exist plan' }; //없으면 에러메세지를 보내줌
 
-      const travelPeriod = subtractDate(existPlan.end, existPlan.start);
-      const startDay = new Date(createCopyPlanInput.start);
+      const travelPeriod = subtractDate(existPlan.end, existPlan.start); // 총기간 
+      const startDay = new Date(createCopyPlanInput.start ); //시작 날짜
       const endDay = new Date(
-        startDay.setDate(startDay.getDate() + travelPeriod - 1),
+        startDay.setDate(startDay.getDate() + travelPeriod - 1), //끝 날짜
       );
-      const copyPlan = await this.planRepository.copyPlan(
+      const copyPlan = await this.planRepository.copyPlan( //얘는 플랜아이디 plan에 id를받아와서 맨 높은놈바로위에꺼를 planid로만들고 넣어준 날짜로 바꿔줌
         existPlan,
         createCopyPlanInput.start,
         endDay,
       );
 
-      if (!copyPlan) throws;
+      if (!copyPlan) throws; //위에서못받아오면 
       const travels = await this.travelRepositoy.showTravelsByPlanId(
         createCopyPlanInput.planId,
       );
@@ -249,7 +250,7 @@ export class PlanService {
     }
   }
   async createRandomPlan(
-    createRandomPlanInput: CreateRandomPlanInput,
+    createRandomPlanInput: CreateRandomPlanInput, 
     req: Request,
   ): Promise<CreateRandomPlanOutput> {
     try {
@@ -272,7 +273,8 @@ export class PlanService {
           new Date(createRandomPlanInput.start).getTime()) /
           (1000 * 60 * 60 * 24) +
         1;
-
+        //where절에서 areacode랑 sigungucode랑비교해서 맞는것만 가져오면됨
+        
       const checkDestinationArr: number[] = [0];
 
       //여행지 생성
@@ -304,11 +306,81 @@ export class PlanService {
         message: 'create plan',
         plan: tempPlan,
       };
-    } catch (e) {
+    } catch (e) { 
+      console.log("ERROR : ", e)
       return {
         ok: false,
         error: 'failed to create plan',
       };
     }
   }
+  async createRandomPlan1(
+    createRandomPlanInput, 
+    req: Request,
+  ): Promise<CreateRandomPlanOutput> {
+    try {
+      console.log('ho');
+    
+      //여행 제목 설정
+      if (createRandomPlanInput.title == null) {
+        createRandomPlanInput.title = `${createRandomPlanInput.city}여행 ${createRandomPlanInput.start} 시작`;
+      }
+
+      //여행 계획 CREATE
+      const plan = await this.planRepository.createPlan(
+        createRandomPlanInput,
+        req.user['sub'],
+      );
+      if (!plan) throwError;
+      //출발날짜 string -> date
+      // //여행기간  두 날의 차이 / 단위 ms(천분의 1초) / 나누기 하루를 초로 낸것에 1000을 곱
+      const travelPeriod =
+        (new Date(createRandomPlanInput.end).getTime() -
+          new Date(createRandomPlanInput.start).getTime()) /
+          (1000 * 60 * 60 * 24) +
+        1;
+        //where절에서 areacode랑 sigungucode랑비교해서 맞는것만 가져오면됨
+        
+      const checkDestinationArr: number[] = [0];
+
+      //여행지 생성
+      for (let i = 0; i < travelPeriod; i++) {
+        //태그에 따른 여행지 찾기
+        const tempDayPerDesArr: Destination[] = [];
+        for (let j = 0; j < 2; j++) {
+          const dayPerDes = await this.destinationRepository.getRaondomDes1(
+            createRandomPlanInput,
+            createRandomPlanInput.tag[i],
+            checkDestinationArr,
+          );
+          if (dayPerDes === null)
+            return { ok: false, message: `this city dosen't have ~~` };
+          checkDestinationArr.push(dayPerDes.id);
+          tempDayPerDesArr.push(dayPerDes);
+        }
+
+        const travel = await this.travelService.createTravelPerDay(
+          createRandomPlanInput,
+          plan.id,
+          tempDayPerDesArr,
+          i,
+        );
+        if (!travel) return { ok: false, error: 'failed to create plan' };
+      }
+      const tempPlan = await this.planRepository.showPlan(plan.id);
+      return {
+        ok: true,
+        message: 'create plan',
+        plan: tempPlan,
+      };
+    } catch (e) { 
+      console.log("ERROR : ", e)
+      return {
+        ok: false,
+        error: 'failed to create plan',
+      };
+    }
+  }
+
+ 
 }

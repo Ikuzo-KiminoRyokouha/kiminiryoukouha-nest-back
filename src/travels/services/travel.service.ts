@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { throwError } from 'rxjs';
 import { Request } from 'express';
 import { BasicOutput } from '../../common/dtos/output.dto';
-import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
+import { CreateRandomPlanInput, CreateRandomPlanInput1 } from '../dtos/plan/craete-random-plan.dto';
 import {
   AddRandomTravelInput,
   AddRandomTravelOutput,
@@ -174,7 +174,7 @@ export class TravelService {
   }
 
   async createTravelPerDay(
-    createRandomPlanInput: CreateRandomPlanInput,
+    createRandomPlanInput: CreateRandomPlanInput|CreateRandomPlanInput1,
     planId,
     dayPerDes,
     i,

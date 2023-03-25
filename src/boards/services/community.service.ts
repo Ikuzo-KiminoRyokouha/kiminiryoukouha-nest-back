@@ -20,7 +20,9 @@ export class CommunityService {
       showCommunityInputDto,
     );
   }
-
+  async getBoardById(id) {
+    return this.communityRepository.getBoardById(id);
+  }
   /**
    * @description 커뮤니티 생성  서비스 로직입니다
    * @param createCommunityInputDto  : 커뮤니티 생성시 필요한 Property를 담은 전송 계층 입니다.
@@ -46,6 +48,7 @@ export class CommunityService {
     updateCommunityInputDto: UpdateCommunityInput,
     req: Request,
   ) {
+    console.log(updateCommunityInputDto);
     return await this.communityRepository.update(
       updateCommunityInputDto,
       req.user['sub'],
@@ -67,7 +70,7 @@ export class CommunityService {
    * @param req : 요청에 대한 정보
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
-  async showUserCommunity(userId: number) {
-    return await this.communityRepository.findUserInfo(userId);
+  async showMyCommunity(req: Request) {
+    return await this.communityRepository.findUserInfo(req.user['sub']);
   }
 }

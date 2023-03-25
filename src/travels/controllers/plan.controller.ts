@@ -13,6 +13,7 @@ import { BasicOutput } from '../../common/dtos/output.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   CreateRandomPlanInput,
+  CreateRandomPlanInput1,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
 import { CreateCopyPlanInput } from '../dtos/plan/create-copy-plan.dto';
@@ -38,14 +39,31 @@ export class PlanController {
     return this.planService.createPlan(createPlanInput, req);
   }
 
-  @UseGuards(AccessTokenGuard)
-  @Post('/random')
-  createRandomPlan(
-    @Body() createRandomPlanInput: CreateRandomPlanInput,
+  // @UseGuards(AccessTokenGuard) 
+  // @Post('/random')
+  // createRandomPlan(
+  //   @Body() createRandomPlanInput: CreateRandomPlanInput,
+  //   @Req() req: Request,
+  // ) {
+   
+  //   return this.planService.createRandomPlan(createRandomPlanInput, req);
+  // }
+
+
+  @UseGuards(AccessTokenGuard) 
+  @Post('/random/1')
+  createRandomPlan1(
+        @Body() createRandomPlanInput: CreateRandomPlanInput1,
     @Req() req: Request,
   ) {
-    return this.planService.createRandomPlan(createRandomPlanInput, req);
+ 
+ 
+   
+    return this.planService.createRandomPlan1(createRandomPlanInput, req);
   }
+
+
+
 
   @UseGuards(AccessTokenGuard)
   @Post('/personality')
@@ -53,9 +71,11 @@ export class PlanController {
     @Body() createPersonPlanInput: CreateRandomPlanInput,
     @Req() req: Request,
   ): Promise<CreatePlanOutput> {
+    
     return this.planService.createPersonalityPlan(createPersonPlanInput, req);
   }
 
+  //이게 계획눌렀을때 가져오는거 
   @UseGuards(AccessTokenGuard)
   @Post('/copy')
   createCopyPlan(
@@ -66,6 +86,7 @@ export class PlanController {
 
   @Get('/:id')
   showPlan(@Param('id') planId: number): Promise<ShowPlanOutput> {
+    
     return this.planService.showPlan(planId);
   }
 
@@ -86,4 +107,7 @@ export class PlanController {
   ): Promise<DeletePlanOutput> {
     return this.planService.deletePlan(planId, req);
   }
+
+
 }
+

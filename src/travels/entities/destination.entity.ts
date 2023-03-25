@@ -41,6 +41,13 @@ export class Destination extends BasicEntity {
   @IsString()
   description: string;
 
+  @Column()
+  @IsString()
+  areacode: string;
+
+  @Column()
+  @IsString()
+  sigungucode: string;
   @OneToMany(() => Travel, (travel) => travel.plan)
   travels: Travel[];
 }
