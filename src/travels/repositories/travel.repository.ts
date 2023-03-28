@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
 import { Repository } from 'typeorm';
 import { CreateTravelInput } from '../dtos/travel/create-travel.dto';
-import { Destination } from '../entities/destination.entity';
-import { Plan } from '../entities/plan.entity';
 import { Travel } from '../entities/travel.entity';
 
 @Injectable()

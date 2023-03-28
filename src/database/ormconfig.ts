@@ -5,6 +5,8 @@ import { Plan } from '../travels/entities/plan.entity';
 import { Travel } from '../travels/entities/travel.entity';
 import { User } from '../users/entities/user.entity';
 import { Rating } from '../travels/entities/rating.entity';
+import { BankingToken } from '../travels/entities/bankingToken.entity';
+import { Account } from '../travels/entities/account.entity';
 
 export const ormOptions: TypeOrmModuleOptions = {
   type: 'mysql' as 'mysql',
@@ -25,6 +27,8 @@ export const ormOptions: TypeOrmModuleOptions = {
     Destination,
     Rating,
     Community,
+    BankingToken,
+    Account,
   ],
   ssl:
     process.env.NODE_ENV === 'production'
