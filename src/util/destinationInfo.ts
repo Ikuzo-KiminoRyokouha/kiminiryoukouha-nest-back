@@ -64,6 +64,7 @@ function codeToTag(destinationInfo) {
   });
   return destinationInfo.filter((destination) => destination.cat3 != undefined);
 }
+
 //searchKeyword
 function commonUrl(type) {
   const APIKEY = process.env.DES_INFO;
