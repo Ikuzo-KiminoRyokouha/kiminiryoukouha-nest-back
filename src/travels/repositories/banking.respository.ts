@@ -54,4 +54,12 @@ export class BankingRepository {
       throws;
     }
   }
+
+  async updateCheckNum(token: BankingToken) {
+    const checkNum = await this.bankingTokenRepository.update(token.userNo, {
+      checking: () => 'checking + 1',
+    });
+    token.checking += 1;
+    return token;
+  }
 }
