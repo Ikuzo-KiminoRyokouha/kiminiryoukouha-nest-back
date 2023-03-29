@@ -30,7 +30,7 @@ export class BankingToken {
   @IsNumber()
   userId: number;
 
-  @Column({ default: '00000000' })
-  @IsString()
-  check: string;
+  @Column({ default: 0 })
+  @IsNumber()
+  checking: number;
 }

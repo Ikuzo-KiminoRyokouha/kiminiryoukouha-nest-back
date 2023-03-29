@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { throwError } from 'rxjs';
 import { BasicOutput } from 'src/common/dtos/output.dto';
+import { getBankingCheckCode } from 'src/util/banking/getBankingCheckCode';
 import { AccountRepository } from '../repositories/account.respository';
 import { BankingRepository } from '../repositories/banking.respository';
 import { planRepository } from '../repositories/plan.repository';
@@ -125,16 +126,18 @@ export class BankingService {
   async createTransactionList({ planId }, userId): Promise<BasicOutput> {
     //계좌조회 데이터 + 새로운 데이터 추가
     const token = await this.bankingRepository.getBankingToken(userId);
+    const newToken = await this.bankingRepository.updateCheckNum(token);
     const plan = await this.planRepository.showPlan(planId);
     const endDay = plan.end.toISOString().slice(0, 10).split('-').join('');
     const startDay = plan.start.toISOString().slice(0, 10).split('-').join('');
+    const checkCode = getBankingCheckCode(newToken.checking);
     const res = await axios
       .get(
         process.env.BANKING_API_URI + '/v2.0/account/transaction_list/fin_num',
         {
           params: {
-            bank_tran_id: 'M202300381U000000090',
-            fintech_use_num: '120230038188951018177964',
+            bank_tran_id: process.env.BANKING_TRAIN_NUM + 'U' + checkCode,
+            fintech_use_num: token.finNum,
             inquiry_type: 'A',
             inquiry_base: 'D',
             from_date: startDay,
@@ -148,7 +151,7 @@ export class BankingService {
       .then((res) => {
         return res.data;
       });
-
+    console.log(res);
     const accountDatas: IGetTransaction[] = res.res_list;
 
     if (!accountDatas)
@@ -212,7 +215,6 @@ export class BankingService {
       );
       if (!transaction)
         return { ok: false, message: 'cannot find this transaction' };
-      console.log(transactionId, transaction.visible);
       const updatedTransaction =
         await this.accountRepository.updateTransactionVisible(
           transactionId,
