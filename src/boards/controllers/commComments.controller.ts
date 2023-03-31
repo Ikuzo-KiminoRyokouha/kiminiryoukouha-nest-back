@@ -10,19 +10,20 @@ export class commCommentsController {
 
   @Get('/')
   showCommComments() {
-    return this.commCommentsService.showComments();
+    return this.commCommentsService.showComments1();
   }
 
   @Get('/asdf')
   findByUserOne1(@Query('id') id: number) {
-    return this.commCommentsService.showComments();
+    return this.commCommentsService.showComments1();
   }
 
-  @Get('/asdf/:id')
-  findByUserOne2(@Param('id') id: number) {
-    return this.commCommentsService.test1(id);
-  }
+  // @Get('/asdf/:id')
+  // findByUserOne2(@Param('id') id: number) {
+  //   return this.commCommentsService.test1(id);
+  // }
 
+  // 댓글쓰기
   @UseGuards(AccessTokenGuard)
   @Post()
   createComment(
@@ -31,5 +32,10 @@ export class commCommentsController {
   ): Promise<CreateCommCommentOutput> {
     console.log('req.user', req.user);
     return this.commCommentsService.createComment(createCommCommentInput, req.user);
+  }
+
+  @Get('/asdf/:postId')
+  showComments(@Param('postId') postId: number) {
+    return this.commCommentsService.showComments(postId);
   }
 }

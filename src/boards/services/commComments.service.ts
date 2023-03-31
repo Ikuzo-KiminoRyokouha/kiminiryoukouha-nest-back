@@ -5,7 +5,7 @@ import { CommCommentsRepository } from '../repositories/commComments.repository'
 @Injectable()
 export class CommCommentsService {
   constructor(private readonly commCommentsRepository: CommCommentsRepository) {}
-  async showComments(): Promise<string> {
+  async showComments1(): Promise<string> {
     return '응애1';
   }
 
@@ -28,6 +28,18 @@ export class CommCommentsService {
       return {
         ok: false,
         message: 'faild to create comment',
+      };
+    }
+  }
+
+  async showComments(postId: number) {
+    try {
+      await this.commCommentsRepository.showComments(postId);
+    } catch (err) {
+      console.log('err', err);
+      return {
+        ok: false,
+        error: 'failed to show comments',
       };
     }
   }

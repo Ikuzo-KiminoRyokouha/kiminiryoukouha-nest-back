@@ -28,4 +28,23 @@ export class CommCommentsRepository {
       return false;
     }
   }
+
+  async showComments(postId) {
+    try {
+      const selectedComments = await this.commCommentsRepository
+        .createQueryBuilder('commcomment')
+        .select(['commcomment.id', 'commcomment.content', 'user.email', 'user.nickname'])
+        .where('commcomment.postId = :postId', { postId: postId })
+        .leftJoin('commcomment.user', 'user')
+        .getManyAndCount();
+
+      console.log('selectedComments', selectedComments);
+      return selectedComments;
+    } catch (err) {
+      console.log('err', err);
+      return {
+        comments: [],
+      };
+    }
+  }
 }
