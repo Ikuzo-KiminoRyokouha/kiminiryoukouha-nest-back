@@ -20,11 +20,25 @@ import { TravelService } from './services/travel.service';
 import { User } from '../users/entities/user.entity';
 import { RatingService } from './services/rating.service';
 import { RatingController } from './controllers/rating.controller';
+import { BankingController } from './controllers/banking.controller';
+import { BankingService } from './services/banking.service';
+import { BankingToken } from './entities/bankingToken.entity';
+import { BankingRepository } from './repositories/banking.respository';
+import { Account } from './entities/account.entity';
+import { AccountRepository } from './repositories/account.respository';
 // import { TestController } from './controllers/test.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Plan, Destination, Travel, Rating, User]),
+    TypeOrmModule.forFeature([
+      Plan,
+      Destination,
+      Travel,
+      Rating,
+      User,
+      BankingToken,
+      Account,
+    ]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
   controllers: [
@@ -32,6 +46,7 @@ import { RatingController } from './controllers/rating.controller';
     PlanController,
     DestinationController,
     RatingController,
+    BankingController,
     // TestController,
   ],
   providers: [
@@ -43,6 +58,9 @@ import { RatingController } from './controllers/rating.controller';
     TravelRepository,
     RatingRepository,
     RatingService,
+    BankingService,
+    BankingRepository,
+    AccountRepository,
   ],
 })
 export class TravelModule {}
