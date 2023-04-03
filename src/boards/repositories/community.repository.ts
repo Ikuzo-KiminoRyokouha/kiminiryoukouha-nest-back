@@ -93,7 +93,7 @@ export class CommunityRepository {
     const { limit, offset } = option;
     console.log(limit, offset);
     try {
-      return await this.communityRepository.find({
+      return await this.communityRepository.findAndCount({
         select: {
           id: true,
           img: true,
