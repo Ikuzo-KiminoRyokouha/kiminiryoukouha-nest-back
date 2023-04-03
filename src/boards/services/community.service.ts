@@ -16,9 +16,7 @@ export class CommunityService {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
   async showCommunity(showCommunityInputDto: ShowCommunityInput) {
-    return await this.communityRepository.findByLimitOffset(
-      showCommunityInputDto,
-    );
+    return await this.communityRepository.findByLimitOffset(showCommunityInputDto);
   }
   async getBoardById(id) {
     return this.communityRepository.getBoardById(id);
@@ -29,14 +27,8 @@ export class CommunityService {
    * @param req  : 요청에 대한 정보
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Not Created
    */
-  async createCommunity(
-    createCommunityInputDto: CreateCommunityInput,
-    req: Request,
-  ) {
-    return await this.communityRepository.create(
-      createCommunityInputDto,
-      req.user['sub'],
-    );
+  async createCommunity(createCommunityInputDto: CreateCommunityInput, req: Request) {
+    return await this.communityRepository.create(createCommunityInputDto, req.user['sub']);
   }
   /**
    * @description 커뮤니티 수정 데이터 서비스 로직입니다
@@ -44,15 +36,9 @@ export class CommunityService {
    * @param req : 요청에 대한 정보
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Created
    */
-  async updateCommunity(
-    updateCommunityInputDto: UpdateCommunityInput,
-    req: Request,
-  ) {
+  async updateCommunity(updateCommunityInputDto: UpdateCommunityInput, req: Request) {
     console.log(updateCommunityInputDto);
-    return await this.communityRepository.update(
-      updateCommunityInputDto,
-      req.user['sub'],
-    );
+    return await this.communityRepository.update(updateCommunityInputDto, req.user['sub']);
   }
 
   /**

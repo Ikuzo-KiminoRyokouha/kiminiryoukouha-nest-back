@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -47,7 +42,7 @@ export class CommunityRepository {
         user,
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new HttpException("Can't Created", HttpStatus.BAD_REQUEST);
     }
   }

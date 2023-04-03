@@ -29,22 +29,63 @@ export class CommCommentsRepository {
     }
   }
 
+  async showComment(commentId) {
+    try {
+      const comment = await this.commCommentsRepository.findOne({
+        where: { id: commentId },
+      });
+      if (!comment) {
+        return false;
+      }
+      return comment;
+    } catch (err) {
+      console.log('err', err);
+      return false;
+    }
+  }
+
   async showComments(postId) {
     try {
       const selectedComments = await this.commCommentsRepository
         .createQueryBuilder('commcomment')
         .select(['commcomment.id', 'commcomment.content', 'user.email', 'user.nickname'])
-        .where('commcomment.postId = :postId', { postId: postId })
+        .where('commcomment.communityId = :postId', { postId: postId })
         .leftJoin('commcomment.user', 'user')
         .getManyAndCount();
 
-      console.log('selectedComments', selectedComments);
-      return selectedComments;
+      // console.log('selectedComments', selectedComments);
+      const comments = selectedComments[0];
+      const count = Math.ceil(selectedComments[1] / 6);
+      // console.log('comments', comments);
+      // console.log('count', count);
+      return {
+        comments,
+        count,
+      };
     } catch (err) {
       console.log('err', err);
       return {
         comments: [],
       };
+    }
+  }
+
+  async updateComment(commentId, updateCommentInput) {
+    try {
+      await this.commCommentsRepository.save([{ id: commentId, ...updateCommentInput }]);
+      return true;
+    } catch (err) {
+      console.log('err', err);
+      return false;
+    }
+  }
+
+  async deleteComment(commentId) {
+    try {
+      await this.commCommentsRepository.softDelete({ id: commentId });
+    } catch (err) {
+      console.log('err', err);
+      return false;
     }
   }
 }
