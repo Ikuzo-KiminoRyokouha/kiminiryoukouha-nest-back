@@ -48,14 +48,14 @@ export class CommCommentsRepository {
     try {
       const selectedComments = await this.commCommentsRepository
         .createQueryBuilder('commcomment')
-        .select(['commcomment.id', 'commcomment.content', 'user.email', 'user.nickname'])
+        .select(['commcomment', 'user.email', 'user.nickname', 'user.id'])
         .where('commcomment.communityId = :postId', { postId: postId })
         .leftJoin('commcomment.user', 'user')
         .getManyAndCount();
 
       // console.log('selectedComments', selectedComments);
       const comments = selectedComments[0];
-      const count = Math.ceil(selectedComments[1] / 6);
+      const count = Math.ceil(selectedComments[1]);
       // console.log('comments', comments);
       // console.log('count', count);
       return {
@@ -83,6 +83,7 @@ export class CommCommentsRepository {
   async deleteComment(commentId) {
     try {
       await this.commCommentsRepository.softDelete({ id: commentId });
+      return true;
     } catch (err) {
       console.log('err', err);
       return false;

@@ -20,7 +20,7 @@ export class CommunityController {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
   @Get('/')
-  showCommunity(@Query() showCommunityInput: ShowCommunityInput): ShowCommunityOutput {
+  showCommunity(@Query() showCommunityInput: ShowCommunityInput) {
     return this.communityService.showCommunity(showCommunityInput);
   }
   @Get('/:id')

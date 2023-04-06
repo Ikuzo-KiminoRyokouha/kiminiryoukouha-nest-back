@@ -37,7 +37,7 @@ export class CommCommentsService {
       const { comments, count } = await this.commCommentsRepository.showComments(postId);
       if (!comments[0]) {
         return {
-          ok: true,
+          ok: false,
           message: 'not found any comment',
         };
       }
@@ -115,7 +115,7 @@ export class CommCommentsService {
       if (!check) {
         return {
           ok: false,
-          error: 'failed to delete comment',
+          error: 'failed to delete comment1',
         };
       }
       return {
@@ -126,7 +126,7 @@ export class CommCommentsService {
       console.log('err', err);
       return {
         ok: false,
-        error: 'failed to delete comment',
+        error: 'failed to delete comment2',
       };
     }
   }
