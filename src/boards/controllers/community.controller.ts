@@ -33,11 +33,10 @@ export class CommunityController {
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
   @Get('/')
-  showCommunity(
-    @Query() showCommunityInput: ShowCommunityInput,
-  ): ShowCommunityOutput {
+  showCommunity(@Query() showCommunityInput: ShowCommunityInput) {
     return this.communityService.showCommunity(showCommunityInput);
   }
+
   @Get('/:id')
   getBoardByid(@Param('id') id: number) {
     return this.communityService.getBoardById(id);
@@ -79,8 +78,6 @@ export class CommunityController {
   @UseGuards(AccessTokenGuard)
   @Delete('/:id')
   deleteCommunity(@Param('id') id: number, @Req() req: Request) {
-    console.log(req);
-    console.log('123123');
     return this.communityService.deleteCommunity(id, req);
   }
 
