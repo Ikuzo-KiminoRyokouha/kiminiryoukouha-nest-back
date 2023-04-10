@@ -89,9 +89,9 @@ export class CommunityRepository {
    *
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
+
   async findByLimitOffset(option: LimitOffset) {
     const { limit, offset } = option;
-    console.log(limit, offset);
     try {
       return await this.communityRepository.findAndCount({
         select: {
@@ -101,12 +101,18 @@ export class CommunityRepository {
           createdAt: true,
           updatedAt: true,
           deleteAt: true,
+          user: {
+            id: true,
+            nickname: true,
+            email: true,
+            role: true,
+          },
         },
         take: limit,
         skip: offset,
-        relations: { plan: true },
-        loadRelationIds: {
-          relations: ['user'],
+        relations: {
+          plan: true,
+          user: true,
         },
       });
     } catch (error) {
@@ -138,7 +144,7 @@ export class CommunityRepository {
    */
   async delete(id: number, userId: number) {
     try {
-      this.checkUser(id, userId);
+      await this.checkUser(id, userId);
       return await this.communityRepository.softDelete(id);
     } catch (error) {
       throw new HttpException("Can't Deleted", HttpStatus.BAD_REQUEST);
@@ -147,7 +153,6 @@ export class CommunityRepository {
 
   async checkUser(id: number, userId: number) {
     const community = await this.communityRepository.findOneBy({ id });
-
     if (community.userId != userId) {
       throw new HttpException('Unauthorized Access', HttpStatus.UNAUTHORIZED);
     }

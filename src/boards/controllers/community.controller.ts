@@ -23,6 +23,7 @@ export class CommunityController {
   showCommunity(@Query() showCommunityInput: ShowCommunityInput) {
     return this.communityService.showCommunity(showCommunityInput);
   }
+
   @Get('/:id')
   getBoardByid(@Param('id') id: number) {
     return this.communityService.getBoardById(id);
@@ -58,8 +59,6 @@ export class CommunityController {
   @UseGuards(AccessTokenGuard)
   @Delete('/:id')
   deleteCommunity(@Param('id') id: number, @Req() req: Request) {
-    console.log(req);
-    console.log('123123');
     return this.communityService.deleteCommunity(id, req);
   }
 
