@@ -39,15 +39,15 @@ export class PlanController {
     return this.planService.createPlan(createPlanInput, req);
   }
 
-  // @UseGuards(AccessTokenGuard) 
-  // @Post('/random')
-  // createRandomPlan(
-  //   @Body() createRandomPlanInput: CreateRandomPlanInput,
-  //   @Req() req: Request,
-  // ) {
+  @UseGuards(AccessTokenGuard) 
+  @Post('/random')
+  createRandomPlan(
+    @Body() createRandomPlanInput: CreateRandomPlanInput,
+    @Req() req: Request,
+  ) {
    
-  //   return this.planService.createRandomPlan(createRandomPlanInput, req);
-  // }
+    return this.planService.createRandomPlan(createRandomPlanInput, req);
+  }
 
 
   @UseGuards(AccessTokenGuard) 
@@ -56,9 +56,6 @@ export class PlanController {
         @Body() createRandomPlanInput: CreateRandomPlanInput1,
     @Req() req: Request,
   ) {
- 
- 
-   
     return this.planService.createRandomPlan1(createRandomPlanInput, req);
   }
 
