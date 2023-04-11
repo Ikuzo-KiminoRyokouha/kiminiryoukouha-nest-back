@@ -21,6 +21,14 @@ export class BankingToken {
   @IsString()
   finNum: string;
 
+  @Column({ nullable: true })
+  @IsString()
+  bank_name: string;
+
+  @Column({ nullable: true })
+  @IsString()
+  account_num: string;
+
   @OneToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
   })

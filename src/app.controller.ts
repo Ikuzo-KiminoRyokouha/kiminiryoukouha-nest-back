@@ -1,5 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import axios from 'axios';
+import { error } from 'console';
 import { PythonShell } from 'python-shell';
 import { throwError } from 'rxjs';
 
@@ -10,22 +12,18 @@ export class AppController {
     return 'hello';
   }
 
-  @Cron('0 0 0 * * *')
+  @Cron('0 1 23 * * *')
   dataToCSV() {
     try {
-      PythonShell.run(
-        'dataToCSV.py',
-        {
-          mode: 'text',
-          scriptPath: 'src/util/python',
-        },
-        function (err, data) {
-          if (!err) {
-            throwError;
-          }
-          console.log('success to cronJob');
-        },
-      );
+      axios
+        .get(process.env.DJANGO_API + '/destinations')
+        .then((res) => {
+          console.log('success to ' + res);
+        })
+        .catch((error) => {
+          console.log(error);
+          throwError;
+        });
     } catch (error) {
       return 'cronjob error';
     }
