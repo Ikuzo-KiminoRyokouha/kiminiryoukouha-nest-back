@@ -6,6 +6,7 @@ import { getBankingCheckCode } from 'src/util/banking/getBankingCheckCode';
 import { AccountRepository } from '../repositories/account.respository';
 import { BankingRepository } from '../repositories/banking.respository';
 import { planRepository } from '../repositories/plan.repository';
+import { throws } from 'assert';
 
 export interface BankAccount {
   bank_name: string;
@@ -91,6 +92,27 @@ export class BankingService {
     return { ok: true, accounts: bankAccounts };
   }
 
+  async getMyBankingBasicInfo(userId) {
+    try {
+      const info = await this.bankingRepository.getBankingBasicInfo(userId);
+      if (!info) {
+        return {
+          ok: false,
+          message: 'cannot find any banking inof',
+        };
+      }
+      return {
+        ok: true,
+        info,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: 'failed to find bankgin info',
+      };
+    }
+  }
+
   async saveMyCount(
     { bank_name, account_num_masked, account_holder_name },
     userId,
@@ -113,9 +135,11 @@ export class BankingService {
         account.bank_name == bank_name &&
         account.account_num_masked == account_num_masked,
     );
-    const savedFinNum = await this.bankingRepository.saveMyFinNum(
+    const savedFinNum = await this.bankingRepository.saveMyAccountInfo(
       token.userNo,
       account.fintech_use_num,
+      bank_name,
+      account_num_masked,
     );
     if (!savedFinNum)
       return { ok: false, message: 'failed to set your account' };
@@ -140,8 +164,8 @@ export class BankingService {
             fintech_use_num: token.finNum,
             inquiry_type: 'A',
             inquiry_base: 'D',
-            from_date: startDay,
-            to_date: endDay,
+            from_date: 20230303,
+            to_date: 20230304,
             sort_order: 'D',
             tran_dtime: '20230310101921',
           },
