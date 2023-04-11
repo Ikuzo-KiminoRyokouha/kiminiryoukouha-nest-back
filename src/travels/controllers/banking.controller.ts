@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 
 import { Request } from 'express';
 import { BasicOutput } from 'src/common/dtos/output.dto';
@@ -32,10 +22,7 @@ export class BankingController {
     @Req() req: Request,
     @Body() createBankingTokenInput: CreateBankingTokenInput,
   ): Promise<BasicOutput> {
-    return await this.bankingService.createBankingToken(
-      createBankingTokenInput,
-      req.user['sub'],
-    );
+    return await this.bankingService.createBankingToken(createBankingTokenInput, req.user['sub']);
   }
 
   // 나의 등록된 계좌들
@@ -47,11 +34,8 @@ export class BankingController {
 
   //대표 계좌 설정
   @UseGuards(AccessTokenGuard)
-  @Post('/my/count')
-  async saveMyCount(
-    @Req() req: Request,
-    @Body() saveCountInput: SaveCountInput,
-  ): Promise<BasicOutput> {
+  @Post('/mycount')
+  async saveMyCount(@Req() req: Request, @Body() saveCountInput: SaveCountInput): Promise<BasicOutput> {
     return this.bankingService.saveMyCount(saveCountInput, req.user['sub']);
   }
 
@@ -61,25 +45,18 @@ export class BankingController {
     @Req() req: Request,
     @Body() createTransactionInput: CreateTransactionInput,
   ): Promise<BasicOutput> {
-    return this.bankingService.createTransactionList(
-      createTransactionInput,
-      req.user['sub'],
-    );
+    return this.bankingService.createTransactionList(createTransactionInput, req.user['sub']);
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('/transaction/list/:planId')
-  async getTransactionList(
-    @Param('planId') planId: number,
-  ): Promise<ShowTransactionOut> {
+  async getTransactionList(@Param('planId') planId: number): Promise<ShowTransactionOut> {
     return this.bankingService.getTransactionList(planId);
   }
 
   @UseGuards(AccessTokenGuard)
   @Put('/transaction/list/:transactionId')
-  async updateTransactionVisible(
-    @Param('transactionId') transactionId: number,
-  ): Promise<BasicOutput> {
+  async updateTransactionVisible(@Param('transactionId') transactionId: number): Promise<BasicOutput> {
     return this.bankingService.updateTrnasactionVisible(transactionId);
   }
 

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import { BasicEntity } from 'src/common/entities/basic.entity';
-import { User } from 'src/users/entities/user.entity';
+import { BasicEntity } from '../../common/entities/basic.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { Community } from './community.entity';
 
