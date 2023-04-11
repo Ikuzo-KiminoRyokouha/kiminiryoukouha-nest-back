@@ -36,9 +36,13 @@ export class DestinationService {
     return { ok: true, description: destinaiton.description };
   }
 
-  async showDestinationTag(areacode,sigungu): Promise<ShowDestinationCode> { //얘가 plan/new step2번쨰에서 불려지는 태그들 
+  async showDestinationTag(areacode, sigungu): Promise<ShowDestinationCode> {
+    //얘가 plan/new step2번쨰에서 불려지는 태그들
     try {
-      const tags = await this.destinationRespository.showDestinationTag(areacode,sigungu);
+      const tags = await this.destinationRespository.showDestinationTag(
+        areacode,
+        sigungu,
+      );
       if (!tags[0]) return { ok: false, error: 'not found any tag' };
       return { ok: true, tags };
     } catch (error) {
