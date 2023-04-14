@@ -12,6 +12,8 @@ import { CommonModule } from './common/common.module';
 import { ormOptions } from './database/ormconfig';
 import { TravelModule } from './travels/travel.module';
 import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
 
 @Module({
   imports: [
@@ -19,6 +21,9 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env',
       // ignoreEnvFile: process.env.NODE_ENV === 'prod',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '../..', 'public/img'),
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(ormOptions),
