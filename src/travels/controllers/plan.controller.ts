@@ -39,31 +39,24 @@ export class PlanController {
     return this.planService.createPlan(createPlanInput, req);
   }
 
-  // @UseGuards(AccessTokenGuard) 
+  // @UseGuards(AccessTokenGuard)
   // @Post('/random')
   // createRandomPlan(
   //   @Body() createRandomPlanInput: CreateRandomPlanInput,
   //   @Req() req: Request,
   // ) {
-   
+
   //   return this.planService.createRandomPlan(createRandomPlanInput, req);
   // }
 
-
-  @UseGuards(AccessTokenGuard) 
+  @UseGuards(AccessTokenGuard)
   @Post('/random/1')
   createRandomPlan1(
-        @Body() createRandomPlanInput: CreateRandomPlanInput1,
+    @Body() createRandomPlanInput: CreateRandomPlanInput1,
     @Req() req: Request,
   ) {
- 
- 
-   
     return this.planService.createRandomPlan1(createRandomPlanInput, req);
   }
-
-
-
 
   @UseGuards(AccessTokenGuard)
   @Post('/personality')
@@ -71,11 +64,10 @@ export class PlanController {
     @Body() createPersonPlanInput: CreateRandomPlanInput,
     @Req() req: Request,
   ): Promise<CreatePlanOutput> {
-    
     return this.planService.createPersonalityPlan(createPersonPlanInput, req);
   }
 
-  //이게 계획눌렀을때 가져오는거 
+  //이게 계획눌렀을때 가져오는거
   @UseGuards(AccessTokenGuard)
   @Post('/copy')
   createCopyPlan(
@@ -86,7 +78,6 @@ export class PlanController {
 
   @Get('/:id')
   showPlan(@Param('id') planId: number): Promise<ShowPlanOutput> {
-    
     return this.planService.showPlan(planId);
   }
 
@@ -107,7 +98,4 @@ export class PlanController {
   ): Promise<DeletePlanOutput> {
     return this.planService.deletePlan(planId, req);
   }
-
-
 }
-

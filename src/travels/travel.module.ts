@@ -26,6 +26,10 @@ import { BankingToken } from './entities/bankingToken.entity';
 import { BankingRepository } from './repositories/banking.respository';
 import { Account } from './entities/account.entity';
 import { AccountRepository } from './repositories/account.respository';
+import { AlbumController } from './controllers/album.controller';
+import { AlbumService } from './services/album.service';
+import { AlbumRepository } from './repositories/album.repository';
+import { Album } from './entities/album.entity';
 // import { TestController } from './controllers/test.controller';
 
 @Module({
@@ -38,6 +42,7 @@ import { AccountRepository } from './repositories/account.respository';
       User,
       BankingToken,
       Account,
+      Album,
     ]),
     TypeOrmExModule.forCustomRepository([UserRespository]),
   ],
@@ -47,6 +52,7 @@ import { AccountRepository } from './repositories/account.respository';
     DestinationController,
     RatingController,
     BankingController,
+    AlbumController,
     // TestController,
   ],
   providers: [
@@ -61,6 +67,8 @@ import { AccountRepository } from './repositories/account.respository';
     BankingService,
     BankingRepository,
     AccountRepository,
+    AlbumService,
+    AlbumRepository,
   ],
 })
 export class TravelModule {}
