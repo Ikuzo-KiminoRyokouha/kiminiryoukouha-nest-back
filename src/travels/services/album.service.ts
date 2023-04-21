@@ -16,27 +16,30 @@ export class AlbumService {
   ) {}
 
   async createImage(
-    createImageInput: CreateImageInput,
+    { mapx, mapy, planId, destinationId, titile }: CreateImageInput,
     file: Express.Multer.File,
   ) {
     try {
-      const plan = await this.planRepository.showPlan(createImageInput.planId);
-
+      const plan = await this.planRepository.showPlan(planId);
       if (!file) return { ok: false, message: 'not found any image' };
       if (!plan) return { ok: false, message: 'not found any plan' };
 
       const ext = path.extname(file.originalname);
       const url = `${path.basename(file.originalname, ext) + Date.now() + ext}`;
       url.replace(/:/g, '-');
-      console.log(url);
       fs.writeFileSync(`public/img/${url}`, file.buffer);
-      console.log(!createImageInput.titile);
-      if (!createImageInput.titile) {
-        createImageInput.titile = plan.city + '여행';
+      if (!titile) {
+        titile = plan.city + '여행';
+      }
+      if (destinationId == '0') {
+        destinationId = null;
       }
       const image = await this.albumRepository.createImate({
-        planId: createImageInput.planId,
-        title: createImageInput.titile,
+        planId,
+        destinationId,
+        title,
+        mapx,
+        mapy,
         url: 'http://localhost:8000/public/img/' + url,
       });
       if (!image) return { ok: false, message: 'failed to create image' };
@@ -53,6 +56,11 @@ export class AlbumService {
     }
   }
 
+  async showAlbums(userId) {
+    const albums = await this.albumRepository.showAlbumsByUserId(userId);
+    console.log(albums);
+  }
+
   async showAlbum(planId, userId): Promise<ShowImagesOutput> {
     try {
       const plan = await this.planRepository.showPlan(planId);
@@ -62,18 +70,16 @@ export class AlbumService {
       const tempImages = await this.albumRepository.showAlbumByPlanId(planId);
       const images = {};
       tempImages.forEach((item) => {
-        const date = new Date(item.createdAt).toDateString(); // 날짜만 추출
+        let date = new Date(item.createdAt).toISOString().slice(0, 10); // 날짜만 추출
+
         if (!images[date]) {
           images[date] = [item]; // 해당 날짜에 해당하는 배열이 없다면 새로 생성
         } else {
           images[date].push(item); // 이미 해당 날짜에 해당하는 배열이 있다면 해당 배열에 추가
         }
       });
-      Object.keys(images).forEach((key) =>
-        console.log(key, ' : ', images[key]),
-      );
-      // if (images[0] == null)
-      //   return { ok: false, message: 'not found any image' };
+
+      if (images == null) return { ok: false, message: 'not found any image' };
       return { ok: true, images };
     } catch (error) {
       console.log(error);

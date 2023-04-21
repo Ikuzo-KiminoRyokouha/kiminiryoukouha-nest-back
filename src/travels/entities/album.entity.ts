@@ -1,7 +1,8 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { BasicEntity } from 'src/common/entities/basic.entity';
+import { BasicEntity } from '../../common/entities/basic.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Plan } from './plan.entity';
+import { Destination } from './destination.entity';
 
 @Entity()
 export class Album extends BasicEntity {
@@ -31,4 +32,14 @@ export class Album extends BasicEntity {
   @Column()
   @IsNumber()
   planId: number;
+
+  @ManyToOne(() => Destination, (destination) => destination.id, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'destinationId' })
+  destination?: Destination | null;
+  @Column({ nullable: true })
+  @IsNumber()
+  destinationId?: number | null;
 }

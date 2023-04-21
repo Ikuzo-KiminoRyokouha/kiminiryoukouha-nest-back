@@ -1,6 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
-import { BasicEntity } from 'src/common/entities/basic.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()

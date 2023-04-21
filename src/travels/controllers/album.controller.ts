@@ -28,6 +28,7 @@ export class AlbumController {
     @Body() createImageInput: CreateImageInput,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<BasicOutput> {
+    console.log(createImageInput);
     return await this.albumService.createImage(createImageInput, file);
   }
 
@@ -38,5 +39,11 @@ export class AlbumController {
     @Req() req: Request,
   ): Promise<ShowImagesOutput> {
     return this.albumService.showAlbum(planId, req.user['sub']);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('my/all')
+  async showAlbums(@Req() req: Request) {
+    return this.albumService.showAlbums(req.user['sub']);
   }
 }

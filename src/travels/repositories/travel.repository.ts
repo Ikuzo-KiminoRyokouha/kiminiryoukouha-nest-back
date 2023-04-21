@@ -16,6 +16,9 @@ export class TravelRepository {
     try {
       const travel = await this.travelRepository.findOne({
         where: { id: travelId },
+        relations: {
+          destination: true,
+        },
       });
       if (!travel) return null;
       return travel;
@@ -27,7 +30,16 @@ export class TravelRepository {
   async showTravelsByPlanId(planId) {
     try {
       const travels = await this.travelRepository.find({
+        select: {
+          destinationId: true,
+          destination: {
+            title: true,
+          },
+        },
         where: { planId },
+        relations: {
+          destination: true,
+        },
         // order: { startDay: 'ASC' },
       });
       return travels;

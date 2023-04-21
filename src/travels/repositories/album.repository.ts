@@ -10,11 +10,14 @@ export class AlbumRepository {
     private readonly albumRepository: Repository<Album>,
   ) {}
 
-  async createImate({ planId, url, title }) {
+  async createImate({ planId, destinationId, url, title, mapx, mapy }) {
     const image = await this.albumRepository.save(
       this.albumRepository.create({
         planId,
+        destinationId,
         url,
+        mapx,
+        mapy,
         title,
       }),
     );
@@ -31,5 +34,18 @@ export class AlbumRepository {
     });
 
     return album;
+  }
+
+  async showAlbumsByUserId(userId) {
+    const albums = await this.albumRepository
+      .createQueryBuilder('album')
+      .select(['album.id', 'album.planId'])
+      .leftJoin('album.plan', 'plan')
+      .groupBy('planId')
+
+      .where('plan.userId = :userId', { userId })
+      .getMany();
+
+    return albums;
   }
 }

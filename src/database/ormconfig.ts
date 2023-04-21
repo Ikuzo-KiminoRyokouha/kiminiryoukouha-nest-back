@@ -7,7 +7,7 @@ import { User } from '../users/entities/user.entity';
 import { Rating } from '../travels/entities/rating.entity';
 import { BankingToken } from '../travels/entities/bankingToken.entity';
 import { Account } from '../travels/entities/account.entity';
-import { Album } from 'src/travels/entities/album.entity';
+import { Album } from '../travels/entities/album.entity';
 
 export const ormOptions: TypeOrmModuleOptions = {
   type: 'mysql' as 'mysql',

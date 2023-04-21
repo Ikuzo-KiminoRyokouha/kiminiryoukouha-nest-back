@@ -13,7 +13,6 @@ import { BasicOutput } from '../../common/dtos/output.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   CreateRandomPlanInput,
-  CreateRandomPlanInput1,
   CreateRandomPlanOutput,
 } from '../dtos/plan/craete-random-plan.dto';
 import { CreateCopyPlanInput } from '../dtos/plan/create-copy-plan.dto';
@@ -25,39 +24,13 @@ import { DeletePlanOutput } from '../dtos/plan/delete-plan.dto';
 import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
 import { ShowPlansOutput } from '../dtos/plan/show-plans.dto';
 import { PlanService } from '../services/plan.service';
+import { Plan } from '../entities/plan.entity';
 
 @Controller('plan')
 export class PlanController {
   constructor(private planService: PlanService) {}
 
-  @UseGuards(AccessTokenGuard)
-  @Post()
-  createPlan(
-    @Body() createPlanInput: CreatePlanInput,
-    @Req() req: Request,
-  ): Promise<CreatePlanOutput> {
-    return this.planService.createPlan(createPlanInput, req);
-  }
-
-  // @UseGuards(AccessTokenGuard)
-  // @Post('/random')
-  // createRandomPlan(
-  //   @Body() createRandomPlanInput: CreateRandomPlanInput,
-  //   @Req() req: Request,
-  // ) {
-
-  //   return this.planService.createRandomPlan(createRandomPlanInput, req);
-  // }
-
-  @UseGuards(AccessTokenGuard)
-  @Post('/random/1')
-  createRandomPlan1(
-    @Body() createRandomPlanInput: CreateRandomPlanInput1,
-    @Req() req: Request,
-  ) {
-    return this.planService.createRandomPlan1(createRandomPlanInput, req);
-  }
-
+  //
   @UseGuards(AccessTokenGuard)
   @Post('/personality')
   createPersonalityPlan(
@@ -74,6 +47,13 @@ export class PlanController {
     @Body() createCopyPlanInput: CreateCopyPlanInput,
   ): Promise<BasicOutput> {
     return this.planService.createCopyPlan(createCopyPlanInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/today')
+  todayPlan(@Req() req: Request): Promise<ShowPlanOutput> {
+    console.log(req.user);
+    return this.planService.todayPlan(req.user['sub']);
   }
 
   @Get('/:id')

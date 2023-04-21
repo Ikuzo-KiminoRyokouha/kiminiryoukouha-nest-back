@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { throws } from 'assert';
 import { CustomRepository } from '../../repositories/custom-repository.decorater';
 import { UserRespository } from '../../users/repositories/users.repository';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import { CreatePlanInput } from '../dtos/plan/create-plan.dto';
 import { ShowPlanOutput } from '../dtos/plan/show-plan.dto';
@@ -19,7 +19,7 @@ export class planRepository {
   ) {}
 
   async createPlan(
-    createPlanInput:   CreateRandomPlanInput,
+    createPlanInput: CreateRandomPlanInput,
     userId,
   ): Promise<Plan> {
     try {
@@ -159,6 +159,18 @@ export class planRepository {
     } catch (error) {
       throws;
     }
+  }
+
+  async todayPlan(userId, today) {
+    const plan = await this.planRepository.findOne({
+      select: { id: true, totalCost: true },
+      where: {
+        userId,
+        start: LessThanOrEqual(today),
+        end: MoreThanOrEqual(today),
+      },
+    });
+    return plan;
   }
 
   // async searchedPlan(searchedItem, page) {

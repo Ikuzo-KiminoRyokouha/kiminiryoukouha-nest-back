@@ -52,7 +52,11 @@ export class DestinationRepository {
     }
   }
 
-  async getRaondomDes1(checkarea,tagArr: string[], checkDes): Promise<Destination> {
+  async getRaondomDes1(
+    checkarea,
+    tagArr: string[],
+    checkDes,
+  ): Promise<Destination> {
     try {
       let randomDestination;
       if (tagArr == null) {
@@ -61,7 +65,7 @@ export class DestinationRepository {
           .where('destination.id NOT IN (:checkDes)', { checkDes })
           .andWhere(`destination.areacode = ${checkarea.areacode}`)
           .andWhere(`destination.sigungucode = ${checkarea.sigungucode}`)
-         
+
           .getMany();
       } else {
         randomDestination = await this.destinationRepository
@@ -80,11 +84,6 @@ export class DestinationRepository {
       throws;
     }
   }
-
-
-
-
-
 
   // async duplicateDestinationCheck(chedkedItem, destinaiton) { 일단내가한거아님
   //   try {
@@ -120,18 +119,19 @@ export class DestinationRepository {
     }
   }
 
-  async showDestinationTag(areacode,sigungu) {
+  async showDestinationTag(areacode, sigungu) {
     try {
       const tag = await this.destinationRepository
-        .createQueryBuilder('destination') //데이터베이스에서 destination테이블에서 
-        .select('destination.cat3 AS tag ') //바다,산 
+        .createQueryBuilder('destination') //데이터베이스에서 destination테이블에서
+        .select('destination.cat3 AS tag ') //바다,산
         .where(`destination.areacode = ${areacode}`)
         .andWhere(`destination.sigungucode = ${sigungu}`)
-        .addSelect('COUNT(*) AS tagCount')//개수 
+        .addSelect('COUNT(*) AS tagCount') //개수
         .groupBy('destination.cat3')
         .getRawMany();
       return tag;
     } catch (error) {
+      console.log(error);
       throws;
     }
   }
