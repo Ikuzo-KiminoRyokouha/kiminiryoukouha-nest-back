@@ -18,10 +18,20 @@ import {
 import { AddTraveOutPut } from '../dtos/travel/add-travel.dto';
 import { UpdateTravelOutput } from '../dtos/travel/update-travel.dto';
 import { TravelService } from '../services/travel.service';
+import { showTravelsOutput } from '../dtos/travel/show-travels.dto';
 
 @Controller('travel')
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/:planId')
+  async showTravelByPlanId(
+    @Param('planId') planId: number,
+  ): Promise<showTravelsOutput> {
+    console.log('travelcontollder');
+    return await this.travelService.showTravelByPlanId(planId);
+  }
 
   @UseGuards(AccessTokenGuard)
   @Put('/clear/:travelId')

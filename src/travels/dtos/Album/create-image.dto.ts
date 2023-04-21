@@ -5,6 +5,17 @@ export class CreateImageInput {
   planId: string;
 
   @IsString()
+  destinationId: string;
+
+  @IsString()
   @IsOptional()
   titile?: string;
+
+  @IsString()
+  @IsOptional()
+  mapx: string;
+
+  @IsString()
+  @IsOptional()
+  mapy: string;
 }
