@@ -49,16 +49,9 @@ export class BankingRepository {
     return bankingInfo;
   }
 
-  async saveMyAccountInfo(
-    userNo: string,
-    finNum: string,
-    bank_name,
-    account_num,
-  ) {
+  async saveMyAccountInfo(userNo: string, finNum: string, bank_name, account_num) {
     try {
-      const fin = await this.bankingTokenRepository.save([
-        { userNo, finNum, bank_name, account_num },
-      ]);
+      const fin = await this.bankingTokenRepository.save([{ userNo, finNum, bank_name, account_num }]);
       return fin;
     } catch (error) {
       console.log('saveMyFinNum err', error);

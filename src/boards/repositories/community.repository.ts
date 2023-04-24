@@ -68,7 +68,7 @@ export class CommunityRepository {
       const plan = await this.planRepository.findOneBy({ id: planId });
 
       /* 생성자 본인의 요청인지 확인 */
-      this.checkUser(id, userId);
+      await this.checkUser(plan.userId, userId);
       return await this.communityRepository.update(id, {
         plan,
         ...property,

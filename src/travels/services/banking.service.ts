@@ -72,14 +72,9 @@ export class BankingService {
   async getMyBankingInfo(userId) {
     const token = await this.bankingRepository.getBankingToken(userId);
     const myInfo = await axios
-      .get(
-        process.env.BANKING_API_URI +
-          '/v2.0/user/me?user_seq_no=' +
-          token.userNo,
-        {
-          headers: { Authorization: 'Bearer' + token.accessToken },
-        },
-      )
+      .get(process.env.BANKING_API_URI + '/v2.0/user/me?user_seq_no=' + token.userNo, {
+        headers: { Authorization: 'Bearer' + token.accessToken },
+      })
       .then((res) => {
         return res.data;
       });
@@ -113,27 +108,17 @@ export class BankingService {
     }
   }
 
-  async saveMyCount(
-    { bank_name, account_num_masked, account_holder_name },
-    userId,
-  ) {
+  async saveMyCount({ bank_name, account_num_masked, account_holder_name }, userId) {
     const token = await this.bankingRepository.getBankingToken(userId);
     const myInfo = await axios
-      .get(
-        process.env.BANKING_API_URI +
-          '/v2.0/user/me?user_seq_no=' +
-          token.userNo,
-        {
-          headers: { Authorization: 'Bearer' + token.accessToken },
-        },
-      )
+      .get(process.env.BANKING_API_URI + '/v2.0/user/me?user_seq_no=' + token.userNo, {
+        headers: { Authorization: 'Bearer' + token.accessToken },
+      })
       .then((res) => {
         return res.data;
       });
     const account = myInfo.res_list.find(
-      (account) =>
-        account.bank_name == bank_name &&
-        account.account_num_masked == account_num_masked,
+      (account) => account.bank_name == bank_name && account.account_num_masked == account_num_masked,
     );
     const savedFinNum = await this.bankingRepository.saveMyAccountInfo(
       token.userNo,
@@ -141,8 +126,7 @@ export class BankingService {
       bank_name,
       account_num_masked,
     );
-    if (!savedFinNum)
-      return { ok: false, message: 'failed to set your account' };
+    if (!savedFinNum) return { ok: false, message: 'failed to set your account' };
 
     return { ok: true, message: 'success to set your account' };
   }
@@ -156,34 +140,29 @@ export class BankingService {
     const startDay = plan.start.toISOString().slice(0, 10).split('-').join('');
     const checkCode = getBankingCheckCode(newToken.checking);
     const res = await axios
-      .get(
-        process.env.BANKING_API_URI + '/v2.0/account/transaction_list/fin_num',
-        {
-          params: {
-            bank_tran_id: process.env.BANKING_TRAIN_NUM + 'U' + checkCode,
-            fintech_use_num: token.finNum,
-            inquiry_type: 'A',
-            inquiry_base: 'D',
-            from_date: 20230303,
-            to_date: 20230304,
-            sort_order: 'D',
-            tran_dtime: '20230310101921',
-          },
-          headers: { Authorization: 'Bearer' + token.accessToken },
+      .get(process.env.BANKING_API_URI + '/v2.0/account/transaction_list/fin_num', {
+        params: {
+          bank_tran_id: process.env.BANKING_TRAIN_NUM + 'U' + checkCode,
+          fintech_use_num: token.finNum,
+          inquiry_type: 'A',
+          inquiry_base: 'D',
+          from_date: 20230411,
+          to_date: 20230412,
+          sort_order: 'D',
+          tran_dtime: '20230411010106',
         },
-      )
+        headers: { Authorization: 'Bearer' + token.accessToken },
+      })
       .then((res) => {
         return res.data;
       });
     console.log(res);
     const accountDatas: IGetTransaction[] = res.res_list;
 
-    if (!accountDatas)
-      return { ok: false, error: 'failed to read transaction list' };
+    if (!accountDatas) return { ok: false, error: 'failed to read transaction list' };
 
     const planAccount: IGetTransaction[] = [];
-    const storedAccountInfo =
-      await this.accountRepository.getAccountInfoByPlanId(planId);
+    const storedAccountInfo = await this.accountRepository.getAccountInfoByPlanId(planId);
 
     accountDatas.forEach(async (data) => {
       //계획 날짜의 데이터 만
@@ -222,9 +201,7 @@ export class BankingService {
 
   async getTransactionList(planId) {
     try {
-      const transaction = await this.accountRepository.getAccountInfoByPlanId(
-        planId,
-      );
+      const transaction = await this.accountRepository.getAccountInfoByPlanId(planId);
 
       return { ok: true, transaction };
     } catch (error) {
@@ -234,16 +211,12 @@ export class BankingService {
 
   async updateTrnasactionVisible(transactionId): Promise<BasicOutput> {
     try {
-      const transaction = await this.accountRepository.getTransactionById(
+      const transaction = await this.accountRepository.getTransactionById(transactionId);
+      if (!transaction) return { ok: false, message: 'cannot find this transaction' };
+      const updatedTransaction = await this.accountRepository.updateTransactionVisible(
         transactionId,
+        transaction.visible,
       );
-      if (!transaction)
-        return { ok: false, message: 'cannot find this transaction' };
-      const updatedTransaction =
-        await this.accountRepository.updateTransactionVisible(
-          transactionId,
-          transaction.visible,
-        );
       console.log(updatedTransaction);
       return { ok: true, message: 'success to update transaction' };
     } catch (error) {
