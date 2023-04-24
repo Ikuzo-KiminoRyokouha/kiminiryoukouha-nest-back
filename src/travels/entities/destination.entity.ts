@@ -2,6 +2,7 @@ import { IsOptional, IsString } from 'class-validator';
 import { BasicEntity } from '../../common/entities/basic.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Travel } from './travel.entity';
+import { Album } from './album.entity';
 
 @Entity()
 export class Destination extends BasicEntity {

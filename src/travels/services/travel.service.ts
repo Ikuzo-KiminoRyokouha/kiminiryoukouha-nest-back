@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { throwError } from 'rxjs';
 import { Request } from 'express';
 import { BasicOutput } from '../../common/dtos/output.dto';
-import { CreateRandomPlanInput, CreateRandomPlanInput1 } from '../dtos/plan/craete-random-plan.dto';
+import { CreateRandomPlanInput } from '../dtos/plan/craete-random-plan.dto';
 import {
   AddRandomTravelInput,
   AddRandomTravelOutput,
@@ -22,6 +22,22 @@ export class TravelService {
     private destinaitonRespoeitory: DestinationRepository,
     private planRepository: planRepository,
   ) {}
+
+  async showTravelByPlanId(planId) {
+    try {
+      const travels = await this.travelRespository.showTravelsByPlanId(planId);
+      if (!travels[0]) return { ok: false, message: 'not found an y travel' };
+      return {
+        ok: true,
+        travels,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: 'failed to find travels',
+      };
+    }
+  }
 
   async updateTravelClear(
     travelId: number,
@@ -174,7 +190,7 @@ export class TravelService {
   }
 
   async createTravelPerDay(
-    createRandomPlanInput: CreateRandomPlanInput|CreateRandomPlanInput1,
+    createRandomPlanInput: CreateRandomPlanInput,
     planId,
     dayPerDes,
     i,

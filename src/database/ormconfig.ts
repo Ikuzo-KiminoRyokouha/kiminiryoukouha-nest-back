@@ -7,6 +7,7 @@ import { User } from '../users/entities/user.entity';
 import { Rating } from '../travels/entities/rating.entity';
 import { BankingToken } from '../travels/entities/bankingToken.entity';
 import { Account } from '../travels/entities/account.entity';
+import { Album } from '../travels/entities/album.entity';
 
 export const ormOptions: TypeOrmModuleOptions = {
   type: 'mysql' as 'mysql',
@@ -18,7 +19,7 @@ export const ormOptions: TypeOrmModuleOptions = {
   synchronize: process.env.NODE_ENV !== 'prod',
   // synchronize: true,
   logging: true,
-  entities: [User, Plan, Board, Comment, Travel, Destination, Rating, Community, CommComments, BankingToken, Account],
+  entities: [User, Plan, Board, Comment, Travel, Destination, Rating, Community, BankingToken, Account, Album],
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   timezone: 'KST',
   // migrationsRun: true,
