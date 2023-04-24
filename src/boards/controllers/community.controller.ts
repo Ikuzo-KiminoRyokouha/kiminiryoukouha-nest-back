@@ -37,6 +37,17 @@ export class CommunityController {
     return this.communityService.showCommunity(showCommunityInput);
   }
 
+  /**
+   * @description [GET] 커뮤니티 내가 쓴 정보 조회  컨트롤러입니다
+   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
+   */
+  @UseGuards(AccessTokenGuard)
+  @Get('/user')
+  showMyStroy(@Req() req: Request, @Query() query: { userId: string }) {
+    const { userId } = query;
+    return this.communityService.showMyCommunity(userId || req.user['sub']);
+  }
+
   @Get('/:id')
   getBoardByid(@Param('id') id: number) {
     return this.communityService.getBoardById(id);
@@ -79,16 +90,5 @@ export class CommunityController {
   @Delete('/:id')
   deleteCommunity(@Param('id') id: number, @Req() req: Request) {
     return this.communityService.deleteCommunity(id, req);
-  }
-
-  /**
-   * @description [GET] 커뮤니티 내가 쓴 정보 조회  컨트롤러입니다
-   * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Can't Created
-   */
-  @UseGuards(AccessTokenGuard)
-  @Get('/user')
-  showMyStroy(@Req() req: Request, @Query() query: { userId: string }) {
-    const { userId } = query;
-    return this.communityService.showCommunity(userId || req.user['sub']);
   }
 }
