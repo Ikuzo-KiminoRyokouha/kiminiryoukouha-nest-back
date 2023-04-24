@@ -1,6 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
-import { BasicEntity } from 'src/common/entities/basic.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -20,6 +19,14 @@ export class BankingToken {
   @Column({ nullable: true })
   @IsString()
   finNum: string;
+
+  @Column({ nullable: true })
+  @IsString()
+  bank_name: string;
+
+  @Column({ nullable: true })
+  @IsString()
+  account_num: string;
 
   @OneToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',

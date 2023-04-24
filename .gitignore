@@ -174,3 +174,8 @@ test.repository.ts
 pandas_output.csv
 pandas_destination_output.csv
 test.csv
+
+img/*
+img
+
+ref.md

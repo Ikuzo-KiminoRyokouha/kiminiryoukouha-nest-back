@@ -102,7 +102,6 @@ export class AuthService {
     const verifyedUser = this.jwtService.verify(req.cookies.refresh_token, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
     });
-
     const user = await this.usersRepository.getUser(verifyedUser['sub']);
     return {
       accessToken: await this.jwtService.signAsync(

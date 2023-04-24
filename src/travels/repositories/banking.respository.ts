@@ -35,19 +35,30 @@ export class BankingRepository {
   }
 
   async getBankingToken(userId: number): Promise<BankingToken> {
-    try {
-      const token = await this.bankingTokenRepository.findOne({
-        where: { userId },
-      });
-      return token;
-    } catch (error) {
-      throws;
-    }
+    const token = await this.bankingTokenRepository.findOne({
+      where: { userId },
+    });
+    return token;
   }
 
-  async saveMyFinNum(userNo: string, finNum: string) {
+  async getBankingBasicInfo(userId) {
+    const bankingInfo = await this.bankingTokenRepository.findOne({
+      where: { userId },
+      select: ['bank_name', 'account_num'],
+    });
+    return bankingInfo;
+  }
+
+  async saveMyAccountInfo(
+    userNo: string,
+    finNum: string,
+    bank_name,
+    account_num,
+  ) {
     try {
-      const fin = await this.bankingTokenRepository.save([{ userNo, finNum }]);
+      const fin = await this.bankingTokenRepository.save([
+        { userNo, finNum, bank_name, account_num },
+      ]);
       return fin;
     } catch (error) {
       console.log('saveMyFinNum err', error);

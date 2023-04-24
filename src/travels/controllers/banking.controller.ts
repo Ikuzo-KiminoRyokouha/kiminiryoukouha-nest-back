@@ -20,6 +20,7 @@ import { ShowAccountsOutput } from '../dtos/banking/show-accounts.dto';
 import { ShowTransactionOut } from '../dtos/banking/show-transaction.dto';
 
 import { BankingService } from '../services/banking.service';
+import { ShowMyAccountInfoOutput } from '../dtos/banking/show-banking.dto';
 
 @Controller('banking')
 export class BankingController {
@@ -53,6 +54,14 @@ export class BankingController {
     @Body() saveCountInput: SaveCountInput,
   ): Promise<BasicOutput> {
     return this.bankingService.saveMyCount(saveCountInput, req.user['sub']);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/my/account/info')
+  async getMyBankingBasicInfo(
+    @Req() req: Request,
+  ): Promise<ShowMyAccountInfoOutput> {
+    return this.bankingService.getMyBankingBasicInfo(req.user['sub']);
   }
 
   @UseGuards(AccessTokenGuard)
