@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Board, Comment, Community } from '../boards/entities';
+import { Board, CommComments, Comment, Community } from '../boards/entities';
 import { Destination } from '../travels/entities/destination.entity';
 import { Plan } from '../travels/entities/plan.entity';
 import { Travel } from '../travels/entities/travel.entity';
@@ -31,6 +31,7 @@ export const ormOptions: TypeOrmModuleOptions = {
     BankingToken,
     Account,
     Album,
+    CommComments,
   ],
   ssl:
     process.env.NODE_ENV === 'production'

@@ -1,4 +1,4 @@
-import { Board, Comment, Community } from './src/boards/entities';
+import { Board, CommComments, Comment, Community } from './src/boards/entities';
 import { Destination } from './src/travels/entities/destination.entity';
 import { Plan } from './src/travels/entities/plan.entity';
 import { Rating } from './src/travels/entities/rating.entity';
@@ -24,6 +24,7 @@ const ormConfig = {
     Destination,
     Rating,
     Community,
+    CommComments,
   ],
   ssl:
     process.env.NODE_ENV === 'production'
