@@ -70,7 +70,7 @@ export class CommunityService {
    * @param req : 요청에 대한 정보
    * @returns  success : 성공한 Community에 대한 정보  error : Status Code 400 Can't Found
    */
-  async showMyCommunity(req: Request) {
-    return await this.communityRepository.findUserInfo(req.user['sub']);
+  async showMyCommunity(id: string) {
+    return await this.communityRepository.findUserInfo(Number(id));
   }
 }
