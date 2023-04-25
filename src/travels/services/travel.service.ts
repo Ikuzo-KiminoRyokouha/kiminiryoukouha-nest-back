@@ -39,6 +39,31 @@ export class TravelService {
     }
   }
 
+  async showTodayTrevel() {
+    try {
+      const date = new Date();
+      const year = date.getFullYear(); // 년도
+      const month = date.getMonth() + 1; // 월 (0부터 시작하므로 +1 필요)
+      const day = date.getDate(); // 일
+
+      const koreanDate: Date = new Date(year, month - 1, day);
+      const koreanTimezoneOffset: number = 540;
+
+      koreanDate.setMinutes(koreanDate.getMinutes() + koreanTimezoneOffset);
+      console.log(koreanDate);
+      const travels = await this.travelRespository.showTodayTravel(koreanDate);
+      return {
+        ok: true,
+        travels,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: 'failed to show today trevel',
+      };
+    }
+  }
+
   async updateTravelClear(
     travelId: number,
     req: Request,
@@ -136,8 +161,18 @@ export class TravelService {
         return { ok: false, message: 'you can not add travel in this plan' };
       const startDay = new Date(); // 여행 몇번째 날 인지
 
+      const date = new Date();
+      const year = date.getFullYear(); // 년도
+      const month = date.getMonth() + 1; // 월 (0부터 시작하므로 +1 필요)
+      const day = date.getDate(); // 일
+
+      const koreanDate: Date = new Date(year, month - 1, day);
+      const koreanTimezoneOffset: number = 540;
+
+      koreanDate.setMinutes(koreanDate.getMinutes() + koreanTimezoneOffset);
+
       const createTravelInput: CreateTravelInput = {
-        startDay,
+        startDay: koreanDate,
         planId: plan.id,
         destinationId,
       };
@@ -211,5 +246,30 @@ export class TravelService {
       travels.push(travel);
     }
     return travels;
+  }
+
+  async deleteTravelById(travelId, userId) {
+    try {
+      const deletedTravel = await this.travelRespository.deleteTravelById(
+        travelId,
+      );
+      const travel = await this.travelRespository.showTravel(travelId);
+      if (!travel) return { ok: false, message: 'cannot find this travel' };
+      if (deletedTravel['affected'] == 0) {
+        return {
+          ok: false,
+          message: 'faield to delete travel',
+        };
+      }
+      return {
+        ok: true,
+        message: 'success to delete travel',
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: 'failed to delete travel',
+      };
+    }
   }
 }

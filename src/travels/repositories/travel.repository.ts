@@ -27,6 +27,18 @@ export class TravelRepository {
     }
   }
 
+  async showTodayTravel(today) {
+    const travel = await this.travelRepository.find({
+      where: {
+        startDay: today,
+      },
+      relations: {
+        destination: true,
+      },
+    });
+    return travel;
+  }
+
   async showTravelsByPlanId(planId) {
     try {
       const travels = await this.travelRepository.find({
@@ -107,5 +119,12 @@ export class TravelRepository {
 
   async addRandomTravel({ planId, tag }, travels) {
     // const newTravel = await this.travelRepository.createQueryBuilder('travel').where('travel')
+  }
+
+  async deleteTravelById(travelId) {
+    const deletedTravel = await this.travelRepository.softDelete({
+      id: travelId,
+    });
+    console.log('travel repo', deletedTravel);
   }
 }
