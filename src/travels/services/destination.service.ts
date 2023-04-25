@@ -12,10 +12,15 @@ import {
   ShowTravelBySurpriseOutput,
 } from '../dtos/destination/show-travel-bySurprise.dto';
 import { DestinationRepository } from '../repositories/destination.repository';
+import { planRepository } from '../repositories/plan.repository';
+import { areaCode } from 'src/util/dataSet/areaCode';
 
 @Injectable()
 export class DestinationService {
-  constructor(private destinationRespository: DestinationRepository) {}
+  constructor(
+    private destinationRespository: DestinationRepository,
+    private planRepository: planRepository,
+  ) {}
 
   async showDestinationDetail(destinaitonId): Promise<ShowDetinationDetail> {
     const destinaiton = await this.destinationRespository.showDestinationById(
@@ -55,6 +60,11 @@ export class DestinationService {
     req: Request,
   ): Promise<ShowTravelBySurpriseOutput> {
     try {
+      const plan = await this.planRepository.showPlan(planId);
+      if (!plan) return { ok: false, message: 'cannot find this plan' };
+      console.log(plan);
+      console.log(plan.areacode);
+
       const rawItem = await axios
         .post(process.env.DJANGO_API + 'destinations', {
           data: {
@@ -62,6 +72,8 @@ export class DestinationService {
             tag,
             start: (count - 1) * 5,
             end: count * 5,
+            sigungucode: plan.sigungucode,
+            areacode: plan.areacode,
           },
         })
         .then((res) => {
@@ -90,6 +102,7 @@ export class DestinationService {
         destination: newDesArr,
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'can not show travel',
