@@ -10,9 +10,10 @@ export class CreatePlanInput extends PickType(Plan, [
   'start',
   'end',
   'city',
-  'destination',
   'totalCost',
   'dayPerCost',
+  'sigungucode',
+  'areacode',
 ]) {}
 
 export class CreatePlanOutput extends BasicOutput {}

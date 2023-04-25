@@ -85,6 +85,8 @@ export class planRepository {
           'plan.tag',
           'plan.totalCost',
           'plan.userId',
+          'plan.areacode',
+          'plan.sigungucode',
           'travel.id',
           'travel.startDay',
           'destination.id',
