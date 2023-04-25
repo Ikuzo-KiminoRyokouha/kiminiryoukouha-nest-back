@@ -12,7 +12,8 @@ export class AppController {
     return 'hello';
   }
 
-  @Cron('0 1 23 * * *')
+  // @Cron('0 1 23 * * *')
+  @Cron('0 19 * * * *')
   dataToCSV() {
     try {
       axios

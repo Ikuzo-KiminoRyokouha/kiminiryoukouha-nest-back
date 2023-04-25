@@ -163,13 +163,14 @@ export class planRepository {
 
   async todayPlan(userId, today) {
     const plan = await this.planRepository.findOne({
-      select: { id: true, totalCost: true },
+      // select: { id: true, totalCost: true },
       where: {
         userId,
         start: LessThanOrEqual(today),
         end: MoreThanOrEqual(today),
       },
     });
+    console.log(plan);
     return plan;
   }
 

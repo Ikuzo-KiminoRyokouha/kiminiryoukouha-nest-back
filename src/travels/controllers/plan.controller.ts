@@ -37,6 +37,7 @@ export class PlanController {
     @Body() createPersonPlanInput: CreateRandomPlanInput,
     @Req() req: Request,
   ): Promise<CreatePlanOutput> {
+    console.log(createPersonPlanInput);
     return this.planService.createPersonalityPlan(createPersonPlanInput, req);
   }
 
@@ -51,9 +52,8 @@ export class PlanController {
 
   @UseGuards(AccessTokenGuard)
   @Get('/today')
-  todayPlan(@Req() req: Request): Promise<ShowPlanOutput> {
-    console.log(req.user);
-    return this.planService.todayPlan(req.user['sub']);
+  async todayPlan(@Req() req: Request): Promise<ShowPlanOutput> {
+    return await this.planService.todayPlan(req.user['sub']);
   }
 
   @Get('/:id')
