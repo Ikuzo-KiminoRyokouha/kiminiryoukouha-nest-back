@@ -86,14 +86,14 @@ export class TravelController {
     );
   }
 
-  @UseGuards(AccessTokenGuard)
-  @Post('/other/random')
-  async addRandomTravel(
-    @Body() addTravelInput: AddRandomTravelInput,
-    @Req() req: Request,
-  ): Promise<AddRandomTravelOutput> {
-    return await this.travelService.addRandomTravel(addTravelInput, req);
-  }
+  // @UseGuards(AccessTokenGuard)
+  // @Post('/other/random')
+  // async addRandomTravel(
+  //   @Body() addTravelInput: AddRandomTravelInput,
+  //   @Req() req: Request,
+  // ): Promise<AddRandomTravelOutput> {
+  //   return await this.travelService.addRandomTravel(addTravelInput, req);
+  // }
 
   @UseGuards(AccessTokenGuard)
   @Delete('/:travelId')

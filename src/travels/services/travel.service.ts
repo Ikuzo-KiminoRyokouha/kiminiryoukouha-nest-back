@@ -175,6 +175,7 @@ export class TravelService {
         startDay: koreanDate,
         planId: plan.id,
         destinationId,
+        exrating: null,
       };
       const travel = await this.travelRespository.creatTravel(
         createTravelInput,
@@ -186,48 +187,49 @@ export class TravelService {
     }
   }
 
-  async addRandomTravel(
-    addRandomTravelInput: AddRandomTravelInput,
-    req: Request,
-  ): Promise<AddRandomTravelOutput> {
-    try {
-      //여행 계획 플랜 가져오기
-      const plan = await this.planRepository.showPlan(
-        addRandomTravelInput.planId,
-      );
-      if (plan.userId != req.user['sub'])
-        return { ok: false, message: 'you cannot add travel' };
-      //여행지 id 담을 임시 배열
-      const tempTravelIdArr = [];
-      //임시배열에 여행지 id만 담음
-      plan.travels.forEach((element) => {
-        tempTravelIdArr.push(element.id);
-      });
+  // async addRandomTravel(
+  //   addRandomTravelInput: AddRandomTravelInput,
+  //   req: Request,
+  // ): Promise<AddRandomTravelOutput> {
+  //   try {
+  //     //여행 계획 플랜 가져오기
+  //     const plan = await this.planRepository.showPlan(
+  //       addRandomTravelInput.planId,
+  //     );
+  //     if (plan.userId != req.user['sub'])
+  //       return { ok: false, message: 'you cannot add travel' };
+  //     //여행지 id 담을 임시 배열
+  //     const tempTravelIdArr = [];
+  //     //임시배열에 여행지 id만 담음
+  //     plan.travels.forEach((element) => {
+  //       tempTravelIdArr.push(element.id);
+  //     });
 
-      //배열에 없는 여행지를 추천
-      const newDestination = await this.destinaitonRespoeitory.getRaondomDes(
-        addRandomTravelInput.tag,
-        tempTravelIdArr,
-      );
-      const createNewTravelInput: CreateTravelInput = {
-        startDay: new Date(),
-        planId: plan.id,
-        destinationId: newDestination.id,
-      };
-      const newTravel = await this.travelRespository.creatTravel(
-        createNewTravelInput,
-      );
-      // console.log(newTravel);
-      return { ok: true, travel: newTravel };
-    } catch (error) {
-      return { ok: false, error: 'faield to add travel' };
-    }
-  }
+  //     //배열에 없는 여행지를 추천
+  //     const newDestination = await this.destinaitonRespoeitory.getRaondomDes(
+  //       addRandomTravelInput.tag,
+  //       tempTravelIdArr,
+  //     );
+  //     const createNewTravelInput: CreateTravelInput = {
+  //       startDay: new Date(),
+  //       planId: plan.id,
+  //       destinationId: newDestination.id,
+  //     };
+  //     const newTravel = await this.travelRespository.creatTravel(
+  //       createNewTravelInput,
+  //     );
+  //     // console.log(newTravel);
+  //     return { ok: true, travel: newTravel };
+  //   } catch (error) {
+  //     return { ok: false, error: 'faield to add travel' };
+  //   }
+  // }
 
   async createTravelPerDay(
     createRandomPlanInput: CreateRandomPlanInput,
     planId,
     dayPerDes,
+    dayPerRating,
     i,
   ) {
     const startDay = new Date(createRandomPlanInput.start);
@@ -238,6 +240,7 @@ export class TravelService {
         startDay,
         planId: planId,
         destinationId: dayPerDes[j].id,
+        exrating: dayPerRating[j].rating,
       };
 
       const travel = await this.travelRespository.creatTravel(

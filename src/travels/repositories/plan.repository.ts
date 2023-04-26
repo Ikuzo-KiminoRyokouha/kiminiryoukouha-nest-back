@@ -89,6 +89,7 @@ export class planRepository {
           'plan.sigungucode',
           'travel.id',
           'travel.startDay',
+          'travel.exrating',
           'destination.id',
           'destination.title',
           'destination.mapx',
