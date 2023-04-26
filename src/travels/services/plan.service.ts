@@ -83,9 +83,9 @@ export class PlanService {
         createPersonPlanInput,
         plan.id,
         [{ id: destinations[0][0] }, { id: destinations[1][0] }],
+        [{ rating: destinations[0][1] }, { rating: destinations[1][1] }],
         i,
       );
-      console.log('3');
 
       if (!travel) return;
     }

@@ -5,4 +5,5 @@ export class CreateTravelInput extends PickType(Travel, [
   'startDay',
   'planId',
   'destinationId',
+  'exrating',
 ]) {}

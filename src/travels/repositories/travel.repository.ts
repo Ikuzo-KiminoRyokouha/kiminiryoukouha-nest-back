@@ -95,6 +95,7 @@ export class TravelRepository {
           ...createTravelInput,
           planId: createTravelInput.planId,
           destinationId: createTravelInput.destinationId,
+          exrating: createTravelInput.exrating,
         }),
       );
       return travel;
