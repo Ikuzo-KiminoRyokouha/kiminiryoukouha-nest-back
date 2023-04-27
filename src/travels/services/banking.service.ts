@@ -149,6 +149,7 @@ export class BankingService {
 
   async createTransactionList({ planId }, userId): Promise<BasicOutput> {
     //계좌조회 데이터 + 새로운 데이터 추가
+    console.log('banking service / createTransaction list');
     const token = await this.bankingRepository.getBankingToken(userId);
     const newToken = await this.bankingRepository.updateCheckNum(token);
     const plan = await this.planRepository.showPlan(planId);
@@ -164,8 +165,8 @@ export class BankingService {
             fintech_use_num: token.finNum,
             inquiry_type: 'A',
             inquiry_base: 'D',
-            from_date: 20230411,
-            to_date: 20230412,
+            from_date: startDay,
+            to_date: endDay,
             sort_order: 'D',
             tran_dtime: '20230411010106',
           },

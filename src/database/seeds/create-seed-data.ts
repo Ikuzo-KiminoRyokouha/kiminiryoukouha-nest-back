@@ -14,9 +14,9 @@ import { Rating } from '../../travels/entities/rating.entity';
 
 export class CreateInitialUserData implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
-    const destination1 = await getAllDestinationInfo(12);
-    const destination2 = await getAllDestinationInfo(14);
-    const setData = destination1.concat(destination2);
+    // const destination1 = await getAllDestinationInfo(12);
+    // const destination2 = await getAllDestinationInfo(14);
+    // const setData = destination1.concat(destination2);
     console.log('length', (destinationInfoMap as Array<any>).length);
     await connection
       .createQueryBuilder()
@@ -43,7 +43,7 @@ export class CreateInitialUserData implements Seeder {
       .execute();
     const usersRating = [];
     for (let i = 0; i < userData.length; i++) {
-      for (let j = 0; j < setData.length; j++) {
+      for (let j = 0; j < (destinationInfoMap as Array<any>).length; j++) {
         const check = Math.floor(Math.random() * 20) + 1;
         if (check == 2) {
           const rating = Math.floor(Math.random() * 5);

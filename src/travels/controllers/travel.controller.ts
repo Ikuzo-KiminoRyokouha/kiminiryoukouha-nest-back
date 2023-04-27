@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -23,6 +24,12 @@ import { showTravelsOutput } from '../dtos/travel/show-travels.dto';
 @Controller('travel')
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/today')
+  async showTodayTravel(): Promise<showTravelsOutput> {
+    return await this.travelService.showTodayTrevel();
+  }
 
   @UseGuards(AccessTokenGuard)
   @Get('/:planId')
@@ -79,12 +86,21 @@ export class TravelController {
     );
   }
 
+  // @UseGuards(AccessTokenGuard)
+  // @Post('/other/random')
+  // async addRandomTravel(
+  //   @Body() addTravelInput: AddRandomTravelInput,
+  //   @Req() req: Request,
+  // ): Promise<AddRandomTravelOutput> {
+  //   return await this.travelService.addRandomTravel(addTravelInput, req);
+  // }
+
   @UseGuards(AccessTokenGuard)
-  @Post('/other/random')
-  async addRandomTravel(
-    @Body() addTravelInput: AddRandomTravelInput,
+  @Delete('/:travelId')
+  async deleteTravelById(
+    @Param('travelId') travelId: number,
     @Req() req: Request,
-  ): Promise<AddRandomTravelOutput> {
-    return await this.travelService.addRandomTravel(addTravelInput, req);
+  ): Promise<BasicOutput> {
+    return await this.travelService.deleteTravelById(travelId, req.user['sub']);
   }
 }

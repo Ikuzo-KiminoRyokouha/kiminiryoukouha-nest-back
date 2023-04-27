@@ -44,11 +44,6 @@ export class Plan extends BasicEntity {
   @IsString()
   city: string;
 
-  @Column({ type: 'json', nullable: true })
-  @IsObject()
-  @IsOptional()
-  destination: object;
-
   @Column({ nullable: true })
   @IsNumber()
   @IsOptional()
@@ -58,6 +53,14 @@ export class Plan extends BasicEntity {
   @IsObject()
   @IsOptional()
   dayPerCost: object;
+
+  @Column()
+  @IsString()
+  areacode: string;
+
+  @Column()
+  @IsString()
+  sigungucode: string;
 
   @OneToMany(() => Travel, (travel) => travel.plan, {
     cascade: ['remove', 'soft-remove', 'recover'],

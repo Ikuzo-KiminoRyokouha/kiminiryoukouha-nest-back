@@ -56,7 +56,6 @@ export class PlanService {
         new Date(createPersonPlanInput.start).getTime()) /
         (1000 * 60 * 60 * 24) +
       1;
-
     for (let i = 0; i < travelPeriod; i++) {
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
 
@@ -67,12 +66,13 @@ export class PlanService {
             tag: createPersonPlanInput.tag[i + 1],
             start: 0,
             end: 2,
+            areacode: createPersonPlanInput.areacode,
+            sigungucode: createPersonPlanInput.sigungucode,
           },
         })
         .then((res) => {
           return res.data;
         });
-
       const splitItem = rawItem.split(')(');
       const destinations = splitItem.map((item) => {
         const newItem = item.replace(/[()]/g, '').split(',');
@@ -83,8 +83,10 @@ export class PlanService {
         createPersonPlanInput,
         plan.id,
         [{ id: destinations[0][0] }, { id: destinations[1][0] }],
+        [{ rating: destinations[0][1] }, { rating: destinations[1][1] }],
         i,
       );
+
       if (!travel) return;
     }
 

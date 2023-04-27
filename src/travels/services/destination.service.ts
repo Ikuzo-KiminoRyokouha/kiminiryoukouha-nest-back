@@ -12,10 +12,15 @@ import {
   ShowTravelBySurpriseOutput,
 } from '../dtos/destination/show-travel-bySurprise.dto';
 import { DestinationRepository } from '../repositories/destination.repository';
+import { planRepository } from '../repositories/plan.repository';
+import { areaCode } from 'src/util/dataSet/areaCode';
 
 @Injectable()
 export class DestinationService {
-  constructor(private destinationRespository: DestinationRepository) {}
+  constructor(
+    private destinationRespository: DestinationRepository,
+    private planRepository: planRepository,
+  ) {}
 
   async showDestinationDetail(destinaitonId): Promise<ShowDetinationDetail> {
     const destinaiton = await this.destinationRespository.showDestinationById(
@@ -51,27 +56,53 @@ export class DestinationService {
   }
 
   async showTravleDesBySurprise(
-    { userId, planId, tag, count }: ShowTravelBySurpriseInput,
+    { planId, tag, count }: ShowTravelBySurpriseInput,
     req: Request,
   ): Promise<ShowTravelBySurpriseOutput> {
     try {
+      const plan = await this.planRepository.showPlan(planId);
+      if (!plan) return { ok: false, message: 'cannot find this plan' };
+      console.log(plan);
+      console.log(plan.areacode);
+
       const rawItem = await axios
         .post(process.env.DJANGO_API + 'destinations', {
-          data: { userId, tag, start: (count - 1) * 5, end: count * 5 },
+          data: {
+            userId: req.user['sub'],
+            tag,
+            start: (count - 1) * 5,
+            end: count * 5,
+            sigungucode: plan.sigungucode,
+            areacode: plan.areacode,
+          },
         })
         .then((res) => {
           return res.data;
         });
       const splitItem = rawItem.split(')(');
-      const personalizedDestination = splitItem.map((item) => {
+      console.log(splitItem);
+      const newDesArr = [];
+      for (let i = 0; i < splitItem.length; i++) {
+        const item = splitItem[i];
         const newItem = item.replace(/[()]/g, '').split(',');
-        return [parseInt(newItem[0]), parseFloat(newItem[1])];
-      });
+        const newDes = await this.destinationRespository.showDestinationById(
+          parseInt(newItem[0]),
+        );
+        newDesArr.push([newDes, parseFloat(newItem[1])]);
+      }
+      // const personalizedDestination = splitItem.map(async (item) => {
+      //   const newItem = item.replace(/[()]/g, '').split(',');
+      //   const newDes = await this.destinationRespository.showDestinationById(
+      //     parseInt(newItem[0]),
+      //   );
+      //   return [newDes, parseFloat(newItem[1])];
+      // });
       return {
         ok: true,
-        destination: personalizedDestination,
+        destination: newDesArr,
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'can not show travel',

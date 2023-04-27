@@ -48,7 +48,7 @@ export class BankingController {
 
   //대표 계좌 설정
   @UseGuards(AccessTokenGuard)
-  @Post('/my/count')
+  @Post('/mycount')
   async saveMyCount(
     @Req() req: Request,
     @Body() saveCountInput: SaveCountInput,
