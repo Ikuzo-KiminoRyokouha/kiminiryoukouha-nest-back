@@ -26,6 +26,7 @@ import { BasicOutput } from '../../common/dtos/output.dto';
 import { throws } from 'assert';
 import { isSameDate, subtractDate } from '../..//util/dateCal';
 import axios from 'axios';
+import { dateToKor } from 'src/util/dateToKor';
 
 @Injectable()
 export class PlanService {
@@ -206,15 +207,7 @@ export class PlanService {
 
   async todayPlan(userId) {
     try {
-      const date = new Date();
-      const year = date.getFullYear(); // 년도
-      const month = date.getMonth() + 1; // 월 (0부터 시작하므로 +1 필요)
-      const day = date.getDate(); // 일
-
-      const koreanDate: Date = new Date(year, month - 1, day);
-      const koreanTimezoneOffset: number = 540;
-
-      koreanDate.setMinutes(koreanDate.getMinutes() + koreanTimezoneOffset);
+      const koreanDate = await dateToKor();
 
       const plan = await this.planRepository.todayPlan(userId, koreanDate);
       return {

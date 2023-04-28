@@ -80,7 +80,6 @@ export class DestinationService {
           return res.data;
         });
       const splitItem = rawItem.split(')(');
-      console.log(splitItem);
       const newDesArr = [];
       for (let i = 0; i < splitItem.length; i++) {
         const item = splitItem[i];
@@ -90,13 +89,7 @@ export class DestinationService {
         );
         newDesArr.push([newDes, parseFloat(newItem[1])]);
       }
-      // const personalizedDestination = splitItem.map(async (item) => {
-      //   const newItem = item.replace(/[()]/g, '').split(',');
-      //   const newDes = await this.destinationRespository.showDestinationById(
-      //     parseInt(newItem[0]),
-      //   );
-      //   return [newDes, parseFloat(newItem[1])];
-      // });
+
       return {
         ok: true,
         destination: newDesArr,

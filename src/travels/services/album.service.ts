@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { UserRespository } from 'src/users/repositories/users.repository';
 import { planRepository } from '../repositories/plan.repository';
 import path from 'path';
 import { AlbumRepository } from '../repositories/album.repository';
