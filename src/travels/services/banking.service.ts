@@ -153,9 +153,15 @@ export class BankingService {
     const token = await this.bankingRepository.getBankingToken(userId);
     const newToken = await this.bankingRepository.updateCheckNum(token);
     const plan = await this.planRepository.showPlan(planId);
-    const endDay = plan.end.toISOString().slice(0, 10).split('-').join('');
+    let endDay = plan.end.toISOString().slice(0, 10).split('-').join('');
     const startDay = plan.start.toISOString().slice(0, 10).split('-').join('');
+    const nowDate = new Date().toISOString().slice(0, 10).split('-').join('');
     const checkCode = getBankingCheckCode(newToken.checking);
+
+    if (endDay > nowDate) {
+      endDay = nowDate;
+    }
+
     const res = await axios
       .get(
         process.env.BANKING_API_URI + '/v2.0/account/transaction_list/fin_num',
@@ -221,8 +227,9 @@ export class BankingService {
     return { ok: true, message: 'success to  make transaction list' };
   }
 
-  async getTransactionList(planId) {
+  async getTransactionList(planId, userId) {
     try {
+      const newTrans = await this.createTransactionList({ planId }, userId);
       const transaction = await this.accountRepository.getAccountInfoByPlanId(
         planId,
       );

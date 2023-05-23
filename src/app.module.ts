@@ -14,6 +14,9 @@ import { TravelModule } from './travels/travel.module';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import path from 'path';
+import { planRepository } from './travels/repositories/plan.repository';
+import { TypeOrmExModule } from './repositories/custom-repository.module';
+import { Plan } from './travels/entities/plan.entity';
 
 @Module({
   imports: [
@@ -27,6 +30,9 @@ import path from 'path';
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(ormOptions),
+
+    // TypeOrmModule.forFeature([Plan]),
+    // TypeOrmExModule.forCustomRepository([planRepository]),
 
     UsersModule,
     CommonModule,

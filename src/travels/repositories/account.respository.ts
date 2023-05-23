@@ -30,8 +30,8 @@ export class AccountRepository {
         planId,
       },
       order: {
-        date: 'DESC',
-        time: 'DESC',
+        date: 'ASC',
+        time: 'ASC',
       },
     });
 
