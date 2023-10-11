@@ -86,6 +86,7 @@ export class planRepository {
           'plan.totalCost',
           'plan.userId',
           'plan.areacode',
+          'plan.dayPerCost',
           'plan.sigungucode',
           'travel.id',
           'travel.startDay',
@@ -103,6 +104,7 @@ export class planRepository {
         .where('plan.id = :planId', { planId })
         .orderBy('travel.startDay')
         .getOne();
+      // console.log()
       if (!plan) return null;
       return plan;
     } catch (error) {
@@ -166,7 +168,6 @@ export class planRepository {
 
   async todayPlan(userId, today) {
     const plan = await this.planRepository.findOne({
-      // select: { id: true, totalCost: true },
       where: {
         userId,
         start: LessThanOrEqual(today),

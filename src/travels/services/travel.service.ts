@@ -14,6 +14,7 @@ import { DestinationRepository } from '../repositories/destination.repository';
 import { planRepository } from '../repositories/plan.repository';
 import { TravelRepository } from '../repositories/travel.repository';
 import { AddTraveOutPut } from '../dtos/travel/add-travel.dto';
+import { dateToKor } from 'src/util/dateToKor';
 
 @Injectable()
 export class TravelService {
@@ -159,17 +160,8 @@ export class TravelService {
       if (!plan) return { ok: false, message: 'this plan not found' };
       if (plan.userId != req.user['sub'])
         return { ok: false, message: 'you can not add travel in this plan' };
-      const startDay = new Date(); // 여행 몇번째 날 인지
 
-      const date = new Date();
-      const year = date.getFullYear(); // 년도
-      const month = date.getMonth() + 1; // 월 (0부터 시작하므로 +1 필요)
-      const day = date.getDate(); // 일
-
-      const koreanDate: Date = new Date(year, month - 1, day);
-      const koreanTimezoneOffset: number = 540;
-
-      koreanDate.setMinutes(koreanDate.getMinutes() + koreanTimezoneOffset);
+      const koreanDate = await dateToKor();
 
       const createTravelInput: CreateTravelInput = {
         startDay: koreanDate,
@@ -186,44 +178,6 @@ export class TravelService {
       return { ok: false, message: 'failed to add travel' };
     }
   }
-
-  // async addRandomTravel(
-  //   addRandomTravelInput: AddRandomTravelInput,
-  //   req: Request,
-  // ): Promise<AddRandomTravelOutput> {
-  //   try {
-  //     //여행 계획 플랜 가져오기
-  //     const plan = await this.planRepository.showPlan(
-  //       addRandomTravelInput.planId,
-  //     );
-  //     if (plan.userId != req.user['sub'])
-  //       return { ok: false, message: 'you cannot add travel' };
-  //     //여행지 id 담을 임시 배열
-  //     const tempTravelIdArr = [];
-  //     //임시배열에 여행지 id만 담음
-  //     plan.travels.forEach((element) => {
-  //       tempTravelIdArr.push(element.id);
-  //     });
-
-  //     //배열에 없는 여행지를 추천
-  //     const newDestination = await this.destinaitonRespoeitory.getRaondomDes(
-  //       addRandomTravelInput.tag,
-  //       tempTravelIdArr,
-  //     );
-  //     const createNewTravelInput: CreateTravelInput = {
-  //       startDay: new Date(),
-  //       planId: plan.id,
-  //       destinationId: newDestination.id,
-  //     };
-  //     const newTravel = await this.travelRespository.creatTravel(
-  //       createNewTravelInput,
-  //     );
-  //     // console.log(newTravel);
-  //     return { ok: true, travel: newTravel };
-  //   } catch (error) {
-  //     return { ok: false, error: 'faield to add travel' };
-  //   }
-  // }
 
   async createTravelPerDay(
     createRandomPlanInput: CreateRandomPlanInput,

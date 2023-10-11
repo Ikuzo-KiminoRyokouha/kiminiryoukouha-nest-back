@@ -79,9 +79,10 @@ export class BankingController {
   @UseGuards(AccessTokenGuard)
   @Get('/transaction/list/:planId')
   async getTransactionList(
+    @Req() req: Request,
     @Param('planId') planId: number,
   ): Promise<ShowTransactionOut> {
-    return this.bankingService.getTransactionList(planId);
+    return this.bankingService.getTransactionList(planId, req.user['sub']);
   }
 
   @UseGuards(AccessTokenGuard)

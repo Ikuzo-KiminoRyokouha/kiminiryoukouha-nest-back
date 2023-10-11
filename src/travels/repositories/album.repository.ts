@@ -26,7 +26,7 @@ export class AlbumRepository {
 
   async showAlbumByPlanId(planId) {
     const album = await this.albumRepository.find({
-      where: planId,
+      where: { planId },
       select: ['id', 'title', 'mapx', 'mapy', 'url', 'createdAt'],
       order: {
         createdAt: 'ASC',
