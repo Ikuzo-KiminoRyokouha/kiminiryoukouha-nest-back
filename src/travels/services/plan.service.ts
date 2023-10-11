@@ -42,7 +42,7 @@ export class PlanService {
     req: Request,
   ): Promise<CreateRandomPlanOutput> {
     if (createPersonPlanInput.title == null) {
-      createPersonPlanInput.title = `${createPersonPlanInput.city}여행 ${createPersonPlanInput.start} 시작`;
+      createPersonPlanInput.title = `${createPersonPlanInput.city}旅行 ${createPersonPlanInput.start} スタート`;
     }
     //여행 계획 CREATE
     const plan = await this.planRepository.createPlan(
