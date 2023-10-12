@@ -30,8 +30,8 @@ const ormConfig = {
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }
       : false,
-  timezone: 'KST',
-  //   seeds: ['src/database/seeds/**/*.ts'],
+  timezone: '+09:00',
+  // seeds: ['src/database/seeds/**/*.ts'],
 };
 
 export default ormConfig;

@@ -37,7 +37,7 @@ export const ormOptions: TypeOrmModuleOptions = {
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }
       : false,
-  timezone: 'KST',
-  // migrationsRun: true,
+  timezone: '+09:00',
+  migrationsRun: true,
   // seeds: ['src/database/seed s/**/*.ts'],
 };
