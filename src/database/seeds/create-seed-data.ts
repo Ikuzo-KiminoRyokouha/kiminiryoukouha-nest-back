@@ -2,6 +2,8 @@ import { Destination } from '../../travels/entities/destination.entity';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 import destinationInfoMap from '../../util/dataSet/destinationInfoMap.json';
+//안되면밑에지우기
+import destinationInfoMapJP from '../../util/dataSet/destinationInfoMapJP.json';
 import {
   getAllDestinationInfo,
   getDestinationDetail,
@@ -17,12 +19,12 @@ export class CreateInitialUserData implements Seeder {
     // const destination1 = await getAllDestinationInfo(12);
     // const destination2 = await getAllDestinationInfo(14);
     // const setData = destination1.concat(destination2);
-    console.log('length', (destinationInfoMap as Array<any>).length);
+    console.log('length', (destinationInfoMapJP as unknown as Array<any>).length);
     await connection
       .createQueryBuilder()
       .insert()
       .into(Destination)
-      .values(destinationInfoMap)
+      .values(destinationInfoMapJP)
       .execute();
 
     const userData = [];

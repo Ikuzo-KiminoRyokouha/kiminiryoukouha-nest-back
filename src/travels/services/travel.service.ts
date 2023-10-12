@@ -115,7 +115,7 @@ export class TravelService {
     }
   }
 
-  async updateTravelByDestinationId(
+  async updateTravelByDestinationId(//여기
     travelId: number,
     destinationId: number,
     req: Request,

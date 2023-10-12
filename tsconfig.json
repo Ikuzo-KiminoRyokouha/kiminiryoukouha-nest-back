@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@nestjs/serve-static": ["node_modules/@nestjs/serve-static/dist/index.js"]
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -18,6 +21,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/yup"]
   }
 }

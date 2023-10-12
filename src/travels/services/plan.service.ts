@@ -59,7 +59,7 @@ export class PlanService {
       1;
     for (let i = 0; i < travelPeriod; i++) {
       // [ [destinationId, expectedRating1], [destinationId2, expectedRating2] ]
-      console.log(createPersonPlanInput.tag[i + 1]);
+
       const rawItem = await axios
         .post(process.env.DJANGO_API + 'destinations', {
           data: {

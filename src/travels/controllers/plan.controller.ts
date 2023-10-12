@@ -30,7 +30,11 @@ import { Plan } from '../entities/plan.entity';
 export class PlanController {
   constructor(private planService: PlanService) {}
 
-  //
+  
+
+
+
+
   @UseGuards(AccessTokenGuard)
   @Post('/personality')
   createPersonalityPlan(
