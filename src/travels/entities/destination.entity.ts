@@ -6,16 +6,16 @@ import { Album } from './album.entity';
 
 @Entity()
 export class Destination extends BasicEntity {
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   @IsOptional()
   mapx: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   @IsOptional()
   mapy: string;
@@ -25,15 +25,15 @@ export class Destination extends BasicEntity {
   @IsOptional()
   firstimage: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   cat3: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   contentid: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   contenttypeid: string;
 
@@ -42,11 +42,11 @@ export class Destination extends BasicEntity {
   @IsString()
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   areacode: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   sigungucode: string;
   @OneToMany(() => Travel, (travel) => travel.plan)
