@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -28,7 +27,6 @@ import { Plan } from './travels/entities/plan.entity';
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '../..', 'public/img'),
     }),
-    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(ormOptions),
 
     // TypeOrmModule.forFeature([Plan]),
